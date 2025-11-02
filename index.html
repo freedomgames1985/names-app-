@@ -1,15 +1,9 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="إدارة الأسماء">
-<meta name="theme-color" content="#667eea">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
 <title>برنامج إدارة الأسماء</title>
-<link rel="apple-touch-icon" href="https://i.postimg.cc/7ZrgS8qs/lwjw-bnfsjy-bsyt-%CA%BFn-stwdyw-3.png">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -18,11 +12,6 @@ body{font-family:'Cairo',sans-serif;background:linear-gradient(135deg,#667eea 0%
 .header{background:white;padding:24px;border-radius:16px;margin-bottom:20px;box-shadow:0 4px 20px rgba(0,0,0,0.15);border:3px solid #4338ca;position:relative;padding-left:140px}
 .logo{position:absolute;top:50%;left:20px;transform:translateY(-50%);width:100px;height:100px;object-fit:contain}
 .header h1{font-size:26px;color:#4338ca;margin-bottom:16px;text-align:center}
-.sync-status{text-align:center;padding:8px;border-radius:8px;font-size:12px;font-weight:700;margin-top:12px}
-.sync-online{background:#d1fae5;color:#065f46;border:2px solid #10b981}
-.sync-ready{background:#dbeafe;color:#1e40af;border:2px solid #3b82f6}
-.sync-saving{background:#fef3c7;color:#92400e;border:2px solid #f59e0b;animation:pulse 1s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}
 @media (max-width:768px){
 .header{padding-left:24px;padding-top:90px}
 .logo{width:70px;height:70px;top:15px;left:50%;transform:translateX(-50%)}
@@ -74,36 +63,22 @@ body{font-family:'Cairo',sans-serif;background:linear-gradient(135deg,#667eea 0%
 .alert-danger{background:#fee2e2;color:#991b1b;border-right:4px solid #ef4444}
 .alert-warning{background:#fef3c7;color:#92400e;border-right:4px solid #f59e0b}
 .alert-info{background:#dbeafe;color:#1e40af;border-right:4px solid #3b82f6}
-.sync-card{background:linear-gradient(135deg,#3b82f6,#2563eb);color:white;padding:20px;border-radius:12px;margin-bottom:20px;box-shadow:0 4px 15px rgba(59,130,246,0.3);display:none}
-.sync-card h3{font-size:18px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
-.sync-code{background:rgba(255,255,255,0.2);padding:12px;border-radius:8px;font-family:monospace;font-size:12px;word-break:break-all;margin:10px 0;cursor:pointer;border:2px dashed rgba(255,255,255,0.4);max-height:100px;overflow-y:auto}
-.sync-code:hover{background:rgba(255,255,255,0.3)}
 @media (max-width:768px){
 body{padding:10px}
 .grid-layout{grid-template-columns:1fr}
 .input-row{grid-template-columns:1fr}
 .btn-grid{grid-template-columns:1fr}
 .search-area{flex-direction:column}
+.header h1{font-size:20px}
+.stat-box{flex:1;text-align:center}
 }
 </style>
 </head>
 <body>
 <div class="container">
-<div class="sync-card" id="syncCard">
-<h3>🔗 المزامنة بين الأجهزة</h3>
-<div style="font-size:14px;margin-bottom:10px">شارك هذا الكود مع أجهزتك الأخرى:</div>
-<div class="sync-code" id="syncCode" onclick="copySyncCode()">انقر لإنشاء كود المزامنة</div>
-<div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
-<button class="btn btn-success" onclick="generateSyncCode()" style="flex:1;min-width:120px">🔄 إنشاء كود</button>
-<button class="btn btn-outline" onclick="importSyncCode()" style="flex:1;color:white;border-color:white;min-width:120px">📥 استيراد</button>
-</div>
-</div>
 <div class="header">
 <img src="https://i.postimg.cc/7ZrgS8qs/lwjw-bnfsjy-bsyt-%CA%BFn-stwdyw-3.png" alt="Logo" class="logo">
 <h1>🗂️ برنامج إدارة الأسماء</h1>
-<div class="sync-status sync-ready" id="syncStatus">
-<span id="syncText">✅ حفظ تلقائي مفعّل</span>
-</div>
 <div class="stats-row">
 <div class="stat-box">📊 الإجمالي: <span id="totalCount">0</span></div>
 <div class="stat-box">✅ متوفر: <span id="availableCount">0</span></div>
@@ -120,7 +95,6 @@ body{padding:10px}
 <div class="btn-grid">
 <button class="btn btn-outline" id="showAllBtn">📋 الكل</button>
 <button class="btn btn-outline" id="showMissingBtn">❌ ناقص</button>
-<button class="btn btn-primary" id="syncToggle">🔗 المزامنة</button>
 </div>
 <div class="results-box" id="resultsBox">
 <div class="empty-msg">
@@ -204,6 +178,7 @@ body{padding:10px}
 <div id="modalBody"></div>
 </div>
 </div>
+
 <div id="printOptionsModal" class="modal">
 <div class="modal-box">
 <div class="modal-header">
@@ -214,13 +189,16 @@ body{padding:10px}
 <div style="font-weight:700;margin-bottom:12px;color:#1f2937">اختر الجنس:</div>
 <div style="display:flex;flex-direction:column;gap:10px">
 <label style="padding:12px;border:2px solid #d1d5db;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:600">
-<input type="radio" name="printGender" value="all" checked style="width:20px;height:20px"><span>الكل</span>
+<input type="radio" name="printGender" value="all" checked style="width:20px;height:20px">
+<span>الكل</span>
 </label>
 <label style="padding:12px;border:2px solid #d1d5db;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:600">
-<input type="radio" name="printGender" value="ذكر" style="width:20px;height:20px"><span>👦 ذكور فقط</span>
+<input type="radio" name="printGender" value="ذكر" style="width:20px;height:20px">
+<span>👦 ذكور فقط</span>
 </label>
 <label style="padding:12px;border:2px solid #d1d5db;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:600">
-<input type="radio" name="printGender" value="أنثى" style="width:20px;height:20px"><span>👧 إناث فقط</span>
+<input type="radio" name="printGender" value="أنثى" style="width:20px;height:20px">
+<span>👧 إناث فقط</span>
 </label>
 </div>
 </div>
@@ -230,419 +208,195 @@ body{padding:10px}
 </div>
 </div>
 </div>
+
 <script>
-var STORAGE_KEY = 'names_db_final';
-var db = [];
+const STORAGE_KEY='names_manager_db_v7';
+let db=[];
+try{const stored=localStorage.getItem(STORAGE_KEY);db=stored?JSON.parse(stored):[]}catch(e){db=[]}
+if(db.length===0){db=[{name:'خالد',gender:'ذكر',qty:25,color:'أزرق',note:'مقاس صغير'},{name:'خالدة',gender:'أنثى',qty:10,color:'أحمر',note:'مخصصة'},{name:'أحمد',gender:'ذكر',qty:0,color:'أخضر',note:'ناقص'},{name:'فاطمة',gender:'أنثى',qty:15,color:'وردي',note:''},{name:'محمد',gender:'ذكر',qty:30,color:'أسود',note:''},{name:'عائشة',gender:'أنثى',qty:0,color:'بنفسجي',note:'طلب خاص'}];saveDB()}
+function saveDB(){localStorage.setItem(STORAGE_KEY,JSON.stringify(db));updateStats()}
+function updateStats(){document.getElementById('totalCount').textContent=db.length;document.getElementById('availableCount').textContent=db.filter(i=>i.qty>0).length;document.getElementById('missingCount').textContent=db.filter(i=>i.qty===0).length}
+function showResults(items,title){const box=document.getElementById('resultsBox');if(items.length===0){box.innerHTML='<div class="empty-msg"><div class="empty-icon">❌</div><div style="font-weight:700">لا توجد نتائج</div></div>';return}let html='';if(title){html+='<div style="font-weight:800;color:#4338ca;margin-bottom:12px;font-size:15px">'+title+'</div>'}items.forEach(function(item,idx){const qtyTag=item.qty===0?'<span class="tag tag-danger">❌ ناقص</span>':'<span class="tag tag-success">✅ '+item.qty+'</span>';html+='<div class="result-item" onclick="fillForm(\''+item.name.replace(/'/g,"\\'")+'\')">';html+='<div class="result-name">'+(idx+1)+'. '+item.name+'</div>';html+='<div class="result-tags">';html+=qtyTag;html+='<span class="tag tag-info">⚧ '+(item.gender||'-')+'</span>';html+='<span class="tag tag-info">🎨 '+(item.color||'-')+'</span>';if(item.note){html+='<span class="tag tag-info">📝 '+item.note+'</span>'}html+='</div></div>'});box.innerHTML=html}
+function fillForm(name){const item=db.find(i=>i.name.toLowerCase()===name.toLowerCase());if(item){document.getElementById('nameInput').value=item.name;document.getElementById('qtyInput').value=item.qty;document.getElementById('genderInput').value=item.gender||'';document.getElementById('colorInput').value=item.color||'';document.getElementById('noteInput').value=item.note||'';showModal('✅ تم','تم تعبئة: '+item.name,'success')}}
+function showModal(title,msg,type){type=type||'info';document.getElementById('modalTitle').textContent=title;let cls='alert-info';if(type==='success')cls='alert-success';if(type==='error')cls='alert-danger';if(type==='warning')cls='alert-warning';document.getElementById('modalBody').innerHTML='<div class="alert '+cls+'">'+msg+'</div>';document.getElementById('modal').style.display='flex'}
+function closeModal(){document.getElementById('modal').style.display='none'}
+document.getElementById('searchBtn').addEventListener('click',function(){const q=document.getElementById('searchInput').value.trim().toLowerCase();if(!q){showModal('⚠️ تنبيه','أدخل نص للبحث','warning');return}const results=db.filter(i=>i.name.toLowerCase().includes(q));showResults(results,'نتائج: "'+document.getElementById('searchInput').value+'" ('+results.length+')')});
+document.getElementById('searchInput').addEventListener('keypress',function(e){if(e.key==='Enter')document.getElementById('searchBtn').click()});
+document.getElementById('showAllBtn').addEventListener('click',function(){showResults(db,'📋 جميع السجلات ('+db.length+')')});
+document.getElementById('showMissingBtn').addEventListener('click',function(){const missing=db.filter(i=>i.qty===0);showResults(missing,'❌ الناقص ('+missing.length+')')});
+document.getElementById('addBtn').addEventListener('click',function(){const name=document.getElementById('nameInput').value.trim();const gender=document.getElementById('genderInput').value;if(!name){showModal('⚠️ تنبيه','أدخل الاسم','warning');return}if(!gender){showModal('⚠️ تنبيه','اختر الجنس','warning');return}if(db.some(i=>i.name.toLowerCase()===name.toLowerCase())){showModal('⚠️ موجود','الاسم موجود مسبقاً','warning');return}const qty=parseInt(document.getElementById('qtyInput').value)||0;const color=document.getElementById('colorInput').value.trim();const note=document.getElementById('noteInput').value.trim();db.push({name,qty,gender,color,note});saveDB();showModal('✅ نجح','تم إضافة: '+name,'success');document.getElementById('clearBtn').click();showResults(db,'📋 جميع السجلات')});
+document.getElementById('updateBtn').addEventListener('click',function(){const name=document.getElementById('nameInput').value.trim();if(!name){showModal('⚠️ تنبيه','أدخل الاسم','warning');return}const idx=db.findIndex(i=>i.name.toLowerCase()===name.toLowerCase());if(idx===-1){showModal('⚠️ غير موجود','الاسم غير موجود','error');return}const gender=document.getElementById('genderInput').value;if(!gender){showModal('⚠️ تنبيه','اختر الجنس','warning');return}const qty=parseInt(document.getElementById('qtyInput').value)||0;const color=document.getElementById('colorInput').value.trim();const note=document.getElementById('noteInput').value.trim();db[idx]={name,qty,gender,color,note};saveDB();showModal('✅ نجح','تم تحديث: '+name,'success');showResults(db,'📋 جميع السجلات')});
+document.getElementById('deleteBtn').addEventListener('click',function(){const name=document.getElementById('nameInput').value.trim();if(!name){showModal('⚠️ تنبيه','أدخل الاسم','warning');return}const idx=db.findIndex(i=>i.name.toLowerCase()===name.toLowerCase());if(idx===-1){showModal('⚠️ غير موجود','الاسم غير موجود','error');return}if(!confirm('حذف "'+name+'"؟'))return;db.splice(idx,1);saveDB();showModal('✅ نجح','تم الحذف','success');document.getElementById('clearBtn').click();showResults(db,'📋 جميع السجلات')});
+document.getElementById('clearBtn').addEventListener('click',function(){document.getElementById('nameInput').value='';document.getElementById('qtyInput').value='';document.getElementById('genderInput').value='';document.getElementById('colorInput').value='';document.getElementById('noteInput').value=''});
+document.getElementById('checkBtn').addEventListener('click',function(){const name=document.getElementById('sellName').value.trim();if(!name){showModal('⚠️ تنبيه','أدخل اسم المنتج','warning');return}const item=db.find(i=>i.name.toLowerCase()===name.toLowerCase());if(!item){showModal('⚠️ غير موجود','المنتج غير موجود','error');return}const status=item.qty===0?'❌ <strong style="color:#ef4444">غير متوفر</strong>':'✅ <strong style="color:#10b981">متوفر ('+item.qty+')</strong>';showModal('📦 المخزون','<strong>'+item.name+'</strong><br><br>'+status,'info')});
+document.getElementById('sellBtn').addEventListener('click',function(){const name=document.getElementById('sellName').value.trim();const qty=parseInt(document.getElementById('sellQty').value)||0;if(!name){showModal('⚠️ تنبيه','أدخل اسم المنتج','warning');return}if(qty<=0){showModal('⚠️ تنبيه','أدخل كمية صحيحة','warning');return}const idx=db.findIndex(i=>i.name.toLowerCase()===name.toLowerCase());if(idx===-1){showModal('⚠️ غير موجود','المنتج غير موجود','error');return}if(db[idx].qty<qty){showModal('⚠️ كمية غير كافية','المتاح: '+db[idx].qty+'<br>المطلوب: '+qty,'error');return}if(!confirm('بيع '+qty+' من "'+name+'"؟'))return;db[idx].qty-=qty;saveDB();showModal('✅ تم البيع','المباع: '+qty+'<br>المتبقي: '+db[idx].qty,'success');document.getElementById('sellName').value='';document.getElementById('sellQty').value=''});
+document.getElementById('backupBtn').addEventListener('click',function(){if(db.length===0){showModal('⚠️ تنبيه','لا توجد بيانات','warning');return}let csv='\ufeffالاسم,الكمية,الجنس,اللون,ملاحظات\n';db.forEach(function(i){csv+=i.name+','+i.qty+','+(i.gender||'')+','+(i.color||'')+',"'+(i.note||'')+'"\n'});const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='نسخة_احتياطية_'+new Date().toISOString().split('T')[0]+'.csv';a.click();URL.revokeObjectURL(url);showModal('✅ نجح','تم تحميل '+db.length+' سجل','success')});
 
-function loadDB() {
-  try {
-    var stored = localStorage.getItem(STORAGE_KEY);
-    db = stored ? JSON.parse(stored) : [];
-  } catch(e) {
-    db = [];
-  }
-  if (db.length === 0) {
-    db = [
-      {name: 'خالد', gender: 'ذكر', qty: 25, color: 'أزرق', note: 'مقاس صغير'},
-      {name: 'خالدة', gender: 'أنثى', qty: 10, color: 'أحمر', note: 'مخصصة'},
-      {name: 'أحمد', gender: 'ذكر', qty: 0, color: 'أخضر', note: 'ناقص'}
-    ];
-    saveDB();
-  }
-}
+document.getElementById('exportMissingBtn').addEventListener('click',function(){const missing=db.filter(i=>i.qty===0);if(missing.length===0){showModal('✅ لا يوجد','جميع السجلات متوفرة','success');return}let csv='\ufeffالاسم,الكمية,الجنس,اللون,ملاحظات\n';missing.forEach(function(i){csv+=i.name+','+i.qty+','+(i.gender||'')+','+(i.color||'')+',"'+(i.note||'')+'"\n'});const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='الناقصة_'+new Date().toISOString().split('T')[0]+'.csv';a.click();URL.revokeObjectURL(url);showModal('✅ نجح','تم تصدير '+missing.length+' سجل ناقص','success')});
 
-function saveDB() {
-  try {
-    var st = document.getElementById('syncStatus');
-    var tx = document.getElementById('syncText');
-    st.className = 'sync-status sync-saving';
-    tx.textContent = 'جاري الحفظ...';
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
-    updateStats();
-    setTimeout(function() {
-      st.className = 'sync-status sync-online';
-      tx.textContent = 'تم الحفظ تلقائيا';
-    }, 500);
-    setTimeout(function() {
-      st.className = 'sync-status sync-ready';
-      tx.textContent = 'حفظ تلقائي مفعل';
-    }, 2000);
-  } catch(e) {
-    alert('خطأ في الحفظ');
-  }
-}
+document.getElementById('printBtn').addEventListener('click',function(){document.getElementById('printOptionsModal').style.display='flex'});
 
-function updateStats() {
-  document.getElementById('totalCount').textContent = db.length;
-  document.getElementById('availableCount').textContent = db.filter(function(i) { return i.qty > 0; }).length;
-  document.getElementById('missingCount').textContent = db.filter(function(i) { return i.qty === 0; }).length;
-}
+document.getElementById('printOptionsClose').addEventListener('click',function(){document.getElementById('printOptionsModal').style.display='none'});
 
-function generateSyncCode() {
-  var code = btoa(unescape(encodeURIComponent(JSON.stringify(db))));
-  document.getElementById('syncCode').textContent = code;
-  document.getElementById('syncCard').style.display = 'block';
-  showModal('تم', 'تم إنشاء كود المزامنة', 'success');
-}
+document.getElementById('printAllBtn').addEventListener('click',function(){const gender=document.querySelector('input[name="printGender"]:checked').value;let items=db;if(gender!=='all'){items=db.filter(i=>i.gender===gender)}if(items.length===0){showModal('⚠️ لا يوجد','لا توجد سجلات لهذا الجنس','warning');return}printItems(items,'جميع السجلات'+(gender!=='all'?' - '+gender:''))});
 
-function copySyncCode() {
-  var code = document.getElementById('syncCode').textContent;
-  if (code === 'انقر لإنشاء كود المزامنة') return generateSyncCode();
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(code).then(function() {
-      showModal('تم النسخ', 'الكود منسوخ', 'success');
-    }).catch(function() {
-      prompt('انسخ هذا الكود:', code);
-    });
-  } else {
-    prompt('انسخ هذا الكود:', code);
-  }
-}
+document.getElementById('printMissingBtn').addEventListener('click',function(){const gender=document.querySelector('input[name="printGender"]:checked').value;let items=db.filter(i=>i.qty===0);if(gender!=='all'){items=items.filter(i=>i.gender===gender)}if(items.length===0){showModal('⚠️ لا يوجد','لا توجد سجلات ناقصة','warning');return}printItems(items,'السجلات الناقصة'+(gender!=='all'?' - '+gender:''))});
 
-function importSyncCode() {
-  var code = prompt('الصق كود المزامنة هنا:');
-  if (!code) return;
-  try {
-    var importedDB = JSON.parse(decodeURIComponent(escape(atob(code))));
-    if (!Array.isArray(importedDB)) throw new Error('Invalid');
-    if (confirm('استيراد ' + importedDB.length + ' سجل؟')) {
-      db = importedDB;
-      saveDB();
-      showResults(db, 'تم الاستيراد');
-      showModal('نجح', 'تم استيراد البيانات', 'success');
-    }
-  } catch(e) {
-    showModal('خطأ', 'كود غير صالح', 'error');
-  }
-}
-
-function showResults(items, title) {
-  var box = document.getElementById('resultsBox');
-  if (items.length === 0) {
-    box.innerHTML = '<div class="empty-msg"><div class="empty-icon">❌</div><div style="font-weight:700">لا توجد نتائج</div></div>';
+function printItems(items,title){
+  if(items.length===0){
+    showModal('⚠️ لا يوجد','لا توجد سجلات للطباعة','warning');
     return;
   }
-  var html = '';
-  if (title) html += '<div style="font-weight:800;color:#4338ca;margin-bottom:12px">' + title + '</div>';
-  for (var i = 0; i < items.length; i++) {
-    var item = items[i];
-    var qtyTag = item.qty === 0 ? '<span class="tag tag-danger">ناقص</span>' : '<span class="tag tag-success">' + item.qty + '</span>';
-    html += '<div class="result-item" onclick="fillForm(\'' + item.name.replace(/'/g, "\\'") + '\')">';
-    html += '<div class="result-name">' + (i + 1) + '. ' + item.name + '</div>';
-    html += '<div class="result-tags">' + qtyTag;
-    html += '<span class="tag tag-info">' + (item.gender || '-') + '</span>';
-    html += '<span class="tag tag-info">' + (item.color || '-') + '</span>';
-    if (item.note) html += '<span class="tag tag-info">' + item.note + '</span>';
-    html += '</div></div>';
+  
+  const printWindow=window.open('','_blank');
+  if(!printWindow){
+    showModal('⚠️ خطأ','تأكد من السماح بفتح النوافذ المنبثقة','error');
+    return;
   }
-  box.innerHTML = html;
-}
-
-function fillForm(name) {
-  for (var i = 0; i < db.length; i++) {
-    if (db[i].name.toLowerCase() === name.toLowerCase()) {
-      document.getElementById('nameInput').value = db[i].name;
-      document.getElementById('qtyInput').value = db[i].qty;
-      document.getElementById('genderInput').value = db[i].gender || '';
-      document.getElementById('colorInput').value = db[i].color || '';
-      document.getElementById('noteInput').value = db[i].note || '';
-      showModal('تم', 'تم تعبئة: ' + db[i].name, 'success');
-      break;
-    }
-  }
-}
-
-function showModal(title, msg, type) {
-  document.getElementById('modalTitle').textContent = title;
-  var cls = type === 'success' ? 'alert-success' : type === 'error' ? 'alert-danger' : type === 'warning' ? 'alert-warning' : 'alert-info';
-  document.getElementById('modalBody').innerHTML = '<div class="alert ' + cls + '">' + msg + '</div>';
-  document.getElementById('modal').style.display = 'flex';
-}
-
-function closeModal() {
-  document.getElementById('modal').style.display = 'none';
-}
-
-document.getElementById('syncToggle').addEventListener('click', function() {
-  var card = document.getElementById('syncCard');
-  card.style.display = card.style.display === 'none' ? 'block' : 'none';
-});
-
-document.getElementById('searchBtn').addEventListener('click', function() {
-  var q = document.getElementById('searchInput').value.trim().toLowerCase();
-  if (!q) return showModal('تنبيه', 'أدخل نص للبحث', 'warning');
-  var results = [];
-  for (var i = 0; i < db.length; i++) {
-    if (db[i].name.toLowerCase().indexOf(q) !== -1) results.push(db[i]);
-  }
-  showResults(results, 'نتائج البحث (' + results.length + ')');
-});
-
-document.getElementById('searchInput').addEventListener('keypress', function(e) {
-  if (e.key === 'Enter') document.getElementById('searchBtn').click();
-});
-
-document.getElementById('showAllBtn').addEventListener('click', function() {
-  showResults(db, 'جميع السجلات (' + db.length + ')');
-});
-
-document.getElementById('showMissingBtn').addEventListener('click', function() {
-  var missing = [];
-  for (var i = 0; i < db.length; i++) {
-    if (db[i].qty === 0) missing.push(db[i]);
-  }
-  showResults(missing, 'الناقص (' + missing.length + ')');
-});
-
-document.getElementById('addBtn').addEventListener('click', function() {
-  var name = document.getElementById('nameInput').value.trim();
-  var gender = document.getElementById('genderInput').value;
-  if (!name) return showModal('تنبيه', 'أدخل الاسم', 'warning');
-  if (!gender) return showModal('تنبيه', 'اختر الجنس', 'warning');
-  for (var i = 0; i < db.length; i++) {
-    if (db[i].name.toLowerCase() === name.toLowerCase()) {
-      return showModal('موجود', 'الاسم موجود مسبقا', 'warning');
-    }
-  }
-  db.push({
-    name: name,
-    qty: parseInt(document.getElementById('qtyInput').value) || 0,
-    gender: gender,
-    color: document.getElementById('colorInput').value.trim(),
-    note: document.getElementById('noteInput').value.trim()
+  
+  const currentDate=new Date();
+  const dateStr=currentDate.toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
+  const timeStr=currentDate.toLocaleTimeString('ar-EG');
+  
+  let html='<!DOCTYPE html>';
+  html+='<html lang="ar" dir="rtl">';
+  html+='<head>';
+  html+='<meta charset="utf-8">';
+  html+='<title>'+title+'</title>';
+  html+='<style>';
+  html+='@page{size:A4;margin:15mm}';
+  html+='*{margin:0;padding:0;box-sizing:border-box}';
+  html+='body{font-family:"Tajawal",Arial,sans-serif;direction:rtl;background:white;color:#000;padding:0}';
+  html+='.print-container{max-width:100%;margin:0 auto;padding:20px}';
+  html+='.print-header{text-align:center;margin-bottom:25px;padding:20px;background:linear-gradient(135deg,rgba(47,117,181,0.05),rgba(15,98,254,0.02));border:3px solid #2f75b5;border-radius:12px}';
+  html+='.print-logo-wrapper{margin-bottom:15px}';
+  html+='.print-logo{width:120px;height:120px;display:inline-block;object-fit:contain}';
+  html+='.print-title{color:#2f75b5;font-size:28px;font-weight:800;margin:12px 0;text-transform:uppercase;letter-spacing:1px}';
+  html+='.print-subtitle{color:#0f62fe;font-size:20px;font-weight:700;margin:8px 0;padding:8px 16px;background:rgba(47,117,181,0.1);border-radius:6px;display:inline-block}';
+  html+='.print-date-time{margin-top:12px;padding-top:12px;border-top:2px solid rgba(47,117,181,0.2)}';
+  html+='.print-date{color:#666;font-size:14px;font-weight:600;margin:3px 0}';
+  html+='.stats-row{display:flex;justify-content:center;gap:15px;margin:20px 0;padding:15px;background:#f8f9fa;border-radius:10px;border:2px dashed #2f75b5}';
+  html+='.stat-box{text-align:center;padding:12px 20px;background:white;border:2px solid #2f75b5;border-radius:8px;min-width:120px}';
+  html+='.stat-number{font-size:24px;font-weight:800;color:#2f75b5;display:block;margin-bottom:4px}';
+  html+='.stat-label{font-size:12px;color:#666;font-weight:600;text-transform:uppercase}';
+  html+='table{width:100%;border-collapse:collapse;margin-top:20px;border:3px solid #2f75b5}';
+  html+='thead{background:linear-gradient(135deg,#2f75b5,#0f62fe)}';
+  html+='th{color:white;padding:14px 10px;text-align:center;font-weight:800;font-size:15px;border:2px solid white;text-transform:uppercase}';
+  html+='tbody tr{border-bottom:2px solid #ddd}';
+  html+='tbody tr:nth-child(odd){background:#f8f9fa}';
+  html+='tbody tr:nth-child(even){background:white}';
+  html+='td{padding:12px 10px;text-align:center;font-size:14px;font-weight:600;border:1px solid #ddd}';
+  html+='td:first-child{background:rgba(47,117,181,0.1);font-weight:800;color:#2f75b5}';
+  html+='td:nth-child(2){text-align:right;font-weight:700;font-size:15px;color:#1a1a2e}';
+  html+='.qty-zero{background:#ffebee!important;color:#c62828;font-weight:800}';
+  html+='.qty-low{background:#fff3e0!important;color:#ef6c00;font-weight:700}';
+  html+='.qty-good{background:#e8f5e9!important;color:#2e7d32;font-weight:700}';
+  html+='.print-footer{margin-top:30px;padding:20px;border-top:3px solid #2f75b5;text-align:center;background:rgba(47,117,181,0.03);border-radius:8px}';
+  html+='.footer-title{font-size:16px;font-weight:800;color:#2f75b5;margin-bottom:8px}';
+  html+='.footer-text{font-size:13px;color:#666;font-weight:600}';
+  html+='.footer-watermark{margin-top:10px;font-size:11px;color:#999;font-style:italic}';
+  html+='@media print{';
+  html+='body{padding:0}';
+  html+='.print-container{padding:10mm}';
+  html+='.print-header{page-break-after:avoid;break-after:avoid}';
+  html+='table{page-break-inside:avoid}';
+  html+='tr{page-break-inside:avoid;page-break-after:auto}';
+  html+='}';
+  html+='</style>';
+  html+='</head>';
+  html+='<body>';
+  html+='<div class="print-container">';
+  
+  html+='<div class="print-header">';
+  html+='<div class="print-logo-wrapper">';
+  html+='<img src="https://i.postimg.cc/7ZrgS8qs/lwjw-bnfsjy-bsyt-%CA%BFn-stwdyw-3.png" alt="Logo" class="print-logo">';
+  html+='</div>';
+  html+='<div class="print-title">🧊 برنامج إدارة الأسماء</div>';
+  html+='<div class="print-subtitle">'+title+'</div>';
+  html+='<div class="print-date-time">';
+  html+='<div class="print-date">📅 '+dateStr+'</div>';
+  html+='<div class="print-date">⏰ '+timeStr+'</div>';
+  html+='</div>';
+  html+='</div>';
+  
+  const totalQty=items.reduce(function(sum,item){return sum+item.qty},0);
+  const availableCount=items.filter(function(item){return item.qty>0}).length;
+  const missingCount=items.filter(function(item){return item.qty===0}).length;
+  
+  html+='<div class="stats-row">';
+  html+='<div class="stat-box">';
+  html+='<span class="stat-number">'+items.length+'</span>';
+  html+='<span class="stat-label">📊 إجمالي السجلات</span>';
+  html+='</div>';
+  html+='<div class="stat-box">';
+  html+='<span class="stat-number">'+totalQty+'</span>';
+  html+='<span class="stat-label">📦 إجمالي الكمية</span>';
+  html+='</div>';
+  html+='<div class="stat-box">';
+  html+='<span class="stat-number">'+availableCount+'</span>';
+  html+='<span class="stat-label">✅ متوفر</span>';
+  html+='</div>';
+  html+='<div class="stat-box">';
+  html+='<span class="stat-number">'+missingCount+'</span>';
+  html+='<span class="stat-label">❌ ناقص</span>';
+  html+='</div>';
+  html+='</div>';
+  
+  html+='<table>';
+  html+='<thead><tr>';
+  html+='<th style="width:5%">#</th>';
+  html+='<th style="width:25%">الاسم</th>';
+  html+='<th style="width:12%">الكمية</th>';
+  html+='<th style="width:12%">الجنس</th>';
+  html+='<th style="width:15%">اللون</th>';
+  html+='<th style="width:31%">ملاحظات</th>';
+  html+='</tr></thead>';
+  html+='<tbody>';
+  
+  items.forEach(function(item,idx){
+    let qtyClass='qty-good';
+    if(item.qty===0)qtyClass='qty-zero';
+    else if(item.qty<10)qtyClass='qty-low';
+    
+    html+='<tr>';
+    html+='<td>'+(idx+1)+'</td>';
+    html+='<td style="text-align:right">'+item.name+'</td>';
+    html+='<td class="'+qtyClass+'">'+item.qty+'</td>';
+    html+='<td>'+(item.gender==='ذكر'?'👦':'👧')+' '+(item.gender||'-')+'</td>';
+    html+='<td>'+(item.color||'-')+'</td>';
+    html+='<td style="text-align:right;font-size:13px">'+(item.note||'-')+'</td>';
+    html+='</tr>';
   });
-  saveDB();
-  showModal('نجح', 'تم إضافة: ' + name, 'success');
-  document.getElementById('clearBtn').click();
-  showResults(db, 'جميع السجلات');
-});
-
-document.getElementById('updateBtn').addEventListener('click', function() {
-  var name = document.getElementById('nameInput').value.trim();
-  if (!name) return showModal('تنبيه', 'أدخل الاسم', 'warning');
-  var idx = -1;
-  for (var i = 0; i < db.length; i++) {
-    if (db[i].name.toLowerCase() === name.toLowerCase()) {
-      idx = i;
-      break;
-    }
-  }
-  if (idx === -1) return showModal('غير موجود', 'الاسم غير موجود', 'error');
-  var gender = document.getElementById('genderInput').value;
-  if (!gender) return showModal('تنبيه', 'اختر الجنس', 'warning');
-  db[idx] = {
-    name: name,
-    qty: parseInt(document.getElementById('qtyInput').value) || 0,
-    gender: gender,
-    color: document.getElementById('colorInput').value.trim(),
-    note: document.getElementById('noteInput').value.trim()
-  };
-  saveDB();
-  showModal('نجح', 'تم تحديث: ' + name, 'success');
-  showResults(db, 'جميع السجلات');
-});
-
-document.getElementById('deleteBtn').addEventListener('click', function() {
-  var name = document.getElementById('nameInput').value.trim();
-  if (!name) return showModal('تنبيه', 'أدخل الاسم', 'warning');
-  var idx = -1;
-  for (var i = 0; i < db.length; i++) {
-    if (db[i].name.toLowerCase() === name.toLowerCase()) {
-      idx = i;
-      break;
-    }
-  }
-  if (idx === -1) return showModal('غير موجود', 'الاسم غير موجود', 'error');
-  if (!confirm('حذف "' + name + '"؟')) return;
-  db.splice(idx, 1);
-  saveDB();
-  showModal('نجح', 'تم الحذف', 'success');
-  document.getElementById('clearBtn').click();
-  showResults(db, 'جميع السجلات');
-});
-
-document.getElementById('clearBtn').addEventListener('click', function() {
-  document.getElementById('nameInput').value = '';
-  document.getElementById('qtyInput').value = '';
-  document.getElementById('genderInput').value = '';
-  document.getElementById('colorInput').value = '';
-  document.getElementById('noteInput').value = '';
-});
-
-document.getElementById('checkBtn').addEventListener('click', function() {
-  var name = document.getElementById('sellName').value.trim();
-  if (!name) return showModal('تنبيه', 'أدخل اسم المنتج', 'warning');
-  var item = null;
-  for (var i = 0; i < db.length; i++) {
-    if (db[i].name.toLowerCase() === name.toLowerCase()) {
-      item = db[i];
-      break;
-    }
-  }
-  if (!item) return showModal('غير موجود', 'المنتج غير موجود', 'error');
-  var status = item.qty === 0 ? 'غير متوفر' : 'متوفر (' + item.qty + ')';
-  showModal('المخزون', item.name + ': ' + status, 'info');
-});
-
-document.getElementById('sellBtn').addEventListener('click', function() {
-  var name = document.getElementById('sellName').value.trim();
-  var qty = parseInt(document.getElementById('sellQty').value) || 0;
-  if (!name) return showModal('تنبيه', 'أدخل اسم المنتج', 'warning');
-  if (qty <= 0) return showModal('تنبيه', 'أدخل كمية صحيحة', 'warning');
-  var idx = -1;
-  for (var i = 0; i < db.length; i++) {
-    if (db[i].name.toLowerCase() === name.toLowerCase()) {
-      idx = i;
-      break;
-    }
-  }
-  if (idx === -1) return showModal('غير موجود', 'المنتج غير موجود', 'error');
-  if (db[idx].qty < qty) return showModal('كمية غير كافية', 'المتاح: ' + db[idx].qty, 'error');
-  if (!confirm('بيع ' + qty + ' من "' + name + '"؟')) return;
-  db[idx].qty -= qty;
-  saveDB();
-  showModal('تم البيع', 'المباع: ' + qty + ' - المتبقي: ' + db[idx].qty, 'success');
-  document.getElementById('sellName').value = '';
-  document.getElementById('sellQty').value = '';
-});
-
-document.getElementById('backupBtn').addEventListener('click', function() {
-  if (db.length === 0) return showModal('تنبيه', 'لا توجد بيانات', 'warning');
-  var csv = '\ufeffالاسم,الكمية,الجنس,اللون,ملاحظات\n';
-  for (var i = 0; i < db.length; i++) {
-    var item = db[i];
-    csv += item.name + ',' + item.qty + ',' + (item.gender || '') + ',' + (item.color || '') + ',"' + (item.note || '') + '"\n';
-  }
-  var blob = new Blob([csv], {type: 'text/csv;charset=utf-8'});
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = 'backup_' + new Date().toISOString().split('T')[0] + '.csv';
-  a.click();
-  URL.revokeObjectURL(url);
-  showModal('نجح', 'تم تحميل ' + db.length + ' سجل', 'success');
-});
-
-document.getElementById('exportMissingBtn').addEventListener('click', function() {
-  var missing = [];
-  for (var i = 0; i < db.length; i++) {
-    if (db[i].qty === 0) missing.push(db[i]);
-  }
-  if (missing.length === 0) return showModal('لا يوجد', 'جميع السجلات متوفرة', 'success');
-  var csv = '\ufeffالاسم,الكمية,الجنس,اللون,ملاحظات\n';
-  for (var i = 0; i < missing.length; i++) {
-    var item = missing[i];
-    csv += item.name + ',' + item.qty + ',' + (item.gender || '') + ',' + (item.color || '') + ',"' + (item.note || '') + '"\n';
-  }
-  var blob = new Blob([csv], {type: 'text/csv;charset=utf-8'});
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = 'missing_' + new Date().toISOString().split('T')[0] + '.csv';
-  a.click();
-  URL.revokeObjectURL(url);
-  showModal('نجح', 'تم تصدير ' + missing.length + ' سجل ناقص', 'success');
-});
-
-document.getElementById('printBtn').addEventListener('click', function() {
-  document.getElementById('printOptionsModal').style.display = 'flex';
-});
-
-document.getElementById('printOptionsClose').addEventListener('click', function() {
-  document.getElementById('printOptionsModal').style.display = 'none';
-});
-
-document.getElementById('printAllBtn').addEventListener('click', function() {
-  var gender = document.querySelector('input[name="printGender"]:checked').value;
-  var items = gender === 'all' ? db : db.filter(function(i) { return i.gender === gender; });
-  if (items.length === 0) return showModal('لا يوجد', 'لا توجد سجلات', 'warning');
-  printItems(items, 'جميع السجلات' + (gender !== 'all' ? ' - ' + gender : ''));
-});
-
-document.getElementById('printMissingBtn').addEventListener('click', function() {
-  var gender = document.querySelector('input[name="printGender"]:checked').value;
-  var items = db.filter(function(i) { return i.qty === 0; });
-  if (gender !== 'all') items = items.filter(function(i) { return i.gender === gender; });
-  if (items.length === 0) return showModal('لا يوجد', 'لا توجد سجلات ناقصة', 'warning');
-  printItems(items, 'السجلات الناقصة' + (gender !== 'all' ? ' - ' + gender : ''));
-});
-
-function printItems(items, title) {
-  var pw = window.open('', '_blank');
-  if (!pw) return showModal('خطأ', 'تأكد من السماح بفتح النوافذ', 'error');
-  var html = '<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>' + title + '</title>';
-  html += '<style>body{font-family:Arial;padding:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #000;padding:8px;text-align:center}th{background:#4338ca;color:white}</style>';
-  html += '</head><body><h1 style="text-align:center">' + title + '</h1><table><tr><th>#</th><th>الاسم</th><th>الكمية</th><th>الجنس</th><th>اللون</th><th>ملاحظات</th></tr>';
-  for (var i = 0; i < items.length; i++) {
-    var item = items[i];
-    html += '<tr><td>' + (i + 1) + '</td><td>' + item.name + '</td><td>' + item.qty + '</td><td>' + (item.gender || '-') + '</td><td>' + (item.color || '-') + '</td><td>' + (item.note || '-') + '</td></tr>';
-  }
-  html += '</table><script>window.onload=function(){setTimeout(function(){window.print()},500)};</script></body></html>';
-  pw.document.open();
-  pw.document.write(html);
-  pw.document.close();
-  document.getElementById('printOptionsModal').style.display = 'none';
+  
+  html+='</tbody></table>';
+  
+  html+='<div class="print-footer">';
+  html+='<div class="footer-title">🧊 برنامج إدارة الأسماء</div>';
+  html+='<div class="footer-text">نظام شامل لإدارة المخزون والأسماء</div>';
+  html+='<div class="footer-watermark">تم الطباعة بتاريخ: '+dateStr+' - '+timeStr+'</div>';
+  html+='</div>';
+  
+  html+='</div>';
+  html+='<script>';
+  html+='window.onload=function(){setTimeout(function(){window.print()},1000)};';
+  html+='</'+'script>';
+  html+='</body></html>';
+  
+  printWindow.document.open();
+  printWindow.document.write(html);
+  printWindow.document.close();
+  
+  document.getElementById('printOptionsModal').style.display='none';
 }
 
-document.getElementById('restoreBtn').addEventListener('click', function() {
-  document.getElementById('uploadArea').style.display = 'block';
-  document.getElementById('fileInput').click();
-});
-
-document.getElementById('uploadArea').addEventListener('click', function() {
-  document.getElementById('fileInput').click();
-});
-
-document.getElementById('fileInput').addEventListener('change', function(e) {
-  var file = e.target.files[0];
-  if (!file) return;
-  if (!file.name.endsWith('.csv')) return showModal('خطأ', 'اختر ملف CSV فقط', 'error');
-  var reader = new FileReader();
-  reader.onload = function(event) {
-    try {
-      var content = event.target.result;
-      var lines = content.split('\n').filter(function(l) { return l.trim(); });
-      if (lines.length < 2) return showModal('خطأ', 'الملف فارغ', 'error');
-      var newDB = [];
-      for (var i = 1; i < lines.length; i++) {
-        var parts = lines[i].split(',');
-        if (parts.length >= 3) {
-          var name = parts[0].trim();
-          var qty = parseInt(parts[1]) || 0;
-          var gender = parts[2].trim();
-          var color = parts[3] ? parts[3].trim() : '';
-          var note = parts[4] ? parts[4].replace(/^"|"$/g, '').trim() : '';
-          if (name) newDB.push({name: name, qty: qty, gender: gender, color: color, note: note});
-        }
-      }
-      if (newDB.length === 0) return showModal('خطأ', 'لم يتم العثور على بيانات', 'error');
-      if (confirm('استبدال ' + db.length + ' سجل بـ ' + newDB.length + ' سجل؟')) {
-        db = newDB;
-        saveDB();
-        showResults(db, 'تم الاسترداد');
-        document.getElementById('uploadArea').style.display = 'none';
-        showModal('نجح', 'تم استرداد ' + newDB.length + ' سجل', 'success');
-      }
-    } catch(error) {
-      showModal('خطأ', 'حدث خطأ في قراءة الملف', 'error');
-    }
-  };
-  reader.readAsText(file);
-  e.target.value = '';
-});
-
-document.getElementById('modalClose').addEventListener('click', closeModal);
-document.getElementById('modal').addEventListener('click', function(e) {
-  if (e.target === document.getElementById('modal')) closeModal();
-});
-
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeModal();
-});
-
-loadDB();
+document.getElementById('restoreBtn').addEventListener('click',function(){document.getElementById('uploadArea').style.display='block';document.getElementById('fileInput').click()});
+document.getElementById('uploadArea').addEventListener('click',function(){document.getElementById('fileInput').click()});
+document.getElementById('fileInput').addEventListener('change',function(e){const file=e.target.files[0];if(!file)return;if(!file.name.endsWith('.csv')){showModal('⚠️ خطأ','اختر ملف CSV فقط','error');return}const reader=new FileReader();reader.onload=function(event){try{const content=event.target.result;const lines=content.split('\n').filter(l=>l.trim());if(lines.length<2){showModal('⚠️ خطأ','الملف فارغ','error');return}const newDB=[];for(let i=1;i<lines.length;i++){const parts=lines[i].split(',');if(parts.length>=3){const name=parts[0].trim();const qty=parseInt(parts[1])||0;const gender=parts[2].trim();const color=parts[3]?parts[3].trim():'';const note=parts[4]?parts[4].replace(/^"|"$/g,'').trim():'';if(name){newDB.push({name,qty,gender,color,note})}}}if(newDB.length===0){showModal('⚠️ خطأ','لم يتم العثور على بيانات','error');return}if(confirm('استبدال '+db.length+' سجل بـ '+newDB.length+' سجل؟')){db=newDB;saveDB();showResults(db,'✅ تم الاسترداد');document.getElementById('uploadArea').style.display='none';showModal('✅ نجح','تم استرداد '+newDB.length+' سجل','success')}}catch(error){showModal('⚠️ خطأ','حدث خطأ في قراءة الملف','error')}};reader.readAsText(file,'UTF-8');e.target.value=''});
+document.getElementById('modalClose').addEventListener('click',closeModal);
+document.getElementById('modal').addEventListener('click',function(e){if(e.target===document.getElementById('modal'))closeModal()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();if(e.ctrlKey&&e.key==='f'){e.preventDefault();document.getElementById('searchInput').focus()}if(e.ctrlKey&&e.key==='s'){e.preventDefault();document.getElementById('backupBtn').click()}});
 updateStats();
-console.log('البرنامج جاهز -', db.length, 'سجل');
+console.log('✅ البرنامج جاهز - '+db.length+' سجل');
 </script>
 </body>
 </html>
