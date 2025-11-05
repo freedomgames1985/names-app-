@@ -42,8 +42,8 @@ body{font-family:Cairo,sans-serif;background:linear-gradient(135deg,#667eea,#764
 .search{display:flex;gap:10px;margin-bottom:16px}
 .search input{flex:1;padding:12px;border:2px solid #9ca3af;border-radius:10px;font-size:15px;font-weight:600}
 .results{margin-top:20px;padding:16px;background:#f9fafb;border-radius:10px;border:2px solid #d1d5db;max-height:400px;overflow-y:auto}
-.item{background:#fff;padding:14px;margin-bottom:10px;border-radius:8px;border:2px solid #e5e7eb;cursor:pointer;transition:all 0.2s}
-.item:hover{border-color:#4338ca;transform:translateX(-4px);box-shadow:0 2px 10px rgba(67,56,202,0.2)}
+.item{background:#fff;padding:14px;margin-bottom:10px;border-radius:8px;border:2px solid #e5e7eb;transition:all 0.2s}
+.item:hover{border-color:#4338ca;box-shadow:0 2px 10px rgba(67,56,202,0.2)}
 .name{font-size:16px;font-weight:700;color:#1f2937;margin-bottom:8px}
 .tags{display:flex;gap:8px;flex-wrap:wrap;font-size:13px}
 .tag{padding:4px 12px;border-radius:6px;font-weight:600}
@@ -121,7 +121,7 @@ body{padding:10px}
 <div class="card">
 <div class="title">🔍 البحث والعرض</div>
 <div class="search">
-<input type="text" id="q" placeholder="ابحث عن اسم... (يتم البحث تلقائياً)" oninput="liveSearch()">
+<input type="text" id="q" placeholder="ابحث عن اسم... (يتم البحث تلقائياً أثناء الكتابة)" oninput="liveSearch()">
 <button class="btn btn-primary" onclick="search()" style="width:auto">🔍 بحث</button>
 </div>
 <div class="results" id="results">
@@ -468,27 +468,92 @@ function loadCode() {
   }
 }
 
-function show(items, title) {
+function show(items, title, searchQuery) {
   var r = document.getElementById('results');
+  
+  // إذا كانت هناك عبارة بحث ولم نجد نتائج مطابقة تماماً
+  if (searchQuery && items.length === 0) {
+    var exactMatch = false;
+    for (var i = 0; i < db.length; i++) {
+      if (db[i].name.toLowerCase() === searchQuery.toLowerCase()) {
+        exactMatch = true;
+        break;
+      }
+    }
+    
+    if (!exactMatch) {
+      r.innerHTML = '<div class="empty" style="padding:20px">';
+      r.innerHTML += '<div style="margin-bottom:15px;font-size:16px">❌ لا توجد نتائج لـ "<strong>' + searchQuery + '</strong>"</div>';
+      r.innerHTML += '<button class="btn btn-success" onclick="addNewName(\'' + searchQuery.replace(/'/g, "\\'") + '\')" style="width:auto;padding:12px 24px">➕ إضافة اسم جديد: ' + searchQuery + '</button>';
+      r.innerHTML += '</div>';
+      return;
+    }
+  }
+  
   if (items.length === 0) {
     r.innerHTML = '<div class="empty">❌ لا توجد نتائج</div>';
     return;
   }
+  
   var h = '';
   if (title) h += '<div style="font-weight:800;color:#4338ca;margin-bottom:12px;font-size:16px">' + title + '</div>';
+  
+  // عرض النتائج الموجودة أولاً
   for (var i = 0; i < items.length; i++) {
     var it = items[i];
     var gIcon = it.gender === 'ذكر' ? '👦' : '👧';
     var tag = it.qty === 0 ? '<span class="tag red">❌ ناقص</span>' : it.qty === 1 ? '<span class="tag orange">⚠️ قطعة واحدة</span>' : '<span class="tag green">✅ ' + it.qty + '</span>';
-    h += '<div class="item" onclick="fill(\'' + it.name.replace(/'/g, "\\'") + '\')">';
+    h += '<div class="item" style="display:flex;align-items:center;justify-content:space-between">';
+    h += '<div style="flex:1;cursor:pointer" onclick="fill(\'' + it.name.replace(/'/g, "\\'") + '\')">';
     h += '<div class="name">' + (i + 1) + '. ' + it.name + '</div>';
     h += '<div class="tags">' + tag;
     h += '<span class="tag blue">' + gIcon + ' ' + (it.gender || '-') + '</span>';
     if (it.color) h += '<span class="tag blue">🎨 ' + it.color + '</span>';
     if (it.note) h += '<span class="tag blue">📝 ' + it.note + '</span>';
     h += '</div></div>';
+    h += '<button class="btn btn-success" onclick="addToSell(\'' + it.name.replace(/'/g, "\\'") + '\')" style="width:auto;padding:8px 16px;font-size:13px;margin-right:10px">➕ للبيع</button>';
+    h += '</div>';
   }
+  
+  // إذا كانت هناك عبارة بحث، تحقق من وجود مطابقة تامة
+  if (searchQuery) {
+    var exactMatch = false;
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].name.toLowerCase() === searchQuery.toLowerCase()) {
+        exactMatch = true;
+        break;
+      }
+    }
+    
+    // إذا لم يكن هناك مطابقة تامة، اعرض زر إضافة اسم جديد في الأسفل
+    if (!exactMatch) {
+      h += '<div style="background:#f0f9ff;border:2px dashed #3b82f6;padding:15px;border-radius:10px;margin-top:15px;text-align:center">';
+      h += '<div style="margin-bottom:10px;font-size:14px;color:#1e40af">💡 لم يتم العثور على "<strong>' + searchQuery + '</strong>" بالضبط</div>';
+      h += '<button class="btn btn-success" onclick="addNewName(\'' + searchQuery.replace(/'/g, "\\'") + '\')" style="width:auto;padding:10px 20px">➕ إضافة اسم جديد: ' + searchQuery + '</button>';
+      h += '</div>';
+    }
+  }
+  
   r.innerHTML = h;
+}
+
+function addNewName(name) {
+  document.getElementById('name').value = name;
+  document.getElementById('qty').value = '0';
+  document.getElementById('gender').value = '';
+  document.getElementById('color').value = '';
+  document.getElementById('note').value = '';
+  document.getElementById('gender').focus();
+  msg('إضافة', 'تم ملء الاسم "' + name + '" - الرجاء إكمال البيانات', 'info');
+  
+  // التمرير إلى قسم إدارة السجلات
+  document.getElementById('name').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function addToSell(name) {
+  document.getElementById('sname').value = name;
+  document.getElementById('sqty').focus();
+  msg('تم', 'تم إضافة "' + name + '" لعملية البيع', 'success');
 }
 
 function fill(n) {
@@ -505,9 +570,18 @@ function fill(n) {
   }
 }
 
-function msg(t, m, type) {
+function msg(t, m, type, forceModal) {
+  // إذا كانت forceModal = true، اعرض رسالة منبثقة
+  if (forceModal) {
+    document.getElementById('mtitle').textContent = t;
+    var cls = type === 'success' ? 'success' : type === 'error' ? 'error' : type === 'warning' ? 'warning' : 'info';
+    document.getElementById('mbody').innerHTML = '<div class="alert ' + cls + '">' + m + '</div>';
+    document.getElementById('modal').style.display = 'flex';
+    return;
+  }
+  
+  // وإلا اعرض في الهيدر
   showActionMessage(m, type);
-  // إخفاء الرسالة تلقائياً بعد 3 ثوان
   setTimeout(function() {
     hideActionMessage();
   }, 9000);
@@ -561,7 +635,7 @@ function liveSearch() {
     for (var i = 0; i < db.length; i++) {
       if (db[i].name.toLowerCase().indexOf(q) !== -1) res.push(db[i]);
     }
-    show(res, '🔍 نتائج البحث (' + res.length + ')');
+    show(res, '🔍 نتائج البحث (' + res.length + ')', q);
   }, 300);
 }
 
@@ -575,7 +649,7 @@ function search() {
   for (var i = 0; i < db.length; i++) {
     if (db[i].name.toLowerCase().indexOf(q) !== -1) res.push(db[i]);
   }
-  show(res, '🔍 نتائج البحث (' + res.length + ')');
+  show(res, '🔍 نتائج البحث (' + res.length + ')', q);
 }
 
 function add() {
@@ -653,7 +727,7 @@ function clearForm() {
 
 function check() {
   var n = document.getElementById('sname').value.trim();
-  if (!n) return msg('⚠️ تنبيه', 'الرجاء إدخال اسم المنتج', 'warning');
+  if (!n) return msg('تنبيه', 'الرجاء إدخال اسم المنتج', 'warning');
   var it = null;
   for (var i = 0; i < db.length; i++) {
     if (db[i].name.toLowerCase() === n.toLowerCase()) {
@@ -661,17 +735,17 @@ function check() {
       break;
     }
   }
-  if (!it) return msg('❌ خطأ', 'المنتج غير موجود', 'error');
+  if (!it) return msg('خطأ', 'المنتج غير موجود', 'error');
   var gIcon = it.gender === 'ذكر' ? '👦' : '👧';
   var st = it.qty === 0 ? '❌ غير متوفر' : it.qty === 1 ? '⚠️ نافذ قريبا: قطعة واحدة' : '✅ متوفر: ' + it.qty + ' قطعة';
-  msg('📊 المخزون', '<strong>' + gIcon + ' ' + it.name + '</strong><br><br>' + st, 'info');
+  msg('📊 المخزون', '<strong>' + gIcon + ' ' + it.name + '</strong><br><br>' + st, 'info', true);
 }
 
 function sell() {
   var n = document.getElementById('sname').value.trim();
   var q = parseInt(document.getElementById('sqty').value) || 0;
-  if (!n) return msg('⚠️ تنبيه', 'الرجاء إدخال اسم المنتج', 'warning');
-  if (q <= 0) return msg('⚠️ تنبيه', 'الرجاء إدخال كمية صحيحة', 'warning');
+  if (!n) return msg('تنبيه', 'الرجاء إدخال اسم المنتج', 'warning');
+  if (q <= 0) return msg('تنبيه', 'الرجاء إدخال كمية صحيحة', 'warning');
   var idx = -1;
   for (var i = 0; i < db.length; i++) {
     if (db[i].name.toLowerCase() === n.toLowerCase()) {
@@ -679,15 +753,15 @@ function sell() {
       break;
     }
   }
-  if (idx === -1) return msg('❌ خطأ', 'المنتج غير موجود', 'error');
-  if (db[idx].qty < q) return msg('❌ خطأ', 'الكمية المتوفرة غير كافية<br>المتوفر: ' + db[idx].qty + ' قطعة', 'error');
+  if (idx === -1) return msg('خطأ', 'المنتج غير موجود', 'error');
+  if (db[idx].qty < q) return msg('خطأ', 'الكمية المتوفرة غير كافية<br>المتوفر: ' + db[idx].qty + ' قطعة', 'error', true);
   if (!confirm('💸 هل تريد بيع ' + q + ' قطعة من ' + db[idx].name + '؟')) return;
   db[idx].qty -= q;
   save();
   var m = '✅ تمت عملية البيع بنجاح<br><br>📦 الكمية المباعة: ' + q + ' قطعة<br>📊 الكمية المتبقية: ' + db[idx].qty + ' قطعة';
   if (db[idx].qty === 0) m += '<br><br>❌ تحذير: المخزون نفذ تماماً!';
   else if (db[idx].qty === 1) m += '<br><br>⚠️ تنبيه: متبقي قطعة واحدة فقط!';
-  msg('💰 عملية البيع', m, 'success');
+  msg('💰 عملية البيع', m, 'success', true);
   document.getElementById('sname').value = '';
   document.getElementById('sqty').value = '1';
 }
@@ -875,4 +949,3 @@ init();
 </script>
 </body>
 </html>
-
