@@ -13,6 +13,13 @@ body{font-family:Cairo,sans-serif;background:linear-gradient(135deg,#667eea,#764
 .logo{width:200px;height:auto;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
 .header-content{flex:1;text-align:center}
 .header h1{font-size:24px;color:#4338ca;margin-bottom:12px}
+.header-status{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px}
+.connection-status{display:inline-block;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700}
+.status-online{background:#d1fae5;color:#065f46}
+.status-offline{background:#fee2e2;color:#991b1b}
+.status-local{background:#fef3c7;color:#92400e}
+.action-message{display:inline-block;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;background:#dbeafe;color:#1e40af;opacity:0;transition:opacity 0.3s}
+.action-message.show{opacity:1}
 .stats{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:16px}
 .stat{background:linear-gradient(135deg,#4338ca,#6366f1);color:#fff;padding:12px 20px;border-radius:10px;font-weight:700;font-size:14px}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;flex:1}
@@ -98,8 +105,9 @@ body{padding:10px}
 <img src="https://i.postimg.cc/7ZrgS8qs/lwjw-bnfsjy-bsyt-%CA%BFn-stwdyw-3.png" class="logo" alt="Logo">
 <div class="header-content">
 <h1>📋 برنامج إدارة الأسماء كرزما K3D</h1>
-<div>
+<div class="header-status">
 <span class="connection-status" id="connectionStatus">⚠️ غير متصل</span>
+<span class="action-message" id="actionMessage"></span>
 </div>
 <div class="stats">
 <div class="stat">📊 الإجمالي: <span id="total">0</span></div>
@@ -491,17 +499,45 @@ function fill(n) {
       document.getElementById('gender').value = db[i].gender || '';
       document.getElementById('color').value = db[i].color || '';
       document.getElementById('note').value = db[i].note || '';
-      msg('✅ تم', 'تم تعبئة البيانات بنجاح', 'success');
+      msg('تم', 'تم تعبئة البيانات بنجاح', 'success');
       break;
     }
   }
 }
 
 function msg(t, m, type) {
-  document.getElementById('mtitle').textContent = t;
-  var cls = type === 'success' ? 'success' : type === 'error' ? 'error' : type === 'warning' ? 'warning' : 'info';
-  document.getElementById('mbody').innerHTML = '<div class="alert ' + cls + '">' + m + '</div>';
-  document.getElementById('modal').style.display = 'flex';
+  showActionMessage(m, type);
+  // إخفاء الرسالة تلقائياً بعد 3 ثوان
+  setTimeout(function() {
+    hideActionMessage();
+  }, 120000);
+}
+
+function showActionMessage(message, type) {
+  var msgEl = document.getElementById('actionMessage');
+  msgEl.textContent = message.replace(/<[^>]*>/g, ' '); // إزالة HTML tags
+  
+  // تغيير اللون حسب النوع
+  if (type === 'success') {
+    msgEl.style.background = '#d1fae5';
+    msgEl.style.color = '#065f46';
+  } else if (type === 'error') {
+    msgEl.style.background = '#fee2e2';
+    msgEl.style.color = '#991b1b';
+  } else if (type === 'warning') {
+    msgEl.style.background = '#fef3c7';
+    msgEl.style.color = '#92400e';
+  } else {
+    msgEl.style.background = '#dbeafe';
+    msgEl.style.color = '#1e40af';
+  }
+  
+  msgEl.classList.add('show');
+}
+
+function hideActionMessage() {
+  var msgEl = document.getElementById('actionMessage');
+  msgEl.classList.remove('show');
 }
 
 function closeModal() {
@@ -713,25 +749,26 @@ function printRecords() {
     if (t === 'one' && it.qty !== 1) continue;
     items.push(it);
   }
-  if (items.length === 0) return msg('⚠️ لا يوجد', 'لا توجد سجلات تطابق المعايير المحددة', 'warning');
+  if (items.length === 0) return msg('لا يوجد', 'لا توجد سجلات تطابق المعايير المحددة', 'warning');
   var title = t === 'zero' ? '❌ السجلات الناقصة' : t === 'one' ? '⚠️ السجلات نافذة قريباً (كمية=1)' : '📑 جميع السجلات';
   if (g !== 'all') title += ' - ' + (g === 'ذكر' ? '👦 ذكور' : '👧 إناث');
   var w = window.open('', '_blank');
-  if (!w) return msg('❌ خطأ', 'الرجاء السماح بفتح النوافذ المنبثقة', 'error');
+  if (!w) return msg('خطأ', 'الرجاء السماح بفتح النوافذ المنبثقة', 'error');
   var h = '<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>' + title + ' - كرزما K3D</title>';
   h += '<style>';
   h += 'body{font-family:Arial,sans-serif;padding:30px;background:#f5f5f5}';
-  h += '.print-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px;border-bottom:3px solid #4338ca;padding-bottom:20px}';
-  h += '.logo-print{width:180px;height:auto;border-radius:12px}';
-  h += '.header-info{flex:1;text-align:right;padding-right:30px}';
-  h += 'h1{color:#4338ca;margin:0 0 15px 0;font-size:32px}';
-  h += '.info{color:#666;font-size:15px;margin-bottom:8px}';
-  h += 'table{width:100%;border-collapse:collapse;margin-top:30px;background:#fff;box-shadow:0 3px 15px rgba(0,0,0,0.1)}';
-  h += 'th,td{border:2px solid #4338ca;padding:14px;text-align:center;font-size:15px}';
-  h += 'th{background:#4338ca;color:#fff;font-weight:bold;font-size:16px}';
+  h += '.print-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:25px;border-bottom:3px solid #4338ca;padding-bottom:15px}';
+  h += '.logo-print{width:140px;height:auto;border-radius:10px}';
+  h += '.header-info{flex:1;text-align:right;padding-right:25px}';
+  h += 'h1{color:#4338ca;margin:0 0 10px 0;font-size:26px}';
+  h += '.info{color:#666;font-size:13px;margin-bottom:6px}';
+  h += 'table{width:60%;margin:20px auto;border-collapse:collapse;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,0.1)}';
+  h += 'th,td{border:2px solid #4338ca;padding:10px;text-align:center;font-size:14px}';
+  h += 'th{background:#4338ca;color:#fff;font-weight:bold;font-size:15px}';
   h += '.z{background:#fee2e2;color:#991b1b;font-weight:bold}';
   h += '.o{background:#fef3c7;color:#92400e;font-weight:bold}';
   h += '.g{background:#d1fae5;color:#065f46}';
+  h += '.notes-col{text-align:right;max-width:250px;word-wrap:break-word}';
   h += '@media print{body{background:#fff}.no-print{display:none}}';
   h += '</style></head><body>';
   h += '<div class="print-header">';
@@ -739,24 +776,21 @@ function printRecords() {
   h += '<div class="header-info">';
   h += '<h1>' + title + '</h1>';
   h += '<div class="info">📋 برنامج إدارة الأسماء كرزما K3D</div>';
-  h += '<div class="info">📅 تاريخ الطباعة: ' + new Date().toLocaleDateString('ar-EG', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) + '</div>';
+  h += '<div class="info">📅 ' + new Date().toLocaleDateString('ar-EG', {year: 'numeric', month: 'long', day: 'numeric'}) + '</div>';
   h += '<div class="info">📊 عدد السجلات: ' + items.length + '</div>';
   h += '</div>';
   h += '</div>';
   h += '<table><thead><tr>';
-  h += '<th>#</th><th>👤 الاسم</th><th>📦 الكمية</th><th>⚧️ الجنس</th><th>🎨 اللون</th><th>📝 ملاحظات</th>';
+  h += '<th style="width:8%">#</th><th style="width:35%">الاسم</th><th style="width:15%">الكمية</th><th style="width:42%">ملاحظات</th>';
   h += '</tr></thead><tbody>';
   for (var i = 0; i < items.length; i++) {
     var it = items[i];
     var c = it.qty === 0 ? 'z' : it.qty === 1 ? 'o' : 'g';
-    var gIcon = it.gender === 'ذكر' ? '👦' : '👧';
     h += '<tr>';
     h += '<td>' + (i + 1) + '</td>';
-    h += '<td><strong>' + it.name + '</strong></td>';
+    h += '<td>' + it.name + '</td>';
     h += '<td class="' + c + '">' + it.qty + '</td>';
-    h += '<td>' + gIcon + ' ' + (it.gender || '-') + '</td>';
-    h += '<td>' + (it.color || '-') + '</td>';
-    h += '<td>' + (it.note || '-') + '</td>';
+    h += '<td class="notes-col">' + (it.note || '-') + '</td>';
     h += '</tr>';
   }
   h += '</tbody></table>';
