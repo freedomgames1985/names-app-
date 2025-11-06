@@ -11,7 +11,7 @@ body{font-family:Cairo,sans-serif;background:linear-gradient(135deg,#667eea,#764
 .container{max-width:1000px;margin:0 auto;flex:1;display:flex;flex-direction:column}
 .header{background:#fff;padding:24px;border-radius:16px;margin-bottom:20px;box-shadow:0 4px 20px rgba(0,0,0,0.15);border:3px solid #4338ca;display:flex;align-items:center;gap:24px}
 .logo{
-  width:400px;
+  width:350px; /* تكبير حجم الشعار */
   height:auto;
   border-radius:0;
   box-shadow:none;
@@ -26,23 +26,6 @@ body{font-family:Cairo,sans-serif;background:linear-gradient(135deg,#667eea,#764
 .status-online{background:#d1fae5;color:#065f46}
 .status-offline{background:#fee2e2;color:#991b1b}
 .status-local{background:#fef3c7;color:#92400e}
-</style>
-</head>
-<body>
-<div class="container">
-  <div class="header">
-    <img src="https://i.postimg.cc/pTQwMKs3/lwjw-bnfsjy-bsyt-ʿn-stwdyw-1.png" class="logo" alt="Logo">
-    <div class="header-content">
-      <h1>📋 برنامج إدارة الأسماء كرزما K3D</h1>
-      <div class="header-status">
-        <span class="connection-status status-local">🟡 حفظ محلي فقط</span>
-      </div>
-    </div>
-  </div>
-</div>
-</body>
-</html>
-
 .action-message{display:inline-block;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;background:#dbeafe;color:#1e40af;opacity:0;transition:opacity 0.3s}
 .action-message.show{opacity:1}
 .stats{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:16px}
@@ -148,7 +131,7 @@ body{padding:8px}
 </div>
 
 <div class="header">
-<img src="https://i.postimg.cc/pTQwMKs3/lwjw-bnfsjy-bsyt-ʿn-stwdyw-1.png" class="logo" alt="Logo">
+<img src="https://i.postimg.cc/w7FydryL/1000053547.jpg" class="logo" alt="Logo">
 <div class="header-content">
 <h1>📋 برنامج إدارة الأسماء كرزما K3D</h1>
 <div class="header-status">
@@ -893,7 +876,7 @@ function printRecords() {
   h += '@media print{body{background:#fff}.no-print{display:none}}';
   h += '</style></head><body>';
   h += '<div class="print-header">';
-  h += '<img src="https://i.postimg.cc/pTQwMKs3/lwjw-bnfsjy-bsyt-ʿn-stwdyw-1.png" class="logo-print" alt="Logo">';
+  h += '<img src="https://i.postimg.cc/w7FydryL/1000053547.jpg" class="logo-print" alt="Logo">';
   h += '<div class="header-info">';
   h += '<h1>' + title + '</h1>';
   h += '<div class="info">📋 برنامج إدارة الأسماء كرزما K3D</div>';
@@ -996,8 +979,3 @@ init();
 </script>
 </body>
 </html>
-
-
-
-
-
