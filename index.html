@@ -857,24 +857,25 @@ function printRecords() {
   var w = window.open('', '_blank');
   if (!w) return msg('خطأ', 'الرجاء السماح بفتح النوافذ المنبثقة', 'error');
   var h = '<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>' + title + ' - كرزما K3D</title>';
-  h += '<style>';
-  h += 'body{font-family:Arial,sans-serif;padding:30px;background:#f5f5f5}';
-  h += '.print-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:25px;border-bottom:3px solid #8b7355;padding-bottom:15px}';
-  h += '.logo-print{width:140px;height:auto;border-radius:10px}';
-  h += '.header-info{flex:1;text-align:right;padding-right:25px}';
-  h += 'h1{color:#8b7355;margin:0 0 10px 0;font-size:26px}';
-  h += '.info{color:#666;font-size:13px;margin-bottom:6px}';
-  h += 'table{width:100%;margin:20px auto;border-collapse:collapse;background:#f5e6d3;box-shadow:0 2px 10px rgba(0,0,0,0.1)}';
-  h += 'th,td{border:2px solid #8b7355;padding:12px;text-align:center;font-size:14px}';
-  h += 'th{background:#8b7355;color:#fff;font-weight:bold;font-size:15px}';
-  h += 'td{background:#f5e6d3}';
-  h += '.name-col{font-weight:bold;font-size:15px;color:#5d4037}';
-  h += '.z{background:#ffcdd2;color:#c62828;font-weight:bold}';
-  h += '.o{background:#fff9c4;color:#f57f17;font-weight:bold}';
-  h += '.g{background:#c8e6c9;color:#2e7d32;font-weight:bold}';
-  h += '.notes-col{text-align:right;max-width:300px;word-wrap:break-word}';
-  h += '@media print{body{background:#fff}.no-print{display:none}}';
-  h += '</style></head><body>';
+ h += '<style>';
+h += 'body{font-family:Arial,sans-serif;padding:15px 10px;background:#f5f5f5}';
+h += '.print-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px;border-bottom:2px solid #d4a574;padding-bottom:10px}';
+h += '.logo-print{width:100px;height:auto;border-radius:10px}';
+h += '.header-info{flex:1;text-align:right;padding-right:15px}';
+h += 'h1{color:#d4a574;margin:0 0 5px 0;font-size:20px}';
+h += '.info{color:#666;font-size:11px;margin-bottom:3px}';
+h += 'table{width:100%;margin:10px auto;border-collapse:collapse;background:#f5e6d3;box-shadow:0 2px 10px rgba(0,0,0,0.1);table-layout:fixed}';
+h += 'th,td{border:1px solid #d4a574;padding:4px 2px;text-align:center;font-size:12px}';
+h += 'th{background:#d4a574;color:#fff;font-weight:bold;font-size:13px}';
+h += 'td{background:#f5e6d3}';
+h += '.name-col{font-weight:bold;font-size:18px;color:#5d4037}';
+h += '.qty-col{font-weight:bold;font-size:20px}';
+h += '.z{background:#ffcdd2;color:#c62828;font-weight:bold}';
+h += '.o{background:#fff9c4;color:#f57f17;font-weight:bold}';
+h += '.g{background:#c8e6c9;color:#2e7d32;font-weight:bold}';
+h += '.notes-col{text-align:right;word-wrap:break-word;font-size:12px;overflow-wrap:break-word}';
+h += '@media print{body{background:#fff;padding:10px 5px}.no-print{display:none}table{page-break-inside:auto}tr{page-break-inside:avoid;page-break-after:auto}}';
+h += '</style></head><body>';
   h += '<div class="print-header">';
   h += '<img src="https://i.postimg.cc/pTQwMKs3/lwjw-bnfsjy-bsyt-ʿn-stwdyw-1.png" class="logo-print" alt="Logo">';
   h += '<div class="header-info">';
@@ -885,7 +886,7 @@ function printRecords() {
   h += '</div>';
   h += '</div>';
   h += '<table><thead><tr>';
-  h += '<th style="width:8%">#</th><th style="width:35%">الاسم</th><th style="width:15%">الكمية</th><th style="width:42%">ملاحظات</th>';
+  h += '<th style="width:5%">#</th><th style="width:25%">الاسم</th><th style="width:8%">الكمية</th><th>ملاحظات</th>';
   h += '</tr></thead><tbody>';
   for (var i = 0; i < items.length; i++) {
     var it = items[i];
@@ -893,7 +894,7 @@ function printRecords() {
     h += '<tr>';
     h += '<td>' + (i + 1) + '</td>';
     h += '<td class="name-col">' + it.name + '</td>';
-    h += '<td class="' + c + '">' + it.qty + '</td>';
+    h += '<td class="' + c + ' qty-col">' + it.qty + '</td>';
     h += '<td class="notes-col">' + (it.note || '-') + '</td>';
     h += '</tr>';
   }
@@ -979,6 +980,5 @@ init();
 </script>
 </body>
 </html>
-
 
 
