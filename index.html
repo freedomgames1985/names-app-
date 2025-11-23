@@ -36,6 +36,7 @@ body{font-family:Cairo,sans-serif;background:linear-gradient(135deg,#667eea,#764
 .group input,.group select,.group textarea{width:100%;padding:12px;border:2px solid #9ca3af;border-radius:10px;font-size:15px;font-weight:600;font-family:Cairo,sans-serif}
 .group textarea{min-height:90px;resize:vertical}
 .row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .btn{width:100%;padding:12px 20px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:Cairo,sans-serif;transition:transform 0.2s}
 .btn:hover{transform:translateY(-2px)}
 .btn-primary{background:linear-gradient(135deg,#4338ca,#6366f1);color:#fff}
@@ -57,6 +58,7 @@ body{font-family:Cairo,sans-serif;background:linear-gradient(135deg,#667eea,#764
 .red{background:#fee2e2;color:#991b1b}
 .orange{background:#fef3c7;color:#92400e}
 .blue{background:#e0e7ff;color:#3730a3}
+.purple{background:#f3e8ff;color:#6b21a8}
 .empty{text-align:center;padding:40px;color:#6b7280;font-weight:600}
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1000;align-items:center;justify-content:center;padding:20px}
 .box{background:#fff;border-radius:16px;padding:28px;max-width:500px;width:100%;border:3px solid #4338ca;max-height:90vh;overflow-y:auto}
@@ -78,10 +80,8 @@ body{font-family:Cairo,sans-serif;background:linear-gradient(135deg,#667eea,#764
 .firebase-setup h3{color:#f59e0b;margin-bottom:15px;font-size:18px}
 .firebase-setup input{width:100%;padding:10px;margin-bottom:10px;border:2px solid #d1d5db;border-radius:8px;font-family:monospace;font-size:13px}
 .firebase-setup .help{background:#fef3c7;padding:12px;border-radius:8px;font-size:13px;margin-top:10px;line-height:1.6}
-.connection-status{display:inline-block;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;margin-right:10px}
-.status-online{background:#d1fae5;color:#065f46}
-.status-offline{background:#fee2e2;color:#991b1b}
-.status-local{background:#fef3c7;color:#92400e}
+.box-code-display{background:#f3e8ff;padding:8px 12px;border-radius:8px;font-weight:700;color:#6b21a8;text-align:center;font-size:16px;margin-top:8px;border:2px solid #a78bfa}
+.readonly{background:#f3f4f6;cursor:not-allowed}
 @media(max-width:768px){
 body{padding:8px}
 .header{flex-direction:column;text-align:center;padding:12px !important;gap:8px !important}
@@ -94,6 +94,7 @@ body{padding:8px}
 .stat{padding:6px 12px !important;font-size:11px !important}
 .grid{grid-template-columns:1fr}
 .row{grid-template-columns:1fr}
+.row3{grid-template-columns:1fr}
 .btns{grid-template-columns:1fr}
 .btns3{grid-template-columns:1fr}
 .search{flex-direction:column}
@@ -149,7 +150,7 @@ body{padding:8px}
 <div class="card">
 <div class="title">🔍 البحث والعرض</div>
 <div class="search">
-<input type="text" id="q" placeholder="ابحث عن اسم... (يتم البحث تلقائياً أثناء الكتابة)" oninput="liveSearch()">
+<input type="text" id="q" placeholder="ابحث عن اسم أو رمز علبة... (يتم البحث تلقائياً أثناء الكتابة)" oninput="liveSearch()">
 <button class="btn btn-primary" onclick="search()" style="width:auto">🔍 بحث</button>
 </div>
 <div class="results" id="results">
@@ -161,21 +162,28 @@ body{padding:8px}
 <div class="title">✏️ إدارة السجلات</div>
 <div class="group">
 <label>👤 الاسم</label>
-<input type="text" id="name" placeholder="أدخل الاسم">
+<input type="text" id="name" placeholder="أدخل الاسم" oninput="updateBoxCodePreview()">
 </div>
-<div class="row">
+<div class="row3">
 <div class="group">
 <label>🔢 الكمية</label>
 <input type="number" id="qty" value="0" min="0">
 </div>
 <div class="group">
 <label>⚧️ الجنس</label>
-<select id="gender">
+<select id="gender" onchange="updateBoxCodePreview()">
 <option value="">اختر الجنس</option>
 <option value="ذكر">👦 ذكر</option>
 <option value="أنثى">👧 أنثى</option>
 </select>
 </div>
+<div class="group">
+<label>📦 رقم العلبة</label>
+<input type="text" id="boxNumber" placeholder="أدخل رقم العلبة" oninput="updateBoxCodePreview()">
+</div>
+</div>
+<div id="boxCodePreview" class="box-code-display" style="display:none">
+📦 رمز العلبة الكامل: <span id="previewCode"></span>
 </div>
 <div class="group">
 <label>🎨 اللون</label>
@@ -210,17 +218,53 @@ body{padding:8px}
 </div>
 
 <div class="card">
+<div class="title">📦 إضافة حرف للعلبة</div>
+<div class="row3">
+<div class="group">
+<label>🔤 الحرف الأول</label>
+<input type="text" id="letterBoxLetter" placeholder="مثال: أ" maxlength="1" oninput="updateLetterBoxPreview()">
+</div>
+<div class="group">
+<label>⚧️ الجنس</label>
+<select id="letterBoxGender" onchange="updateLetterBoxPreview()">
+<option value="">اختر الجنس</option>
+<option value="ذكر">👦 ذكر</option>
+<option value="أنثى">👧 أنثى</option>
+</select>
+</div>
+<div class="group">
+<label>📦 رقم العلبة</label>
+<input type="text" id="letterBoxNumber" placeholder="مثال: 1" oninput="updateLetterBoxPreview()">
+</div>
+</div>
+<div id="letterBoxPreview" class="box-code-display" style="display:none">
+📦 سيتم حفظ: الحرف "<span id="letterPreview"></span>" (<span id="genderPreview"></span>) → العلبة <span id="boxPreview"></span>
+</div>
+<div class="btns">
+<button class="btn btn-success" onclick="addLetterBox()">➕ إضافة</button>
+<button class="btn btn-outline" onclick="clearLetterBox()">🧹 مسح</button>
+</div>
+<div class="results" id="letterBoxList" style="margin-top:16px;max-height:300px;display:none">
+</div>
+</div>
+
+<div class="card">
 <div class="title">📤 النسخ والطباعة</div>
 <div class="btns3">
-<button class="btn btn-success" onclick="backup()">💾 تحميل</button>
-<button class="btn btn-primary" onclick="restore()">📥 استرداد</button>
+<button class="btn btn-success" onclick="backup()">💾 تحميل البيانات</button>
+<button class="btn btn-primary" onclick="restore()">📥 استرداد البيانات</button>
 <button class="btn btn-primary" onclick="toggleSync()">🔄 مزامنة يدوية</button>
 </div>
 <div class="btns">
 <button class="btn btn-outline" onclick="openPrint()">🖨️ طباعة</button>
 <button class="btn btn-outline" onclick="exportMiss()">📊 تصدير الناقص</button>
 </div>
+<div class="btns" style="margin-top:10px">
+<button class="btn btn-outline" onclick="exportLetterBoxRules()">📦 تصدير قواعد العلب</button>
+<button class="btn btn-outline" onclick="importLetterBoxRules()">📥 استيراد قواعد العلب</button>
+</div>
 <input type="file" id="file" accept=".csv" style="display:none">
+<input type="file" id="letterBoxFile" accept=".json" style="display:none">
 </div>
 </div>
 
@@ -286,12 +330,41 @@ body{padding:8px}
 
 <script>
 var db = [];
+var letterBoxMap = []; // نظام توزيع الحروف على العلب
 var LOCAL_KEY = 'names_k3d_local';
+var LETTERBOX_KEY = 'letterbox_map_k3d';
 var CONFIG_KEY = 'firebase_config_k3d';
 var searchTimeout;
 var firebaseApp = null;
 var database = null;
 var isFirebaseReady = false;
+
+// نظام توزيع العلب - دالة واحدة مسؤولة عن حساب رمز العلبة
+function generateBoxCode(boxNumber, gender) {
+  if (!boxNumber || !gender) return '';
+  
+  // رمز الجنس
+  var genderSymbol = gender === 'ذكر' ? 'ذ' : 'أ';
+  
+  // رمز العلبة الكامل = رقم العلبة + رمز الجنس
+  return boxNumber.toString().trim() + genderSymbol;
+}
+
+// تحديث معاينة رمز العلبة
+function updateBoxCodePreview() {
+  var boxNumber = document.getElementById('boxNumber').value.trim();
+  var gender = document.getElementById('gender').value;
+  var preview = document.getElementById('boxCodePreview');
+  var previewCode = document.getElementById('previewCode');
+  
+  if (boxNumber && gender) {
+    var code = generateBoxCode(boxNumber, gender);
+    previewCode.textContent = code;
+    preview.style.display = 'block';
+  } else {
+    preview.style.display = 'none';
+  }
+}
 
 // تهيئة Firebase
 function initFirebase() {
@@ -384,7 +457,228 @@ function showFirebaseHelp() {
   help.style.display = help.style.display === 'none' ? 'block' : 'none';
 }
 
+// تحديث معاينة إضافة حرف للعلبة
+function updateLetterBoxPreview() {
+  var letter = document.getElementById('letterBoxLetter').value.trim();
+  var gender = document.getElementById('letterBoxGender').value;
+  var boxNum = document.getElementById('letterBoxNumber').value.trim();
+  var preview = document.getElementById('letterBoxPreview');
+  
+  if (letter && gender && boxNum) {
+    document.getElementById('letterPreview').textContent = letter.toUpperCase();
+    document.getElementById('genderPreview').textContent = gender;
+    document.getElementById('boxPreview').textContent = generateBoxCode(boxNum, gender);
+    preview.style.display = 'block';
+  } else {
+    preview.style.display = 'none';
+  }
+}
+
+// إضافة قاعدة توزيع حرف على علبة
+function addLetterBox() {
+  var letter = document.getElementById('letterBoxLetter').value.trim().toUpperCase();
+  var gender = document.getElementById('letterBoxGender').value;
+  var boxNum = document.getElementById('letterBoxNumber').value.trim();
+  
+  // التحقق من الإدخال
+  if (!letter) return msg('⚠️ تنبيه', 'الرجاء إدخال الحرف', 'warning');
+  if (!gender) return msg('⚠️ تنبيه', 'الرجاء اختيار الجنس', 'warning');
+  if (!boxNum) return msg('⚠️ تنبيه', 'الرجاء إدخال رقم العلبة', 'warning');
+  
+  // التحقق من وجود القاعدة مسبقاً
+  for (var i = 0; i < letterBoxMap.length; i++) {
+    if (letterBoxMap[i].letter === letter && letterBoxMap[i].gender === gender) {
+      return msg('⚠️ موجود', 'هذا الحرف مع هذا الجنس موجود مسبقاً في العلبة ' + letterBoxMap[i].box_code, 'warning');
+    }
+  }
+  
+  // توليد رمز العلبة
+  var boxCode = generateBoxCode(boxNum, gender);
+  
+  // إضافة القاعدة
+  letterBoxMap.push({
+    letter: letter,
+    gender: gender,
+    box_number: boxNum,
+    box_code: boxCode
+  });
+  
+  saveLetterBoxMap();
+  
+  // تطبيق القاعدة على جميع الأسماء المطابقة
+  var updatedCount = applyLetterBoxRule(letter, gender, boxNum, boxCode);
+  
+  if (updatedCount > 0) {
+    save();
+    msg('✅ نجح', 'تم إضافة القاعدة: الحرف "' + letter + '" (' + gender + ') → العلبة ' + boxCode + '<br>تم تحديث ' + updatedCount + ' اسم تلقائياً', 'success');
+  } else {
+    msg('✅ نجح', 'تم إضافة القاعدة: الحرف "' + letter + '" (' + gender + ') → العلبة ' + boxCode, 'success');
+  }
+  
+  clearLetterBox();
+  displayLetterBoxList();
+  search();
+}
+
+// حفظ قواعد توزيع الحروف
+function saveLetterBoxMap() {
+  try {
+    localStorage.setItem(LETTERBOX_KEY, JSON.stringify(letterBoxMap));
+  } catch (e) {
+    console.error('خطأ في حفظ قواعد العلب:', e);
+  }
+}
+
+// تحميل قواعد توزيع الحروف
+function loadLetterBoxMap() {
+  try {
+    var saved = localStorage.getItem(LETTERBOX_KEY);
+    letterBoxMap = saved ? JSON.parse(saved) : [];
+    if (letterBoxMap.length > 0) {
+      displayLetterBoxList();
+    }
+  } catch (e) {
+    letterBoxMap = [];
+  }
+}
+
+// عرض قائمة قواعد توزيع الحروف
+function displayLetterBoxList() {
+  var listDiv = document.getElementById('letterBoxList');
+  
+  if (letterBoxMap.length === 0) {
+    listDiv.style.display = 'none';
+    return;
+  }
+  
+  // ترتيب حسب رقم العلبة ثم الجنس
+  var sorted = letterBoxMap.slice().sort(function(a, b) {
+    if (a.box_number !== b.box_number) {
+      return parseInt(a.box_number) - parseInt(b.box_number);
+    }
+    return a.gender === 'ذكر' ? -1 : 1;
+  });
+  
+  var h = '<div style="font-weight:800;color:#4338ca;margin-bottom:12px;font-size:16px">';
+  h += '📋 قواعد توزيع الحروف (' + letterBoxMap.length + ')';
+  h += '</div>';
+  
+  for (var i = 0; i < sorted.length; i++) {
+    var rule = sorted[i];
+    var genderIcon = rule.gender === 'ذكر' ? '👦' : '👧';
+    
+    h += '<div class="item" style="display:flex;align-items:center;justify-content:space-between;gap:10px">';
+    h += '<div style="flex:1">';
+    h += '<span class="name">الحرف "' + rule.letter + '" ' + genderIcon + ' ' + rule.gender + '</span>';
+    h += ' → <span class="tag purple">📦 ' + rule.box_code + '</span>';
+    h += '</div>';
+    h += '<button class="btn btn-danger" onclick="deleteLetterBox(\'' + rule.letter + '\', \'' + rule.gender + '\')" style="width:auto;padding:6px 14px;font-size:13px">🗑️</button>';
+    h += '</div>';
+  }
+  
+  listDiv.innerHTML = h;
+  listDiv.style.display = 'block';
+}
+
+// حذف قاعدة توزيع
+function deleteLetterBox(letter, gender) {
+  if (!confirm('⚠️ هل تريد حذف قاعدة: الحرف "' + letter + '" (' + gender + ')؟')) return;
+  
+  for (var i = 0; i < letterBoxMap.length; i++) {
+    if (letterBoxMap[i].letter === letter && letterBoxMap[i].gender === gender) {
+      letterBoxMap.splice(i, 1);
+      break;
+    }
+  }
+  
+  saveLetterBoxMap();
+  displayLetterBoxList();
+  msg('✅ نجح', 'تم حذف القاعدة بنجاح', 'success');
+}
+
+// مسح حقول إضافة حرف للعلبة
+function clearLetterBox() {
+  document.getElementById('letterBoxLetter').value = '';
+  document.getElementById('letterBoxGender').value = '';
+  document.getElementById('letterBoxNumber').value = '';
+  document.getElementById('letterBoxPreview').style.display = 'none';
+}
+
+// الحصول على رقم العلبة المقترح بناءً على الحرف والجنس
+function getSuggestedBoxNumber(letter, gender) {
+  if (!letter || !gender) return '';
+  
+  letter = letter.toUpperCase();
+  for (var i = 0; i < letterBoxMap.length; i++) {
+    if (letterBoxMap[i].letter === letter && letterBoxMap[i].gender === gender) {
+      return letterBoxMap[i].box_number;
+    }
+  }
+  return '';
+}
+
+// تصدير قواعد توزيع الحروف
+function exportLetterBoxRules() {
+  if (letterBoxMap.length === 0) {
+    return msg('⚠️ تنبيه', 'لا توجد قواعد للتصدير', 'warning');
+  }
+  
+  var json = JSON.stringify(letterBoxMap, null, 2);
+  var blob = new Blob([json], {type: 'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'letterbox_rules_' + new Date().toISOString().slice(0, 10) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  msg('✅ نجح', 'تم تصدير ' + letterBoxMap.length + ' قاعدة بنجاح', 'success');
+}
+
+// استيراد قواعد توزيع الحروف
+function importLetterBoxRules() {
+  document.getElementById('letterBoxFile').click();
+}
+
+// معالج استيراد قواعد العلب
+document.addEventListener('DOMContentLoaded', function() {
+  var letterBoxFileInput = document.getElementById('letterBoxFile');
+  if (letterBoxFileInput) {
+    letterBoxFileInput.addEventListener('change', function(e) {
+      var f = e.target.files[0];
+      if (!f) return;
+      if (!f.name.toLowerCase().endsWith('.json')) {
+        msg('❌ خطأ', 'الرجاء اختيار ملف JSON فقط', 'error');
+        e.target.value = '';
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function(ev) {
+        try {
+          var imported = JSON.parse(ev.target.result);
+          if (!Array.isArray(imported)) {
+            throw new Error('Invalid format');
+          }
+          if (confirm('✅ تم العثور على ' + imported.length + ' قاعدة\n\n⚠️ هل تريد استبدال القواعد الحالية؟')) {
+            letterBoxMap = imported;
+            saveLetterBoxMap();
+            displayLetterBoxList();
+            msg('✅ نجح', 'تم استيراد ' + imported.length + ' قاعدة بنجاح', 'success');
+          }
+        } catch (err) {
+          console.error('خطأ:', err);
+          msg('❌ خطأ', 'فشل في قراءة الملف. تأكد من صحة الملف', 'error');
+        }
+      };
+      reader.readAsText(f, 'UTF-8');
+      e.target.value = '';
+    });
+  }
+});
+
 function init() {
+  // تحميل قواعد توزيع الحروف
+  loadLetterBoxMap();
+  
   // محاولة تهيئة Firebase أولاً
   var fbReady = initFirebase();
   
@@ -399,12 +693,28 @@ function init() {
     
     if (db.length === 0) {
       db = [
-        {name: 'خالد', gender: 'ذكر', qty: 25, color: 'أزرق', note: 'مقاس صغير'},
-        {name: 'خالدة', gender: 'أنثى', qty: 10, color: 'أحمر', note: 'مخصصة'},
-        {name: 'أحمد', gender: 'ذكر', qty: 0, color: 'أخضر', note: 'ناقص'},
-        {name: 'فاطمة', gender: 'أنثى', qty: 1, color: 'وردي', note: 'نافذ قريبا'}
+        {name: 'خالد', gender: 'ذكر', qty: 25, color: 'أزرق', note: 'مقاس صغير', box_number: '7', box_code: generateBoxCode('7', 'ذكر')},
+        {name: 'خالدة', gender: 'أنثى', qty: 10, color: 'أحمر', note: 'مخصصة', box_number: '7', box_code: generateBoxCode('7', 'أنثى')},
+        {name: 'أحمد', gender: 'ذكر', qty: 0, color: 'أخضر', note: 'ناقص', box_number: '1', box_code: generateBoxCode('1', 'ذكر')},
+        {name: 'فاطمة', gender: 'أنثى', qty: 1, color: 'وردي', note: 'نافذ قريبا', box_number: '22', box_code: generateBoxCode('22', 'أنثى')}
       ];
       saveLocal();
+    } else {
+      // تحديث رموز العلب للسجلات القديمة
+      var updated = false;
+      for (var i = 0; i < db.length; i++) {
+        if (!db[i].box_code && db[i].box_number && db[i].gender) {
+          db[i].box_code = generateBoxCode(db[i].box_number, db[i].gender);
+          updated = true;
+        }
+        // إذا كان هناك box_code قديم، حاول استخراج رقم العلبة منه
+        if (!db[i].box_number && db[i].box_code) {
+          // استخراج الرقم من رمز العلبة (مثلاً: "1ذ" -> "1")
+          db[i].box_number = db[i].box_code.replace(/[ذأ]/g, '');
+          updated = true;
+        }
+      }
+      if (updated) saveLocal();
     }
   }
   
@@ -531,12 +841,14 @@ function show(items, title, searchQuery) {
     var it = items[i];
     var genderText = it.gender === 'ذكر' ? '👦 ذكر' : '👧 أنثى';
     var qtyTag = it.qty === 0 ? '<span class="tag red">' + it.qty + '</span>' : it.qty === 1 ? '<span class="tag orange">' + it.qty + '</span>' : '<span class="tag green">' + it.qty + '</span>';
+    var boxCodeTag = it.box_code ? '<span class="tag purple">📦 ' + it.box_code + '</span>' : '';
     
     h += '<div class="item" style="display:flex;align-items:center;justify-content:space-between;gap:10px">';
-    h += '<div style="flex:1;display:flex;align-items:center;gap:8px;cursor:pointer" onclick="fill(\'' + it.name.replace(/'/g, "\\'") + '\')">';
+    h += '<div style="flex:1;display:flex;align-items:center;gap:8px;cursor:pointer;flex-wrap:wrap" onclick="fill(\'' + it.name.replace(/'/g, "\\'") + '\')">';
     h += '<span class="name">' + (i + 1) + '. ' + it.name + '</span>';
     h += qtyTag;
     h += '<span class="tag blue">' + genderText + '</span>';
+    if (boxCodeTag) h += boxCodeTag;
     h += '</div>';
     h += '<button class="btn btn-success" onclick="addToSell(\'' + it.name.replace(/'/g, "\\'") + '\')" style="width:auto;padding:6px 14px;font-size:13px;flex-shrink:0">➕ للبيع</button>';
     h += '</div>';
@@ -570,6 +882,8 @@ function addNewName(name) {
   document.getElementById('gender').value = '';
   document.getElementById('color').value = '';
   document.getElementById('note').value = '';
+  document.getElementById('boxNumber').value = '';
+  updateBoxCodePreview();
   document.getElementById('gender').focus();
   msg('إضافة', 'تم ملء الاسم "' + name + '" - الرجاء إكمال البيانات', 'info');
   
@@ -591,6 +905,8 @@ function fill(n) {
       document.getElementById('gender').value = db[i].gender || '';
       document.getElementById('color').value = db[i].color || '';
       document.getElementById('note').value = db[i].note || '';
+      document.getElementById('boxNumber').value = db[i].box_number || '';
+      updateBoxCodePreview();
       msg('تم', 'تم تعبئة البيانات بنجاح', 'success');
       break;
     }
@@ -660,7 +976,11 @@ function liveSearch() {
     }
     var res = [];
     for (var i = 0; i < db.length; i++) {
-      if (db[i].name.toLowerCase().indexOf(q) !== -1) res.push(db[i]);
+      // البحث في الاسم أو رمز العلبة
+      if (db[i].name.toLowerCase().indexOf(q) !== -1 || 
+          (db[i].box_code && db[i].box_code.toLowerCase().indexOf(q) !== -1)) {
+        res.push(db[i]);
+      }
     }
     show(res, '🔍 نتائج البحث (' + res.length + ')', q);
   }, 300);
@@ -674,28 +994,93 @@ function search() {
   }
   var res = [];
   for (var i = 0; i < db.length; i++) {
-    if (db[i].name.toLowerCase().indexOf(q) !== -1) res.push(db[i]);
+    // البحث في الاسم أو رمز العلبة
+    if (db[i].name.toLowerCase().indexOf(q) !== -1 || 
+        (db[i].box_code && db[i].box_code.toLowerCase().indexOf(q) !== -1)) {
+      res.push(db[i]);
+    }
   }
   show(res, '🔍 نتائج البحث (' + res.length + ')', q);
+}
+
+// تطبيق قاعدة توزيع الحروف على جميع الأسماء المطابقة
+function applyLetterBoxRule(letter, gender, boxNumber, boxCode) {
+  var updatedCount = 0;
+  letter = letter.toUpperCase();
+  
+  for (var i = 0; i < db.length; i++) {
+    var item = db[i];
+    var firstLetter = item.name.charAt(0).toUpperCase();
+    
+    // إذا كان الاسم يبدأ بنفس الحرف ونفس الجنس ولا يوجد له رقم علبة
+    if (firstLetter === letter && item.gender === gender && !item.box_number) {
+      db[i].box_number = boxNumber;
+      db[i].box_code = boxCode;
+      updatedCount++;
+    }
+  }
+  
+  return updatedCount;
 }
 
 function add() {
   var n = document.getElementById('name').value.trim();
   var g = document.getElementById('gender').value;
+  var boxNum = document.getElementById('boxNumber').value.trim();
+  
   if (!n) return msg('⚠️ تنبيه', 'الرجاء إدخال الاسم', 'warning');
   if (!g) return msg('⚠️ تنبيه', 'الرجاء اختيار الجنس', 'warning');
+  if (!boxNum) return msg('⚠️ تنبيه', 'الرجاء إدخال رقم العلبة', 'warning');
+  
   for (var i = 0; i < db.length; i++) {
     if (db[i].name.toLowerCase() === n.toLowerCase()) return msg('⚠️ موجود', 'الاسم موجود مسبقاً', 'warning');
   }
+  
+  // توليد رمز العلبة الكامل
+  var boxCode = generateBoxCode(boxNum, g);
+  
+  // إضافة قاعدة توزيع الحرف تلقائياً
+  var firstLetter = n.charAt(0).toUpperCase();
+  var ruleExists = false;
+  for (var i = 0; i < letterBoxMap.length; i++) {
+    if (letterBoxMap[i].letter === firstLetter && letterBoxMap[i].gender === g) {
+      ruleExists = true;
+      break;
+    }
+  }
+  
+  if (!ruleExists) {
+    letterBoxMap.push({
+      letter: firstLetter,
+      gender: g,
+      box_number: boxNum,
+      box_code: boxCode
+    });
+    saveLetterBoxMap();
+    displayLetterBoxList();
+    
+    // تطبيق القاعدة على جميع الأسماء المطابقة
+    var updatedCount = applyLetterBoxRule(firstLetter, g, boxNum, boxCode);
+    if (updatedCount > 0) {
+      save();
+      msg('✅ نجح', 'تمت إضافة السجل وحفظ القاعدة<br>تم تحديث ' + updatedCount + ' اسم آخر تلقائياً', 'success');
+    } else {
+      msg('✅ نجح', 'تمت إضافة السجل بنجاح - رمز العلبة: ' + boxCode, 'success');
+    }
+  } else {
+    msg('✅ نجح', 'تمت إضافة السجل بنجاح - رمز العلبة: ' + boxCode, 'success');
+  }
+  
   db.push({
     name: n,
     qty: parseInt(document.getElementById('qty').value) || 0,
     gender: g,
     color: document.getElementById('color').value.trim(),
-    note: document.getElementById('note').value.trim()
+    note: document.getElementById('note').value.trim(),
+    box_number: boxNum,
+    box_code: boxCode
   });
   save();
-  msg('✅ نجح', 'تمت إضافة السجل بنجاح', 'success');
   clearForm();
   search();
 }
@@ -711,17 +1096,58 @@ function update() {
     }
   }
   if (idx === -1) return msg('❌ خطأ', 'السجل غير موجود', 'error');
+  
   var g = document.getElementById('gender').value;
+  var boxNum = document.getElementById('boxNumber').value.trim();
+  
   if (!g) return msg('⚠️ تنبيه', 'الرجاء اختيار الجنس', 'warning');
+  if (!boxNum) return msg('⚠️ تنبيه', 'الرجاء إدخال رقم العلبة', 'warning');
+  
+  // إعادة حساب رمز العلبة عند التحديث
+  var boxCode = generateBoxCode(boxNum, g);
+  
+  // إضافة قاعدة توزيع الحرف تلقائياً
+  var firstLetter = n.charAt(0).toUpperCase();
+  var ruleExists = false;
+  for (var i = 0; i < letterBoxMap.length; i++) {
+    if (letterBoxMap[i].letter === firstLetter && letterBoxMap[i].gender === g) {
+      ruleExists = true;
+      break;
+    }
+  }
+  
+  var updatedCount = 0;
+  if (!ruleExists) {
+    letterBoxMap.push({
+      letter: firstLetter,
+      gender: g,
+      box_number: boxNum,
+      box_code: boxCode
+    });
+    saveLetterBoxMap();
+    displayLetterBoxList();
+    
+    // تطبيق القاعدة على جميع الأسماء المطابقة
+    updatedCount = applyLetterBoxRule(firstLetter, g, boxNum, boxCode);
+  }
+  
   db[idx] = {
     name: n,
     qty: parseInt(document.getElementById('qty').value) || 0,
     gender: g,
     color: document.getElementById('color').value.trim(),
-    note: document.getElementById('note').value.trim()
+    note: document.getElementById('note').value.trim(),
+    box_number: boxNum,
+    box_code: boxCode
   };
   save();
-  msg('✅ نجح', 'تم تحديث السجل بنجاح', 'success');
+  
+  if (updatedCount > 0) {
+    msg('✅ نجح', 'تم تحديث السجل وحفظ القاعدة<br>تم تحديث ' + updatedCount + ' اسم آخر تلقائياً', 'success');
+  } else {
+    msg('✅ نجح', 'تم تحديث السجل بنجاح - رمز العلبة: ' + boxCode, 'success');
+  }
+  
   search();
 }
 
@@ -750,6 +1176,8 @@ function clearForm() {
   document.getElementById('gender').value = '';
   document.getElementById('color').value = '';
   document.getElementById('note').value = '';
+  document.getElementById('boxNumber').value = '';
+  document.getElementById('boxCodePreview').style.display = 'none';
 }
 
 function check() {
@@ -765,7 +1193,8 @@ function check() {
   if (!it) return msg('خطأ', 'المنتج غير موجود', 'error');
   var gIcon = it.gender === 'ذكر' ? '👦' : '👧';
   var st = it.qty === 0 ? '❌ غير متوفر' : it.qty === 1 ? '⚠️ نافذ قريبا: قطعة واحدة' : '✅ متوفر: ' + it.qty + ' قطعة';
-  msg('📊 المخزون', '<strong>' + gIcon + ' ' + it.name + '</strong><br><br>' + st, 'info', true);
+  var boxInfo = it.box_code ? '<br>📦 العلبة: ' + it.box_code : '';
+  msg('📊 المخزون', '<strong>' + gIcon + ' ' + it.name + '</strong>' + boxInfo + '<br><br>' + st, 'info', true);
 }
 
 function sell() {
@@ -795,10 +1224,10 @@ function sell() {
 
 function backup() {
   if (db.length === 0) return msg('⚠️ تنبيه', 'لا توجد بيانات للتحميل', 'warning');
-  var csv = 'الاسم,الكمية,الجنس,اللون,ملاحظات\n';
+  var csv = 'الاسم,الكمية,الجنس,اللون,رقم العلبة,رمز العلبة,ملاحظات\n';
   for (var i = 0; i < db.length; i++) {
     var it = db[i];
-    csv += it.name + ',' + it.qty + ',' + (it.gender || '') + ',' + (it.color || '') + ',"' + (it.note || '').replace(/"/g, '""') + '"\n';
+    csv += it.name + ',' + it.qty + ',' + (it.gender || '') + ',' + (it.color || '') + ',' + (it.box_number || '') + ',' + (it.box_code || '') + ',"' + (it.note || '').replace(/"/g, '""') + '"\n';
   }
   var blob = new Blob(['\ufeff' + csv], {type: 'text/csv;charset=utf-8;'});
   var url = URL.createObjectURL(blob);
@@ -816,10 +1245,10 @@ function exportMiss() {
     if (db[i].qty === 0) m.push(db[i]);
   }
   if (m.length === 0) return msg('🎉 رائع', 'لا توجد سجلات ناقصة!', 'success');
-  var csv = 'الاسم,الكمية,الجنس,اللون,ملاحظات\n';
+  var csv = 'الاسم,الكمية,الجنس,اللون,رقم العلبة,رمز العلبة,ملاحظات\n';
   for (var i = 0; i < m.length; i++) {
     var it = m[i];
-    csv += it.name + ',' + it.qty + ',' + (it.gender || '') + ',' + (it.color || '') + ',"' + (it.note || '').replace(/"/g, '""') + '"\n';
+    csv += it.name + ',' + it.qty + ',' + (it.gender || '') + ',' + (it.color || '') + ',' + (it.box_number || '') + ',' + (it.box_code || '') + ',"' + (it.note || '').replace(/"/g, '""') + '"\n';
   }
   var blob = new Blob(['\ufeff' + csv], {type: 'text/csv;charset=utf-8;'});
   var url = URL.createObjectURL(blob);
@@ -857,25 +1286,26 @@ function printRecords() {
   var w = window.open('', '_blank');
   if (!w) return msg('خطأ', 'الرجاء السماح بفتح النوافذ المنبثقة', 'error');
   var h = '<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>' + title + ' - كرزما K3D</title>';
- h += '<style>';
-h += 'body{font-family:Arial,sans-serif;padding:15px 10px;background:#f5f5f5}';
-h += '.print-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px;border-bottom:2px solid #d4a574;padding-bottom:10px}';
-h += '.logo-print{width:100px;height:auto;border-radius:10px}';
-h += '.header-info{flex:1;text-align:right;padding-right:15px}';
-h += 'h1{color:#d4a574;margin:0 0 5px 0;font-size:20px}';
-h += '.info{color:#666;font-size:11px;margin-bottom:3px}';
-h += 'table{width:100%;margin:10px auto;border-collapse:collapse;background:#f5e6d3;box-shadow:0 2px 10px rgba(0,0,0,0.1);table-layout:fixed}';
-h += 'th,td{border:1px solid #d4a574;padding:4px 2px;text-align:center;font-size:12px}';
-h += 'th{background:#d4a574;color:#fff;font-weight:bold;font-size:13px}';
-h += 'td{background:#f5e6d3}';
-h += '.name-col{font-weight:bold;font-size:18px;color:#5d4037}';
-h += '.qty-col{font-weight:bold;font-size:20px}';
-h += '.z{background:#ffcdd2;color:#c62828;font-weight:bold}';
-h += '.o{background:#fff9c4;color:#f57f17;font-weight:bold}';
-h += '.g{background:#c8e6c9;color:#2e7d32;font-weight:bold}';
-h += '.notes-col{text-align:right;word-wrap:break-word;font-size:12px;overflow-wrap:break-word}';
-h += '@media print{body{background:#fff;padding:10px 5px}.no-print{display:none}table{page-break-inside:auto}tr{page-break-inside:avoid;page-break-after:auto}}';
-h += '</style></head><body>';
+  h += '<style>';
+  h += 'body{font-family:Arial,sans-serif;padding:15px 10px;background:#f5f5f5}';
+  h += '.print-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px;border-bottom:2px solid #d4a574;padding-bottom:10px}';
+  h += '.logo-print{width:100px;height:auto;border-radius:10px}';
+  h += '.header-info{flex:1;text-align:right;padding-right:15px}';
+  h += 'h1{color:#d4a574;margin:0 0 5px 0;font-size:20px}';
+  h += '.info{color:#666;font-size:11px;margin-bottom:3px}';
+  h += 'table{width:100%;margin:10px auto;border-collapse:collapse;background:#f5e6d3;box-shadow:0 2px 10px rgba(0,0,0,0.1);table-layout:fixed}';
+  h += 'th,td{border:1px solid #d4a574;padding:4px 2px;text-align:center;font-size:12px}';
+  h += 'th{background:#d4a574;color:#fff;font-weight:bold;font-size:13px}';
+  h += 'td{background:#f5e6d3}';
+  h += '.name-col{font-weight:bold;font-size:18px;color:#5d4037}';
+  h += '.qty-col{font-weight:bold;font-size:20px}';
+  h += '.box-col{font-weight:bold;font-size:14px;color:#6b21a8}';
+  h += '.z{background:#ffcdd2;color:#c62828;font-weight:bold}';
+  h += '.o{background:#fff9c4;color:#f57f17;font-weight:bold}';
+  h += '.g{background:#c8e6c9;color:#2e7d32;font-weight:bold}';
+  h += '.notes-col{text-align:right;word-wrap:break-word;font-size:12px;overflow-wrap:break-word}';
+  h += '@media print{body{background:#fff;padding:10px 5px}.no-print{display:none}table{page-break-inside:auto}tr{page-break-inside:avoid;page-break-after:auto}}';
+  h += '</style></head><body>';
   h += '<div class="print-header">';
   h += '<img src="https://i.postimg.cc/pTQwMKs3/lwjw-bnfsjy-bsyt-ʿn-stwdyw-1.png" class="logo-print" alt="Logo">';
   h += '<div class="header-info">';
@@ -886,7 +1316,7 @@ h += '</style></head><body>';
   h += '</div>';
   h += '</div>';
   h += '<table><thead><tr>';
-  h += '<th style="width:5%">#</th><th style="width:25%">الاسم</th><th style="width:8%">الكمية</th><th>ملاحظات</th>';
+  h += '<th style="width:5%">#</th><th style="width:20%">الاسم</th><th style="width:8%">الكمية</th><th style="width:10%">العلبة</th><th>ملاحظات</th>';
   h += '</tr></thead><tbody>';
   for (var i = 0; i < items.length; i++) {
     var it = items[i];
@@ -895,6 +1325,7 @@ h += '</style></head><body>';
     h += '<td>' + (i + 1) + '</td>';
     h += '<td class="name-col">' + it.name + '</td>';
     h += '<td class="' + c + ' qty-col">' + it.qty + '</td>';
+    h += '<td class="box-col">' + (it.box_code || '-') + '</td>';
     h += '<td class="notes-col">' + (it.note || '-') + '</td>';
     h += '</tr>';
   }
@@ -928,7 +1359,13 @@ document.getElementById('file').addEventListener('change', function(e) {
         msg('❌ خطأ', 'الملف فارغ أو لا يحتوي على بيانات', 'error');
         return;
       }
+      
+      // قراءة سطر الرأس لمعرفة البنية
+      var header = lines[0].trim();
+      var hasBoxColumns = header.indexOf('رقم العلبة') !== -1 || header.indexOf('box_number') !== -1;
+      
       var imported = [];
+      
       for (var i = 1; i < lines.length; i++) {
         var line = lines[i].trim();
         if (!line) continue;
@@ -947,21 +1384,63 @@ document.getElementById('file').addEventListener('change', function(e) {
           }
         }
         parts.push(current);
-        if (parts.length >= 5) {
+        
+        if (parts.length >= 3) {
+          var name = parts[0].trim();
+          var qty = parseInt(parts[1]) || 0;
+          var gender = parts[2].trim();
+          var color = parts.length > 3 ? parts[3].trim() : '';
+          var boxNumber = '';
+          var boxCode = '';
+          var note = '';
+          
+          if (hasBoxColumns && parts.length >= 7) {
+            // بنية جديدة: الاسم,الكمية,الجنس,اللون,رقم العلبة,رمز العلبة,ملاحظات
+            boxNumber = parts[4].trim();
+            boxCode = parts[5].trim();
+            note = parts[6].replace(/^"|"$/g, '').trim();
+          } else if (hasBoxColumns && parts.length >= 6) {
+            // بنية متوسطة
+            boxNumber = parts[4].trim();
+            boxCode = parts.length >= 6 ? parts[5].trim() : '';
+            note = parts.length >= 7 ? parts[6].replace(/^"|"$/g, '').trim() : '';
+          } else {
+            // بنية قديمة: الاسم,الكمية,الجنس,اللون,ملاحظات
+            note = parts.length > 4 ? parts[4].replace(/^"|"$/g, '').trim() : '';
+            // لا يتم التعيين التلقائي - المستخدم سيضيف رقم العلبة يدوياً
+          }
+          
+          // إذا كان هناك boxCode قديم ولكن لا يوجد boxNumber، استخرج الرقم
+          if (!boxNumber && boxCode) {
+            boxNumber = boxCode.replace(/[ذأ]/g, '');
+          }
+          
+          // إذا كان هناك boxNumber ولكن لا يوجد boxCode، قم بتوليده
+          if (boxNumber && !boxCode && gender) {
+            boxCode = generateBoxCode(boxNumber, gender);
+          }
+          
           imported.push({
-            name: parts[0].trim(),
-            qty: parseInt(parts[1]) || 0,
-            gender: parts[2].trim(),
-            color: parts[3].trim(),
-            note: parts[4].replace(/^"|"$/g, '').trim()
+            name: name,
+            qty: qty,
+            gender: gender,
+            color: color,
+            box_number: boxNumber,
+            box_code: boxCode,
+            note: note
           });
         }
       }
+      
       if (imported.length === 0) {
         msg('❌ خطأ', 'لم يتم العثور على بيانات صالحة في الملف', 'error');
         return;
       }
-      if (confirm('✅ تم العثور على ' + imported.length + ' سجل في الملف\n\n⚠️ هل تريد استبدال البيانات الحالية؟\n\nملاحظة: سيتم حذف جميع البيانات الحالية')) {
+      
+      var message = '✅ تم العثور على ' + imported.length + ' سجل في الملف';
+      message += '\n\n⚠️ هل تريد استبدال البيانات الحالية؟\n\nملاحظة: سيتم حذف جميع البيانات الحالية';
+      
+      if (confirm(message)) {
         db = imported;
         save();
         search();
@@ -980,6 +1459,3 @@ init();
 </script>
 </body>
 </html>
-
-
-
