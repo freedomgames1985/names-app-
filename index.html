@@ -164,7 +164,7 @@ body{padding:8px}
 <label>👤 الاسم</label>
 <input type="text" id="name" placeholder="أدخل الاسم" oninput="updateBoxCodePreview()">
 </div>
-<div class="row3">
+<div class="row">
 <div class="group">
 <label>🔢 الكمية</label>
 <input type="number" id="qty" value="0" min="0">
@@ -176,10 +176,6 @@ body{padding:8px}
 <option value="ذكر">👦 ذكر</option>
 <option value="أنثى">👧 أنثى</option>
 </select>
-</div>
-<div class="group">
-<label>📦 رقم العلبة</label>
-<input type="text" id="boxNumber" placeholder="أدخل رقم العلبة" oninput="updateBoxCodePreview()">
 </div>
 </div>
 <div id="boxCodePreview" class="box-code-display" style="display:none">
@@ -352,15 +348,25 @@ function generateBoxCode(boxNumber, gender) {
 
 // تحديث معاينة رمز العلبة
 function updateBoxCodePreview() {
-  var boxNumber = document.getElementById('boxNumber').value.trim();
+  var name = document.getElementById('name').value.trim();
   var gender = document.getElementById('gender').value;
   var preview = document.getElementById('boxCodePreview');
   var previewCode = document.getElementById('previewCode');
   
-  if (boxNumber && gender) {
-    var code = generateBoxCode(boxNumber, gender);
-    previewCode.textContent = code;
-    preview.style.display = 'block';
+  if (name && gender) {
+    var firstLetter = name.charAt(0);
+    var boxNumber = getSuggestedBoxNumber(firstLetter, gender);
+    
+    if (boxNumber) {
+      var code = generateBoxCode(boxNumber, gender);
+      previewCode.textContent = code;
+      previewCode.style.color = '#16a34a';
+      preview.style.display = 'block';
+    } else {
+      previewCode.textContent = 'لا توجد قاعدة - سيتم الحفظ بدون رقم علبة';
+      previewCode.style.color = '#ea580c';
+      preview.style.display = 'block';
+    }
   } else {
     preview.style.display = 'none';
   }
@@ -882,7 +888,6 @@ function addNewName(name) {
   document.getElementById('gender').value = '';
   document.getElementById('color').value = '';
   document.getElementById('note').value = '';
-  document.getElementById('boxNumber').value = '';
   updateBoxCodePreview();
   document.getElementById('gender').focus();
   msg('إضافة', 'تم ملء الاسم "' + name + '" - الرجاء إكمال البيانات', 'info');
@@ -905,7 +910,6 @@ function fill(n) {
       document.getElementById('gender').value = db[i].gender || '';
       document.getElementById('color').value = db[i].color || '';
       document.getElementById('note').value = db[i].note || '';
-      document.getElementById('boxNumber').value = db[i].box_number || '';
       updateBoxCodePreview();
       msg('تم', 'تم تعبئة البيانات بنجاح', 'success');
       break;
@@ -1026,49 +1030,26 @@ function applyLetterBoxRule(letter, gender, boxNumber, boxCode) {
 function add() {
   var n = document.getElementById('name').value.trim();
   var g = document.getElementById('gender').value;
-  var boxNum = document.getElementById('boxNumber').value.trim();
   
   if (!n) return msg('⚠️ تنبيه', 'الرجاء إدخال الاسم', 'warning');
   if (!g) return msg('⚠️ تنبيه', 'الرجاء اختيار الجنس', 'warning');
-  if (!boxNum) return msg('⚠️ تنبيه', 'الرجاء إدخال رقم العلبة', 'warning');
+  
+  // الحصول على رقم العلبة من القواعد المحفوظة (اختياري)
+  var firstLetter = n.charAt(0);
+  var boxNum = getSuggestedBoxNumber(firstLetter, g);
+  var boxCode = '';
+  
+  // إذا كانت هناك قاعدة، استخدمها
+  if (boxNum) {
+    boxCode = generateBoxCode(boxNum, g);
+  } else {
+    // لا توجد قاعدة - سيتم الحفظ بدون رقم علبة
+    boxNum = '';
+    boxCode = '';
+  }
   
   for (var i = 0; i < db.length; i++) {
     if (db[i].name.toLowerCase() === n.toLowerCase()) return msg('⚠️ موجود', 'الاسم موجود مسبقاً', 'warning');
-  }
-  
-  // توليد رمز العلبة الكامل
-  var boxCode = generateBoxCode(boxNum, g);
-  
-  // إضافة قاعدة توزيع الحرف تلقائياً
-  var firstLetter = n.charAt(0).toUpperCase();
-  var ruleExists = false;
-  for (var i = 0; i < letterBoxMap.length; i++) {
-    if (letterBoxMap[i].letter === firstLetter && letterBoxMap[i].gender === g) {
-      ruleExists = true;
-      break;
-    }
-  }
-  
-  if (!ruleExists) {
-    letterBoxMap.push({
-      letter: firstLetter,
-      gender: g,
-      box_number: boxNum,
-      box_code: boxCode
-    });
-    saveLetterBoxMap();
-    displayLetterBoxList();
-    
-    // تطبيق القاعدة على جميع الأسماء المطابقة
-    var updatedCount = applyLetterBoxRule(firstLetter, g, boxNum, boxCode);
-    if (updatedCount > 0) {
-      save();
-      msg('✅ نجح', 'تمت إضافة السجل وحفظ القاعدة<br>تم تحديث ' + updatedCount + ' اسم آخر تلقائياً', 'success');
-    } else {
-      msg('✅ نجح', 'تمت إضافة السجل بنجاح - رمز العلبة: ' + boxCode, 'success');
-    }
-  } else {
-    msg('✅ نجح', 'تمت إضافة السجل بنجاح - رمز العلبة: ' + boxCode, 'success');
   }
   
   db.push({
@@ -1081,6 +1062,13 @@ function add() {
     box_code: boxCode
   });
   save();
+  
+  if (boxCode) {
+    msg('✅ نجح', 'تمت إضافة السجل بنجاح - رمز العلبة: ' + boxCode, 'success');
+  } else {
+    msg('✅ نجح', 'تمت إضافة السجل بنجاح (بدون رقم علبة)', 'success');
+  }
+  
   clearForm();
   search();
 }
@@ -1098,37 +1086,21 @@ function update() {
   if (idx === -1) return msg('❌ خطأ', 'السجل غير موجود', 'error');
   
   var g = document.getElementById('gender').value;
-  var boxNum = document.getElementById('boxNumber').value.trim();
   
   if (!g) return msg('⚠️ تنبيه', 'الرجاء اختيار الجنس', 'warning');
-  if (!boxNum) return msg('⚠️ تنبيه', 'الرجاء إدخال رقم العلبة', 'warning');
   
-  // إعادة حساب رمز العلبة عند التحديث
-  var boxCode = generateBoxCode(boxNum, g);
+  // الحصول على رقم العلبة من القواعد المحفوظة (اختياري)
+  var firstLetter = n.charAt(0);
+  var boxNum = getSuggestedBoxNumber(firstLetter, g);
+  var boxCode = '';
   
-  // إضافة قاعدة توزيع الحرف تلقائياً
-  var firstLetter = n.charAt(0).toUpperCase();
-  var ruleExists = false;
-  for (var i = 0; i < letterBoxMap.length; i++) {
-    if (letterBoxMap[i].letter === firstLetter && letterBoxMap[i].gender === g) {
-      ruleExists = true;
-      break;
-    }
-  }
-  
-  var updatedCount = 0;
-  if (!ruleExists) {
-    letterBoxMap.push({
-      letter: firstLetter,
-      gender: g,
-      box_number: boxNum,
-      box_code: boxCode
-    });
-    saveLetterBoxMap();
-    displayLetterBoxList();
-    
-    // تطبيق القاعدة على جميع الأسماء المطابقة
-    updatedCount = applyLetterBoxRule(firstLetter, g, boxNum, boxCode);
+  // إذا كانت هناك قاعدة، استخدمها
+  if (boxNum) {
+    boxCode = generateBoxCode(boxNum, g);
+  } else {
+    // لا توجد قاعدة - سيتم الحفظ بدون رقم علبة
+    boxNum = '';
+    boxCode = '';
   }
   
   db[idx] = {
@@ -1142,10 +1114,10 @@ function update() {
   };
   save();
   
-  if (updatedCount > 0) {
-    msg('✅ نجح', 'تم تحديث السجل وحفظ القاعدة<br>تم تحديث ' + updatedCount + ' اسم آخر تلقائياً', 'success');
-  } else {
+  if (boxCode) {
     msg('✅ نجح', 'تم تحديث السجل بنجاح - رمز العلبة: ' + boxCode, 'success');
+  } else {
+    msg('✅ نجح', 'تم تحديث السجل بنجاح (بدون رقم علبة)', 'success');
   }
   
   search();
@@ -1176,7 +1148,6 @@ function clearForm() {
   document.getElementById('gender').value = '';
   document.getElementById('color').value = '';
   document.getElementById('note').value = '';
-  document.getElementById('boxNumber').value = '';
   document.getElementById('boxCodePreview').style.display = 'none';
 }
 
@@ -1214,6 +1185,13 @@ function sell() {
   if (!confirm('💸 هل تريد بيع ' + q + ' قطعة من ' + db[idx].name + '؟')) return;
   db[idx].qty -= q;
   save();
+  
+  // تحديث نتائج البحث تلقائياً إذا كان هناك بحث نشط
+  var searchQuery = document.getElementById('q').value.trim();
+  if (searchQuery) {
+    search();
+  }
+  
   var m = '✅ تمت عملية البيع بنجاح<br><br>📦 الكمية المباعة: ' + q + ' قطعة<br>📊 الكمية المتبقية: ' + db[idx].qty + ' قطعة';
   if (db[idx].qty === 0) m += '<br><br>❌ تحذير: المخزون نفذ تماماً!';
   else if (db[idx].qty === 1) m += '<br><br>⚠️ تنبيه: متبقي قطعة واحدة فقط!';
