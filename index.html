@@ -142,6 +142,7 @@ body{padding:8px}
 <div class="stat">📊 الإجمالي: <span id="total">0</span></div>
 <div class="stat">✅ متوفر: <span id="avail">0</span></div>
 <div class="stat">❌ ناقص: <span id="miss">0</span></div>
+<div class="stat">📦 إجمالي القطع: <span id="totalQty">0</span></div>
 </div>
 </div>
 </div>
@@ -262,6 +263,48 @@ body{padding:8px}
 <input type="file" id="file" accept=".csv" style="display:none">
 <input type="file" id="letterBoxFile" accept=".json" style="display:none">
 </div>
+
+<div class="card">
+<div class="title">📋 طلبات الزبائن</div>
+<div class="group">
+<label>👤 اسم الزبون</label>
+<input type="text" id="customerName" placeholder="أدخل اسم الزبون">
+</div>
+<div class="row">
+<div class="group">
+<label>📞 رقم الهاتف</label>
+<input type="text" id="customerPhone" placeholder="مثال: 0599123456">
+</div>
+<div class="group">
+<label>📍 العنوان</label>
+<input type="text" id="customerAddress" placeholder="أدخل العنوان">
+</div>
+</div>
+<div class="group">
+<label>📝 الأسماء المطلوبة</label>
+<div id="orderItemsList" style="margin-bottom:10px;display:none"></div>
+<div class="row">
+<div class="group" style="flex:2;position:relative">
+<input type="text" id="orderItemName" placeholder="أدخل الاسم المطلوب" onkeypress="if(event.key==='Enter') addOrderItem()" oninput="showOrderItemSuggestions()">
+<div id="orderItemSuggestions" style="position:absolute;top:100%;left:0;right:0;background:white;border:1px solid #e5e7eb;border-radius:8px;max-height:300px;overflow-y:auto;z-index:1000;display:none;box-shadow:0 4px 6px rgba(0,0,0,0.1)"></div>
+</div>
+<div class="group" style="flex:1">
+<input type="text" id="orderItemColor" placeholder="اللون" onkeypress="if(event.key==='Enter') addOrderItem()">
+</div>
+<button class="btn btn-success" onclick="addOrderItem()" style="width:auto;padding:10px 20px;margin-top:24px">➕</button>
+</div>
+</div>
+<div class="btns">
+<button class="btn btn-success" onclick="saveOrder()">💾 حفظ الطلب</button>
+<button class="btn btn-outline" onclick="clearOrderForm()">🧹 مسح</button>
+</div>
+<div class="btns" style="margin-top:10px">
+<button class="btn btn-primary" onclick="printOrders()">🖨️ طباعة الطلبات</button>
+<button class="btn btn-primary" onclick="exportOrders()">📥 تنزيل الطلبات</button>
+</div>
+<div class="results" id="ordersList" style="margin-top:16px;max-height:400px;display:none">
+</div>
+</div>
 </div>
 
 <div class="footer" id="status">💾 حفظ تلقائي مفعل</div>
@@ -327,8 +370,11 @@ body{padding:8px}
 <script>
 var db = [];
 var letterBoxMap = []; // نظام توزيع الحروف على العلب
+var orders = []; // طلبات الزبائن
+var currentOrderItems = []; // الأسماء المطلوبة للطلب الحالي
 var LOCAL_KEY = 'names_k3d_local';
 var LETTERBOX_KEY = 'letterbox_map_k3d';
+var ORDERS_KEY = 'orders_k3d';
 var CONFIG_KEY = 'firebase_config_k3d';
 var searchTimeout;
 var firebaseApp = null;
@@ -681,9 +727,545 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
+// عرض اقتراحات الأسماء عند كتابة اسم مطلوب
+function showOrderItemSuggestions() {
+  var input = document.getElementById('orderItemName').value.trim();
+  var suggestionsDiv = document.getElementById('orderItemSuggestions');
+  
+  if (!input) {
+    suggestionsDiv.style.display = 'none';
+    return;
+  }
+  
+  // البحث عن الأسماء المطابقة
+  var matches = [];
+  var inputLower = input.toLowerCase();
+  
+  for (var i = 0; i < db.length; i++) {
+    if (db[i].name.toLowerCase().indexOf(inputLower) !== -1) {
+      matches.push(db[i]);
+    }
+  }
+  
+  if (matches.length === 0) {
+    suggestionsDiv.style.display = 'none';
+    return;
+  }
+  
+  // ترتيب النتائج
+  matches.sort(function(a, b) {
+    var aStarts = a.name.toLowerCase().indexOf(inputLower) === 0;
+    var bStarts = b.name.toLowerCase().indexOf(inputLower) === 0;
+    if (aStarts && !bStarts) return -1;
+    if (!aStarts && bStarts) return 1;
+    return a.name.localeCompare(b.name, 'ar');
+  });
+  
+  // عرض أول 10 نتائج
+  var limit = Math.min(matches.length, 10);
+  var h = '';
+  
+  for (var i = 0; i < limit; i++) {
+    var item = matches[i];
+    var qtyColor = item.qty === 0 ? '#dc2626' : item.qty === 1 ? '#ea580c' : '#16a34a';
+    var qtyText = item.qty === 0 ? 'نفذ' : item.qty + ' قطعة';
+    
+    h += '<div style="padding:10px;border-bottom:1px solid #e5e7eb;cursor:pointer;display:flex;justify-content:space-between;align-items:center" onclick="selectOrderItemSuggestion(\'' + item.name.replace(/'/g, "\\'") + '\')" onmouseover="this.style.background=\'#f9fafb\'" onmouseout="this.style.background=\'white\'">';
+    h += '<div style="flex:1">';
+    h += '<div style="font-weight:600;color:#1e293b">' + item.name + '</div>';
+    if (item.color) {
+      h += '<div style="font-size:13px;color:#64748b">🎨 ' + item.color + '</div>';
+    }
+    h += '</div>';
+    h += '<div style="font-size:13px;color:' + qtyColor + ';font-weight:600">' + qtyText + '</div>';
+    h += '</div>';
+  }
+  
+  suggestionsDiv.innerHTML = h;
+  suggestionsDiv.style.display = 'block';
+}
+
+// اختيار اسم من الاقتراحات
+function selectOrderItemSuggestion(name) {
+  document.getElementById('orderItemName').value = name;
+  document.getElementById('orderItemSuggestions').style.display = 'none';
+  
+  // البحث عن لون الاسم في قاعدة البيانات
+  for (var i = 0; i < db.length; i++) {
+    if (db[i].name === name && db[i].color) {
+      document.getElementById('orderItemColor').value = db[i].color;
+      break;
+    }
+  }
+  
+  document.getElementById('orderItemColor').focus();
+}
+
+// إخفاء الاقتراحات عند النقر خارجها
+document.addEventListener('click', function(e) {
+  var input = document.getElementById('orderItemName');
+  var suggestions = document.getElementById('orderItemSuggestions');
+  if (input && suggestions && e.target !== input && !suggestions.contains(e.target)) {
+    suggestions.style.display = 'none';
+  }
+});
+
+// إضافة اسم مطلوب للطلب الحالي
+function addOrderItem() {
+  var itemName = document.getElementById('orderItemName').value.trim();
+  var itemColor = document.getElementById('orderItemColor').value.trim();
+  
+  if (!itemName) {
+    return msg('⚠️ تنبيه', 'الرجاء إدخال اسم المنتج', 'warning');
+  }
+  
+  // التحقق من وجود الاسم في المخزون
+  var existsInStock = false;
+  for (var i = 0; i < db.length; i++) {
+    if (db[i].name.toLowerCase() === itemName.toLowerCase()) {
+      existsInStock = true;
+      break;
+    }
+  }
+  
+  currentOrderItems.push({
+    name: itemName,
+    color: itemColor,
+    existsInStock: existsInStock
+  });
+  
+  document.getElementById('orderItemName').value = '';
+  document.getElementById('orderItemColor').value = '';
+  document.getElementById('orderItemSuggestions').style.display = 'none';
+  document.getElementById('orderItemName').focus();
+  
+  displayOrderItems();
+  
+  // إذا كان الاسم غير موجود، عرض خيار الإضافة
+  if (!existsInStock) {
+    var confirmMsg = '⚠️ الاسم "<strong>' + itemName + '</strong>" غير موجود في المخزون<br><br>';
+    confirmMsg += 'هل تريد إضافته للمخزون الآن؟<br><br>';
+    confirmMsg += '<button class="btn btn-success" onclick="addItemToInventory(\'' + itemName.replace(/'/g, "\\'") + '\', \'' + itemColor.replace(/'/g, "\\'") + '\')" style="margin:5px">✅ نعم، أضف للمخزون</button>';
+    confirmMsg += '<button class="btn btn-outline" onclick="closeMsg()" style="margin:5px">❌ لا، متابعة</button>';
+    msg('📦 إضافة للمخزون', confirmMsg, 'warning', true);
+  } else {
+    msg('✅ تم', 'تمت إضافة "' + itemName + '" للطلب', 'success');
+  }
+}
+
+// إضافة اسم من الطلب إلى المخزون
+function addItemToInventory(itemName, itemColor) {
+  // التحقق من عدم وجوده مسبقاً
+  for (var i = 0; i < db.length; i++) {
+    if (db[i].name.toLowerCase() === itemName.toLowerCase()) {
+      msg('⚠️ موجود', 'الاسم موجود مسبقاً في المخزون', 'warning');
+      return;
+    }
+  }
+  
+  // البحث عن قاعدة توزيع الحرف
+  var firstLetter = itemName.charAt(0);
+  var gender = '';
+  var boxNum = '';
+  var boxCode = '';
+  
+  // محاولة تحديد الجنس من الاسم (يمكن تحسينها لاحقاً)
+  // الآن سنطلب من المستخدم تحديد الجنس
+  var genderChoice = prompt('الرجاء تحديد جنس الاسم "' + itemName + '":\n\nاكتب "ذ" للذكر أو "أ" للأنثى', '');
+  
+  if (!genderChoice) {
+    msg('❌ إلغاء', 'تم إلغاء إضافة الاسم للمخزون', 'error');
+    return;
+  }
+  
+  if (genderChoice === 'ذ' || genderChoice === 'ذكر') {
+    gender = 'ذكر';
+  } else if (genderChoice === 'أ' || genderChoice === 'انثى' || genderChoice === 'أنثى') {
+    gender = 'أنثى';
+  } else {
+    msg('❌ خطأ', 'الرجاء إدخال "ذ" للذكر أو "أ" للأنثى', 'error');
+    return;
+  }
+  
+  // البحث عن قاعدة العلبة
+  boxNum = getSuggestedBoxNumber(firstLetter, gender);
+  if (boxNum) {
+    boxCode = generateBoxCode(boxNum, gender);
+  }
+  
+  // إضافة للمخزون بكمية 0
+  db.push({
+    name: itemName,
+    qty: 0,
+    gender: gender,
+    color: itemColor,
+    note: 'تمت إضافته من طلبات الزبائن',
+    box_number: boxNum,
+    box_code: boxCode
+  });
+  
+  save();
+  stats();
+  
+  // تحديث حالة الاسم في قائمة الطلب الحالي
+  for (var i = 0; i < currentOrderItems.length; i++) {
+    if (currentOrderItems[i].name.toLowerCase() === itemName.toLowerCase()) {
+      currentOrderItems[i].existsInStock = true;
+      break;
+    }
+  }
+  displayOrderItems();
+  
+  var successMsg = '✅ تمت إضافة "' + itemName + '" للمخزون بنجاح<br><br>';
+  successMsg += '📋 الجنس: ' + gender + '<br>';
+  if (boxCode) {
+    successMsg += '📦 رمز العلبة: ' + boxCode + '<br>';
+  }
+  successMsg += '🎨 اللون: ' + (itemColor || 'بدون') + '<br>';
+  successMsg += '📊 الكمية: 0 (يمكنك تحديثها لاحقاً)';
+  
+  msg('✅ نجح', successMsg, 'success', true);
+}
+
+// إغلاق رسالة التنبيه
+function closeMsg() {
+  document.getElementById('msgBox').style.display = 'none';
+}
+
+// عرض قائمة الأسماء المطلوبة
+function displayOrderItems() {
+  var listDiv = document.getElementById('orderItemsList');
+  
+  if (currentOrderItems.length === 0) {
+    listDiv.style.display = 'none';
+    return;
+  }
+  
+  var h = '<div style="background:#f3f4f6;padding:10px;border-radius:8px;margin-bottom:10px">';
+  h += '<div style="font-weight:600;color:#4338ca;margin-bottom:8px">الأسماء المطلوبة (' + currentOrderItems.length + '):</div>';
+  
+  for (var i = 0; i < currentOrderItems.length; i++) {
+    var item = currentOrderItems[i];
+    var stockIcon = item.existsInStock ? '✅' : '❌';
+    var stockColor = item.existsInStock ? '#16a34a' : '#dc2626';
+    var stockText = item.existsInStock ? 'موجود' : 'غير موجود';
+    
+    h += '<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb">';
+    h += '<div style="flex:1"><span style="font-weight:600">' + (i + 1) + '. ' + item.name + '</span>';
+    if (item.color) h += ' <span style="color:#6b7280">(' + item.color + ')</span>';
+    h += ' <span style="color:' + stockColor + ';font-size:12px;font-weight:600">' + stockIcon + ' ' + stockText + '</span>';
+    h += '</div>';
+    h += '<button class="btn btn-danger" onclick="removeOrderItem(' + i + ')" style="width:auto;padding:4px 12px;font-size:12px">🗑️</button>';
+    h += '</div>';
+  }
+  
+  h += '</div>';
+  listDiv.innerHTML = h;
+  listDiv.style.display = 'block';
+}
+
+// حذف اسم من الطلب الحالي
+function removeOrderItem(index) {
+  currentOrderItems.splice(index, 1);
+  displayOrderItems();
+  msg('✅ تم', 'تم حذف المنتج', 'success');
+}
+
+// حفظ الطلب
+function saveOrder() {
+  var customerName = document.getElementById('customerName').value.trim();
+  var customerPhone = document.getElementById('customerPhone').value.trim();
+  var customerAddress = document.getElementById('customerAddress').value.trim();
+  
+  if (!customerName) {
+    return msg('⚠️ تنبيه', 'الرجاء إدخال اسم الزبون', 'warning');
+  }
+  
+  if (!customerPhone) {
+    return msg('⚠️ تنبيه', 'الرجاء إدخال رقم الهاتف', 'warning');
+  }
+  
+  if (currentOrderItems.length === 0) {
+    return msg('⚠️ تنبيه', 'الرجاء إضافة اسم واحد على الأقل للطلب', 'warning');
+  }
+  
+  var order = {
+    id: Date.now(),
+    customerName: customerName,
+    customerPhone: customerPhone,
+    customerAddress: customerAddress,
+    items: currentOrderItems.slice(),
+    date: new Date().toISOString(),
+    status: 'pending' // حالة الطلب: pending, completed
+  };
+  
+  orders.push(order);
+  saveOrders();
+  displayOrders();
+  
+  msg('✅ نجح', 'تم حفظ طلب ' + customerName + ' بنجاح<br>عدد الأسماء: ' + currentOrderItems.length, 'success');
+  clearOrderForm();
+}
+
+// حفظ الطلبات في localStorage
+function saveOrders() {
+  try {
+    localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+  } catch (e) {
+    console.error('خطأ في حفظ الطلبات:', e);
+  }
+}
+
+// تحميل الطلبات من localStorage
+function loadOrders() {
+  try {
+    var saved = localStorage.getItem(ORDERS_KEY);
+    orders = saved ? JSON.parse(saved) : [];
+    if (orders.length > 0) {
+      displayOrders();
+    }
+  } catch (e) {
+    orders = [];
+  }
+}
+
+// عرض قائمة الطلبات
+function displayOrders() {
+  var listDiv = document.getElementById('ordersList');
+  
+  if (orders.length === 0) {
+    listDiv.style.display = 'none';
+    return;
+  }
+  
+  // ترتيب حسب التاريخ (الأحدث أولاً)
+  var sorted = orders.slice().sort(function(a, b) {
+    return new Date(b.date) - new Date(a.date);
+  });
+  
+  var h = '<div style="font-weight:800;color:#4338ca;margin-bottom:12px;font-size:16px">';
+  h += '📋 قائمة الطلبات (' + orders.length + ')';
+  h += '</div>';
+  
+  for (var i = 0; i < sorted.length; i++) {
+    var order = sorted[i];
+    var date = new Date(order.date);
+    var dateStr = date.toLocaleDateString('ar-EG');
+    var statusColor = order.status === 'completed' ? '#16a34a' : '#ea580c';
+    var statusText = order.status === 'completed' ? '✅ مكتمل' : '⏳ قيد الانتظار';
+    
+    h += '<div class="item" style="border-right:4px solid ' + statusColor + ';margin-bottom:12px">';
+    h += '<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px">';
+    h += '<div style="flex:1">';
+    h += '<div style="font-weight:700;font-size:16px;color:#1e293b">👤 ' + order.customerName + '</div>';
+    h += '<div style="color:#64748b;font-size:14px;margin-top:4px">📞 ' + order.customerPhone + '</div>';
+    if (order.customerAddress) {
+      h += '<div style="color:#64748b;font-size:14px">📍 ' + order.customerAddress + '</div>';
+    }
+    h += '<div style="color:#64748b;font-size:13px;margin-top:4px">📅 ' + dateStr + '</div>';
+    h += '</div>';
+    h += '<div style="display:flex;gap:6px;flex-direction:column">';
+    h += '<span style="background:' + statusColor + ';color:white;padding:4px 10px;border-radius:6px;font-size:12px;white-space:nowrap">' + statusText + '</span>';
+    h += '</div>';
+    h += '</div>';
+    
+    h += '<div style="background:#f8fafc;padding:10px;border-radius:6px;margin-top:8px">';
+    h += '<div style="font-weight:600;color:#475569;margin-bottom:6px">الأسماء المطلوبة (' + order.items.length + '):</div>';
+    for (var j = 0; j < order.items.length; j++) {
+      var item = order.items[j];
+      h += '<div style="padding:4px 0;color:#334155">• ' + item.name;
+      if (item.color) h += ' <span style="color:#64748b">(' + item.color + ')</span>';
+      h += '</div>';
+    }
+    h += '</div>';
+    
+    h += '<div style="display:flex;gap:8px;margin-top:10px">';
+    if (order.status === 'pending') {
+      h += '<button class="btn btn-success" onclick="completeOrder(' + order.id + ')" style="flex:1;padding:8px;font-size:13px">✅ تم الإنجاز</button>';
+    }
+    h += '<button class="btn btn-danger" onclick="deleteOrder(' + order.id + ')" style="flex:1;padding:8px;font-size:13px">🗑️ حذف</button>';
+    h += '</div>';
+    
+    h += '</div>';
+  }
+  
+  listDiv.innerHTML = h;
+  listDiv.style.display = 'block';
+}
+
+// إكمال طلب
+function completeOrder(orderId) {
+  for (var i = 0; i < orders.length; i++) {
+    if (orders[i].id === orderId) {
+      orders[i].status = 'completed';
+      saveOrders();
+      displayOrders();
+      msg('✅ نجح', 'تم وضع علامة الإنجاز على الطلب', 'success');
+      break;
+    }
+  }
+}
+
+// حذف طلب
+function deleteOrder(orderId) {
+  for (var i = 0; i < orders.length; i++) {
+    if (orders[i].id === orderId) {
+      var orderName = orders[i].customerName;
+      if (!confirm('⚠️ هل تريد حذف طلب ' + orderName + '؟')) return;
+      orders.splice(i, 1);
+      saveOrders();
+      displayOrders();
+      msg('✅ نجح', 'تم حذف الطلب بنجاح', 'success');
+      break;
+    }
+  }
+}
+
+// مسح نموذج الطلب
+function clearOrderForm() {
+  document.getElementById('customerName').value = '';
+  document.getElementById('customerPhone').value = '';
+  document.getElementById('customerAddress').value = '';
+  document.getElementById('orderItemName').value = '';
+  document.getElementById('orderItemColor').value = '';
+  currentOrderItems = [];
+  displayOrderItems();
+}
+
+// تحديث إحصائيات الأسماء المطلوبة
+// طباعة الطلبات
+function printOrders() {
+  if (orders.length === 0) {
+    return msg('⚠️ تنبيه', 'لا توجد طلبات للطباعة', 'warning');
+  }
+  
+  var printWindow = window.open('', '_blank');
+  var h = '<html dir="rtl"><head><meta charset="UTF-8"><title>طلبات الزبائن - كرزما K3D</title>';
+  h += '<style>';
+  h += 'body{font-family:Arial,sans-serif;padding:20px;background:#fff}';
+  h += 'h1{text-align:center;color:#4338ca;margin-bottom:30px}';
+  h += '.order{border:2px solid #e5e7eb;border-radius:8px;padding:15px;margin-bottom:20px;page-break-inside:avoid}';
+  h += '.order-header{background:#4338ca;color:white;padding:10px;border-radius:6px;margin-bottom:10px}';
+  h += '.order-info{margin-bottom:10px;padding:8px;background:#f8fafc}';
+  h += '.order-items{background:#fff;padding:10px;border:1px solid #e5e7eb;border-radius:6px}';
+  h += '.item-row{padding:6px 0;border-bottom:1px solid #e5e7eb}';
+  h += '.status-badge{display:inline-block;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600}';
+  h += '.pending{background:#fed7aa;color:#ea580c}';
+  h += '.completed{background:#dcfce7;color:#16a34a}';
+  h += '@media print{body{padding:10px}.order{page-break-inside:avoid}}';
+  h += '</style></head><body>';
+  
+  h += '<h1>📋 طلبات الزبائن - برنامج كرزما K3D</h1>';
+  h += '<p style="text-align:center;color:#64748b;margin-bottom:30px">التاريخ: ' + new Date().toLocaleDateString('ar-EG') + '</p>';
+  
+  // ترتيب الطلبات (قيد الانتظار أولاً)
+  var sorted = orders.slice().sort(function(a, b) {
+    if (a.status !== b.status) {
+      return a.status === 'pending' ? -1 : 1;
+    }
+    return new Date(b.date) - new Date(a.date);
+  });
+  
+  for (var i = 0; i < sorted.length; i++) {
+    var order = sorted[i];
+    var date = new Date(order.date);
+    var dateStr = date.toLocaleDateString('ar-EG');
+    var statusClass = order.status === 'completed' ? 'completed' : 'pending';
+    var statusText = order.status === 'completed' ? '✅ مكتمل' : '⏳ قيد الانتظار';
+    
+    h += '<div class="order">';
+    h += '<div class="order-header">';
+    h += '<h3 style="margin:0">طلب رقم ' + (i + 1) + ' - ' + order.customerName + '</h3>';
+    h += '</div>';
+    
+    h += '<div class="order-info">';
+    h += '<div><strong>📞 الهاتف:</strong> ' + order.customerPhone + '</div>';
+    if (order.customerAddress) {
+      h += '<div><strong>📍 العنوان:</strong> ' + order.customerAddress + '</div>';
+    }
+    h += '<div><strong>📅 التاريخ:</strong> ' + dateStr + '</div>';
+    h += '<div><strong>الحالة:</strong> <span class="status-badge ' + statusClass + '">' + statusText + '</span></div>';
+    h += '</div>';
+    
+    h += '<div class="order-items">';
+    h += '<strong>الأسماء المطلوبة (' + order.items.length + '):</strong>';
+    for (var j = 0; j < order.items.length; j++) {
+      var item = order.items[j];
+      h += '<div class="item-row">';
+      h += '<strong>' + (j + 1) + '.</strong> ' + item.name;
+      if (item.color) h += ' - <span style="color:#64748b">' + item.color + '</span>';
+      h += '</div>';
+    }
+    h += '</div>';
+    
+    h += '</div>';
+  }
+  
+  h += '</body></html>';
+  
+  printWindow.document.open();
+  printWindow.document.write(h);
+  printWindow.document.close();
+  
+  setTimeout(function() {
+    printWindow.print();
+  }, 250);
+  
+  msg('✅ نجح', 'تم فتح نافذة الطباعة', 'success');
+}
+
+// تصدير الطلبات كـ CSV
+function exportOrders() {
+  if (orders.length === 0) {
+    return msg('⚠️ تنبيه', 'لا توجد طلبات للتصدير', 'warning');
+  }
+  
+  var csv = 'رقم الطلب,اسم الزبون,رقم الهاتف,العنوان,التاريخ,الحالة,الأسماء المطلوبة\n';
+  
+  for (var i = 0; i < orders.length; i++) {
+    var order = orders[i];
+    var date = new Date(order.date);
+    var dateStr = date.toLocaleDateString('ar-EG');
+    var statusText = order.status === 'completed' ? 'مكتمل' : 'قيد الانتظار';
+    
+    var itemsStr = '';
+    for (var j = 0; j < order.items.length; j++) {
+      itemsStr += order.items[j].name;
+      if (order.items[j].color) {
+        itemsStr += ' (' + order.items[j].color + ')';
+      }
+      if (j < order.items.length - 1) {
+        itemsStr += ' | ';
+      }
+    }
+    
+    csv += (i + 1) + ',';
+    csv += order.customerName + ',';
+    csv += order.customerPhone + ',';
+    csv += (order.customerAddress || '') + ',';
+    csv += dateStr + ',';
+    csv += statusText + ',';
+    csv += '"' + itemsStr + '"';
+    csv += '\n';
+  }
+  
+  var blob = new Blob(['\ufeff' + csv], {type: 'text/csv;charset=utf-8;'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'orders_' + new Date().toISOString().slice(0, 10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  
+  msg('✅ نجح', 'تم تنزيل ملف الطلبات بنجاح', 'success');
+}
+
 function init() {
   // تحميل قواعد توزيع الحروف
   loadLetterBoxMap();
+  
+  // تحميل طلبات الزبائن
+  loadOrders();
   
   // محاولة تهيئة Firebase أولاً
   var fbReady = initFirebase();
@@ -762,12 +1344,14 @@ function save() {
 
 function stats() {
   document.getElementById('total').textContent = db.length;
-  var a = 0, m = 0;
+  var a = 0, m = 0, totalQty = 0;
   for (var i = 0; i < db.length; i++) {
     if (db[i].qty > 0) a++; else m++;
+    totalQty += db[i].qty;
   }
   document.getElementById('avail').textContent = a;
   document.getElementById('miss').textContent = m;
+  document.getElementById('totalQty').textContent = totalQty;
 }
 
 function makeCode() {
