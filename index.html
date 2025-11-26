@@ -8,13 +8,13 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="كرزما K3D">
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>برنامج إدارة الأسماء كرزما K3D</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Cairo,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);padding:20px;min-height:100vh;display:flex;flex-direction:column}
-.container{max-width:1000px;margin:0 auto;flex:1;display:flex;flex-direction:column}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:Cairo,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);padding:20px;min-height:100vh;display:flex;flex-direction:column;touch-action:manipulation}
+.container{max-width:1000px;margin:0 auto;flex:1;display:flex;flex-direction:column;width:100%}
 .header{background:#fff;padding:24px;border-radius:16px;margin-bottom:20px;box-shadow:0 4px 20px rgba(0,0,0,0.15);border:3px solid #4338ca;display:flex;align-items:center;gap:24px}
 .logo{width:300px;height:auto;border-radius:0;box-shadow:none;background:transparent;mix-blend-mode:multiply;}
 .header-content{flex:1;text-align:center}
@@ -28,17 +28,17 @@ body{font-family:Cairo,sans-serif;background:linear-gradient(135deg,#667eea,#764
 .action-message.show{opacity:1}
 .stats{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:16px}
 .stat{background:linear-gradient(135deg,#4338ca,#6366f1);color:#fff;padding:4px 20px;border-radius:10px;font-weight:700;font-size:14px}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;flex:1}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
 .card{background:#fff;padding:24px;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.15);border:3px solid #4338ca}
 .title{font-size:18px;font-weight:800;color:#4338ca;margin-bottom:20px;padding-bottom:12px;border-bottom:3px solid #e0e7ff}
 .group{margin-bottom:16px}
 .group label{display:block;font-size:14px;font-weight:700;color:#1f2937;margin-bottom:8px}
-.group input,.group select,.group textarea{width:100%;padding:12px;border:2px solid #9ca3af;border-radius:10px;font-size:15px;font-weight:600;font-family:Cairo,sans-serif}
+.group input,.group select,.group textarea{width:100%;padding:12px;border:2px solid #9ca3af;border-radius:10px;font-size:16px;font-weight:600;font-family:Cairo,sans-serif;touch-action:manipulation}
 .group textarea{min-height:90px;resize:vertical}
 .row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.btn{width:100%;padding:12px 20px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:Cairo,sans-serif;transition:transform 0.2s}
-.btn:hover{transform:translateY(-2px)}
+.btn{width:100%;padding:12px 20px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:Cairo,sans-serif;transition:transform 0.2s;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+.btn:active{transform:scale(0.97)}
 .btn-primary{background:linear-gradient(135deg,#4338ca,#6366f1);color:#fff}
 .btn-success{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
 .btn-danger{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}
@@ -47,7 +47,7 @@ body{font-family:Cairo,sans-serif;background:linear-gradient(135deg,#667eea,#764
 .btns{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:16px}
 .btns3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
 .search{display:flex;gap:10px;margin-bottom:16px}
-.search input{flex:1;padding:12px;border:2px solid #9ca3af;border-radius:10px;font-size:15px;font-weight:600}
+.search input{flex:1;padding:12px;border:2px solid #9ca3af;border-radius:10px;font-size:16px;font-weight:600}
 .results{margin-top:20px;padding:16px;background:#f9fafb;border-radius:10px;border:2px solid #d1d5db;max-height:510px;overflow-y:auto}
 .item{background:#fff;padding:10px 14px;margin-bottom:8px;border-radius:8px;border:2px solid #e5e7eb;transition:all 0.2s}
 .item:hover{border-color:#4338ca;box-shadow:0 2px 10px rgba(67,56,202,0.2)}
@@ -59,6 +59,18 @@ body{font-family:Cairo,sans-serif;background:linear-gradient(135deg,#667eea,#764
 .orange{background:#fef3c7;color:#92400e}
 .blue{background:#e0e7ff;color:#3730a3}
 .purple{background:#f3e8ff;color:#6b21a8}
+.tab-nav{background:#fff;padding:0;display:flex;justify-content:center;flex-wrap:nowrap;gap:0;margin:0 0 20px 0;overflow-x:auto;overflow-y:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.15);border:3px solid #4338ca;-webkit-overflow-scrolling:touch;scrollbar-width:thin;position:relative;z-index:100}
+.tab-nav::-webkit-scrollbar{height:3px}
+.tab-nav::-webkit-scrollbar-track{background:#f1f5f9}
+.tab-nav::-webkit-scrollbar-thumb{background:#4338ca;border-radius:3px}
+.tab-btn{background:transparent;border:none;padding:12px 24px;font-size:14px;font-weight:700;color:#64748b;cursor:pointer;transition:all 0.3s;border-left:2px solid #e0e7ff;white-space:nowrap;font-family:Cairo,sans-serif;flex:1;min-width:140px}
+.tab-btn:first-child{border-left:none}
+.tab-btn:hover{background:#f0f4ff;color:#4338ca}
+.tab-btn.active{color:#fff;background:linear-gradient(135deg,#4338ca,#6366f1);border-left-color:#4338ca}
+.tab-btn .icon{font-size:18px;margin-left:6px;display:inline-block}
+.tab-content{display:none;animation:fadeIn 0.3s}
+.tab-content.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .empty{text-align:center;padding:40px;color:#6b7280;font-weight:600}
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1000;align-items:center;justify-content:center;padding:20px}
 .box{background:#fff;border-radius:16px;padding:28px;max-width:500px;width:100%;border:3px solid #4338ca;max-height:90vh;overflow-y:auto}
@@ -83,7 +95,7 @@ body{font-family:Cairo,sans-serif;background:linear-gradient(135deg,#667eea,#764
 .box-code-display{background:#f3e8ff;padding:8px 12px;border-radius:8px;font-weight:700;color:#6b21a8;text-align:center;font-size:16px;margin-top:8px;border:2px solid #a78bfa}
 .readonly{background:#f3f4f6;cursor:not-allowed}
 @media(max-width:768px){
-body{padding:8px}
+body{padding:8px;font-size:14px}
 .header{flex-direction:column;text-align:center;padding:12px !important;gap:8px !important}
 .logo{width:100px !important;height:auto !important;}
 .header-content{width:100%}
@@ -98,6 +110,9 @@ body{padding:8px}
 .btns{grid-template-columns:1fr}
 .btns3{grid-template-columns:1fr}
 .search{flex-direction:column}
+.tab-nav{margin:0 0 15px 0;border-width:2px;justify-content:flex-start}
+.tab-btn{padding:10px 14px;font-size:10px;min-width:auto;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:3px}
+.tab-btn .icon{font-size:18px;margin-left:0;margin-bottom:2px}
 .card{padding:16px}
 .title{font-size:15px;margin-bottom:14px;padding-bottom:8px}
 .group{margin-bottom:12px}
@@ -108,6 +123,9 @@ body{padding:8px}
 .name{font-size:13px}
 .tag{padding:3px 8px;font-size:11px}
 .results{padding:12px;max-height:300px}
+.results::-webkit-scrollbar{width:4px}
+.results::-webkit-scrollbar-track{background:#f1f5f9}
+.results::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:2px}
 .footer{padding:10px;font-size:11px;margin-top:15px}
 .firebase-setup{padding:15px;margin-top:15px}
 .firebase-setup h3{font-size:15px;margin-bottom:12px}
@@ -147,7 +165,25 @@ body{padding:8px}
 </div>
 </div>
 
-<div class="grid">
+<!-- Tab Navigation -->
+<div class="tab-nav">
+<button class="tab-btn active" onclick="switchTab('search')">
+<span class="icon">🔍</span>
+<span>البحث والإدارة</span>
+</button>
+<button class="tab-btn" onclick="switchTab('orders')">
+<span class="icon">📋</span>
+<span>طلبات الزبائن</span>
+</button>
+<button class="tab-btn" onclick="switchTab('settings')">
+<span class="icon">⚙️</span>
+<span>العلب والإعدادات</span>
+</button>
+</div>
+
+<!-- Tab Content: Search, Manage and Sell -->
+<div id="search-tab" class="tab-content active">
+<div class="grid" style="max-width:1000px;margin:0 auto">
 <div class="card">
 <div class="title">🔍 البحث والعرض</div>
 <div class="search">
@@ -213,57 +249,13 @@ body{padding:8px}
 <button class="btn btn-outline" onclick="check()">🔍 فحص</button>
 </div>
 </div>
-
-<div class="card">
-<div class="title">📦 إضافة حرف للعلبة</div>
-<div class="row3">
-<div class="group">
-<label>🔤 الحرف الأول</label>
-<input type="text" id="letterBoxLetter" placeholder="مثال: أ" maxlength="1" oninput="updateLetterBoxPreview()">
 </div>
-<div class="group">
-<label>⚧️ الجنس</label>
-<select id="letterBoxGender" onchange="updateLetterBoxPreview()">
-<option value="">اختر الجنس</option>
-<option value="ذكر">👦 ذكر</option>
-<option value="أنثى">👧 أنثى</option>
-</select>
-</div>
-<div class="group">
-<label>📦 رقم العلبة</label>
-<input type="text" id="letterBoxNumber" placeholder="مثال: 1" oninput="updateLetterBoxPreview()">
-</div>
-</div>
-<div id="letterBoxPreview" class="box-code-display" style="display:none">
-📦 سيتم حفظ: الحرف "<span id="letterPreview"></span>" (<span id="genderPreview"></span>) → العلبة <span id="boxPreview"></span>
-</div>
-<div class="btns">
-<button class="btn btn-success" onclick="addLetterBox()">➕ إضافة</button>
-<button class="btn btn-outline" onclick="clearLetterBox()">🧹 مسح</button>
-</div>
-<div class="results" id="letterBoxList" style="margin-top:16px;max-height:300px;display:none">
 </div>
 </div>
 
-<div class="card">
-<div class="title">📤 النسخ والطباعة</div>
-<div class="btns3">
-<button class="btn btn-success" onclick="backup()">💾 تحميل البيانات</button>
-<button class="btn btn-primary" onclick="restore()">📥 استرداد البيانات</button>
-<button class="btn btn-primary" onclick="toggleSync()">🔄 مزامنة يدوية</button>
-</div>
-<div class="btns">
-<button class="btn btn-outline" onclick="openPrint()">🖨️ طباعة</button>
-<button class="btn btn-outline" onclick="exportMiss()">📊 تصدير الناقص</button>
-</div>
-<div class="btns" style="margin-top:10px">
-<button class="btn btn-outline" onclick="exportLetterBoxRules()">📦 تصدير قواعد العلب</button>
-<button class="btn btn-outline" onclick="importLetterBoxRules()">📥 استيراد قواعد العلب</button>
-</div>
-<input type="file" id="file" accept=".csv" style="display:none">
-<input type="file" id="letterBoxFile" accept=".json" style="display:none">
-</div>
-
+<!-- Tab Content: Customer Orders -->
+<div id="orders-tab" class="tab-content">
+<div style="max-width:1000px;margin:0 auto">
 <div class="card">
 <div class="title">📋 طلبات الزبائن</div>
 <div class="group">
@@ -305,13 +297,73 @@ body{padding:8px}
 <div class="results" id="ordersList" style="margin-top:16px;max-height:400px;display:none">
 </div>
 </div>
+
+<!-- New Card: Saved Orders List -->
+<div class="card" style="margin-top:20px">
+<div class="title" id="ordersTitle">📦 الطلبات المحفوظة (0)</div>
+<div id="savedOrdersList" style="min-height:100px">
+<div class="empty" style="padding:30px">لا توجد طلبات محفوظة حالياً</div>
+</div>
 </div>
 
-<div class="footer" id="status">💾 حفظ تلقائي مفعل</div>
+</div>
+</div>
 
-<!-- إعداد Firebase في الأسفل -->
-<div class="firebase-setup" id="firebaseSetup" style="margin-top:20px">
-<h3>⚙️ إعداد المزامنة السحابية (Firebase)</h3>
+<!-- Tab Content: Settings & Boxes -->
+<div id="settings-tab" class="tab-content">
+<div style="max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:20px">
+<div class="card">
+<div class="title">📤 النسخ والطباعة</div>
+<div class="btns3">
+<button class="btn btn-success" onclick="backup()">💾 تحميل البيانات</button>
+<button class="btn btn-primary" onclick="restore()">📥 استرداد البيانات</button>
+<button class="btn btn-primary" onclick="toggleSync()">🔄 مزامنة يدوية</button>
+</div>
+<div class="btns">
+<button class="btn btn-outline" onclick="openPrint()">🖨️ طباعة</button>
+<button class="btn btn-outline" onclick="exportMiss()">📊 تصدير الناقص</button>
+</div>
+<div class="btns" style="margin-top:10px">
+<button class="btn btn-outline" onclick="exportLetterBoxRules()">📦 تصدير قواعد العلب</button>
+<button class="btn btn-outline" onclick="importLetterBoxRules()">📥 استيراد قواعد العلب</button>
+</div>
+<input type="file" id="file" accept=".csv" style="display:none">
+<input type="file" id="letterBoxFile" accept=".json" style="display:none">
+</div>
+
+<div class="card">
+<div class="title">📦 إدارة العلب</div>
+<div class="row3">
+<div class="group">
+<label>🔤 الحرف الأول</label>
+<input type="text" id="letterBoxLetter" placeholder="مثال: أ" maxlength="1" oninput="updateLetterBoxPreview()">
+</div>
+<div class="group">
+<label>⚧️ الجنس</label>
+<select id="letterBoxGender" onchange="updateLetterBoxPreview()">
+<option value="">اختر الجنس</option>
+<option value="ذكر">👦 ذكر</option>
+<option value="أنثى">👧 أنثى</option>
+</select>
+</div>
+<div class="group">
+<label>📦 رقم العلبة</label>
+<input type="text" id="letterBoxNumber" placeholder="مثال: 1" oninput="updateLetterBoxPreview()">
+</div>
+</div>
+<div id="letterBoxPreview" class="box-code-display" style="display:none">
+📦 سيتم حفظ: الحرف "<span id="letterPreview"></span>" (<span id="genderPreview"></span>) → العلبة <span id="boxPreview"></span>
+</div>
+<div class="btns">
+<button class="btn btn-success" onclick="addLetterBox()">➕ إضافة</button>
+<button class="btn btn-outline" onclick="clearLetterBox()">🧹 مسح</button>
+</div>
+<div class="results" id="letterBoxList" style="margin-top:16px;max-height:300px;display:none">
+</div>
+</div>
+
+<div class="card firebase-setup">
+<h3>🔄 إعدادات Firebase (اختياري)</h3>
 <input type="text" id="fbApiKey" placeholder="API Key">
 <input type="text" id="fbDatabaseURL" placeholder="Database URL (مثال: https://your-project.firebaseio.com)">
 <input type="text" id="fbProjectId" placeholder="Project ID">
@@ -330,8 +382,11 @@ body{padding:8px}
 7️⃣ انسخ: apiKey, databaseURL, projectId والصقها هنا
 </div>
 </div>
+</div>
+</div>
 
 </div>
+<!-- End of Container -->
 
 <div id="modal" class="modal">
 <div class="box">
@@ -386,7 +441,7 @@ function generateBoxCode(boxNumber, gender) {
   if (!boxNumber || !gender) return '';
   
   // رمز الجنس
-  var genderSymbol = gender === 'ذكر' ? 'ذ' : 'أ';
+  var genderSymbol = gender === 'ذكر' ? ' ذ' : ' أ';
   
   // رمز العلبة الكامل = رقم العلبة + رمز الجنس
   return boxNumber.toString().trim() + genderSymbol;
@@ -819,11 +874,22 @@ function addOrderItem() {
     return msg('⚠️ تنبيه', 'الرجاء إدخال اسم المنتج', 'warning');
   }
   
-  // التحقق من وجود الاسم في المخزون
+  // التحقق من وجود الاسم في المخزون وجلب معلومات العلبة
   var existsInStock = false;
+  var boxCode = '';
+  var boxNumber = '';
+  var qty = 0;
+  
   for (var i = 0; i < db.length; i++) {
     if (db[i].name.toLowerCase() === itemName.toLowerCase()) {
       existsInStock = true;
+      boxCode = db[i].box_code || '';
+      boxNumber = db[i].box_number || '';
+      qty = db[i].qty || 0;
+      // استخدام اللون من المخزون إذا لم يتم إدخال لون
+      if (!itemColor && db[i].color) {
+        itemColor = db[i].color;
+      }
       break;
     }
   }
@@ -831,7 +897,10 @@ function addOrderItem() {
   currentOrderItems.push({
     name: itemName,
     color: itemColor,
-    existsInStock: existsInStock
+    existsInStock: existsInStock,
+    boxCode: boxCode,
+    boxNumber: boxNumber,
+    qty: qty
   });
   
   document.getElementById('orderItemName').value = '';
@@ -846,10 +915,16 @@ function addOrderItem() {
     var confirmMsg = '⚠️ الاسم "<strong>' + itemName + '</strong>" غير موجود في المخزون<br><br>';
     confirmMsg += 'هل تريد إضافته للمخزون الآن؟<br><br>';
     confirmMsg += '<button class="btn btn-success" onclick="addItemToInventory(\'' + itemName.replace(/'/g, "\\'") + '\', \'' + itemColor.replace(/'/g, "\\'") + '\')" style="margin:5px">✅ نعم، أضف للمخزون</button>';
-    confirmMsg += '<button class="btn btn-outline" onclick="closeMsg()" style="margin:5px">❌ لا، متابعة</button>';
+    confirmMsg += '<button class="btn btn-outline" onclick="closeModal()" style="margin:5px">❌ لا، متابعة</button>';
     msg('📦 إضافة للمخزون', confirmMsg, 'warning', true);
   } else {
-    msg('✅ تم', 'تمت إضافة "' + itemName + '" للطلب', 'success');
+    var stockMsg = 'تمت إضافة "' + itemName + '" للطلب';
+    if (qty === 0) {
+      stockMsg += '<br><span style="color:#dc2626">⚠️ تحذير: الكمية = 0 (نفذ)</span>';
+    } else if (qty === 1) {
+      stockMsg += '<br><span style="color:#ea580c">⚠️ تنبيه: الكمية = 1 (قطعة أخيرة)</span>';
+    }
+    msg('✅ تم', stockMsg, 'success');
   }
 }
 
@@ -863,29 +938,24 @@ function addItemToInventory(itemName, itemColor) {
     }
   }
   
+  // عرض خيارات الجنس بدلاً من prompt
+  var genderMsg = '🔍 تحديد جنس الاسم "<strong>' + itemName + '</strong>"<br><br>';
+  genderMsg += '<div style="display:flex;gap:15px;justify-content:center;margin-top:20px">';
+  genderMsg += '<button class="btn btn-primary" onclick="confirmAddToInventory(\'' + itemName.replace(/'/g, "\\'") + '\', \'' + itemColor.replace(/'/g, "\\'") + '\', \'ذكر\')" style="padding:15px 30px;font-size:16px">👦 ذكر</button>';
+  genderMsg += '<button class="btn btn-danger" onclick="confirmAddToInventory(\'' + itemName.replace(/'/g, "\\'") + '\', \'' + itemColor.replace(/'/g, "\\'") + '\', \'أنثى\')" style="padding:15px 30px;font-size:16px">👧 أنثى</button>';
+  genderMsg += '</div><br>';
+  genderMsg += '<button class="btn btn-outline" onclick="closeModal()" style="margin-top:10px">❌ إلغاء</button>';
+  msg('📦 اختر الجنس', genderMsg, 'info', true);
+}
+
+// تأكيد إضافة الاسم للمخزون بعد اختيار الجنس
+function confirmAddToInventory(itemName, itemColor, gender) {
+  closeModal();
+  
   // البحث عن قاعدة توزيع الحرف
   var firstLetter = itemName.charAt(0);
-  var gender = '';
   var boxNum = '';
   var boxCode = '';
-  
-  // محاولة تحديد الجنس من الاسم (يمكن تحسينها لاحقاً)
-  // الآن سنطلب من المستخدم تحديد الجنس
-  var genderChoice = prompt('الرجاء تحديد جنس الاسم "' + itemName + '":\n\nاكتب "ذ" للذكر أو "أ" للأنثى', '');
-  
-  if (!genderChoice) {
-    msg('❌ إلغاء', 'تم إلغاء إضافة الاسم للمخزون', 'error');
-    return;
-  }
-  
-  if (genderChoice === 'ذ' || genderChoice === 'ذكر') {
-    gender = 'ذكر';
-  } else if (genderChoice === 'أ' || genderChoice === 'انثى' || genderChoice === 'أنثى') {
-    gender = 'أنثى';
-  } else {
-    msg('❌ خطأ', 'الرجاء إدخال "ذ" للذكر أو "أ" للأنثى', 'error');
-    return;
-  }
   
   // البحث عن قاعدة العلبة
   boxNum = getSuggestedBoxNumber(firstLetter, gender);
@@ -911,6 +981,9 @@ function addItemToInventory(itemName, itemColor) {
   for (var i = 0; i < currentOrderItems.length; i++) {
     if (currentOrderItems[i].name.toLowerCase() === itemName.toLowerCase()) {
       currentOrderItems[i].existsInStock = true;
+      currentOrderItems[i].boxCode = boxCode;
+      currentOrderItems[i].boxNumber = boxNum;
+      currentOrderItems[i].qty = 0;
       break;
     }
   }
@@ -923,13 +996,7 @@ function addItemToInventory(itemName, itemColor) {
   }
   successMsg += '🎨 اللون: ' + (itemColor || 'بدون') + '<br>';
   successMsg += '📊 الكمية: 0 (يمكنك تحديثها لاحقاً)';
-  
-  msg('✅ نجح', successMsg, 'success', true);
-}
-
-// إغلاق رسالة التنبيه
-function closeMsg() {
-  document.getElementById('msgBox').style.display = 'none';
+  msg('✅ نجح', successMsg, 'success');
 }
 
 // عرض قائمة الأسماء المطلوبة
@@ -953,6 +1020,18 @@ function displayOrderItems() {
     h += '<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb">';
     h += '<div style="flex:1"><span style="font-weight:600">' + (i + 1) + '. ' + item.name + '</span>';
     if (item.color) h += ' <span style="color:#6b7280">(' + item.color + ')</span>';
+    
+    // عرض رقم العلبة إذا كان موجوداً
+    if (item.existsInStock && item.boxCode) {
+      h += ' <span style="background:#4338ca;color:white;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;margin:0 4px">📦 ' + item.boxCode + '</span>';
+    }
+    
+    // عرض الكمية إذا كان موجوداً
+    if (item.existsInStock) {
+      var qtyColor = item.qty === 0 ? '#dc2626' : item.qty === 1 ? '#ea580c' : '#16a34a';
+      h += ' <span style="color:' + qtyColor + ';font-size:12px;font-weight:600">(الكمية: ' + item.qty + ')</span>';
+    }
+    
     h += ' <span style="color:' + stockColor + ';font-size:12px;font-weight:600">' + stockIcon + ' ' + stockText + '</span>';
     h += '</div>';
     h += '<button class="btn btn-danger" onclick="removeOrderItem(' + i + ')" style="width:auto;padding:4px 12px;font-size:12px">🗑️</button>';
@@ -1021,20 +1100,25 @@ function loadOrders() {
   try {
     var saved = localStorage.getItem(ORDERS_KEY);
     orders = saved ? JSON.parse(saved) : [];
-    if (orders.length > 0) {
-      displayOrders();
-    }
+    displayOrders(); // عرض الطلبات سواء كانت فارغة أو لا
   } catch (e) {
     orders = [];
+    displayOrders(); // عرض رسالة فارغة
   }
 }
 
 // عرض قائمة الطلبات
 function displayOrders() {
-  var listDiv = document.getElementById('ordersList');
+  var listDiv = document.getElementById('savedOrdersList');
+  var titleDiv = document.getElementById('ordersTitle');
+  
+  // تحديث العنوان بعدد الطلبات
+  if (titleDiv) {
+    titleDiv.textContent = '📦 الطلبات المحفوظة (' + orders.length + ')';
+  }
   
   if (orders.length === 0) {
-    listDiv.style.display = 'none';
+    listDiv.innerHTML = '<div class="empty" style="padding:30px">لا توجد طلبات محفوظة حالياً</div>';
     return;
   }
   
@@ -1043,9 +1127,7 @@ function displayOrders() {
     return new Date(b.date) - new Date(a.date);
   });
   
-  var h = '<div style="font-weight:800;color:#4338ca;margin-bottom:12px;font-size:16px">';
-  h += '📋 قائمة الطلبات (' + orders.length + ')';
-  h += '</div>';
+  var h = '';
   
   for (var i = 0; i < sorted.length; i++) {
     var order = sorted[i];
@@ -1075,6 +1157,7 @@ function displayOrders() {
       var item = order.items[j];
       h += '<div style="padding:4px 0;color:#334155">• ' + item.name;
       if (item.color) h += ' <span style="color:#64748b">(' + item.color + ')</span>';
+      if (item.boxCode) h += ' <span style="background:#4338ca;color:white;padding:2px 6px;border-radius:4px;font-size:11px;margin:0 4px">📦 ' + item.boxCode + '</span>';
       h += '</div>';
     }
     h += '</div>';
@@ -1090,17 +1173,94 @@ function displayOrders() {
   }
   
   listDiv.innerHTML = h;
-  listDiv.style.display = 'block';
 }
 
 // إكمال طلب
 function completeOrder(orderId) {
   for (var i = 0; i < orders.length; i++) {
     if (orders[i].id === orderId) {
+      var order = orders[i];
+      
+      // تنقيص الكميات من المخزون
+      var soldItems = [];
+      var unavailableItems = [];
+      var notInStockItems = [];
+      
+      for (var j = 0; j < order.items.length; j++) {
+        var item = order.items[j];
+        var found = false;
+        
+        // البحث عن الاسم في المخزون
+        for (var k = 0; k < db.length; k++) {
+          if (db[k].name.toLowerCase() === item.name.toLowerCase()) {
+            found = true;
+            if (db[k].qty > 0) {
+              db[k].qty--;
+              soldItems.push({
+                name: item.name,
+                boxCode: db[k].box_code,
+                remainingQty: db[k].qty
+              });
+            } else {
+              unavailableItems.push({
+                name: item.name,
+                boxCode: db[k].box_code
+              });
+            }
+            break;
+          }
+        }
+        
+        if (!found) {
+          notInStockItems.push(item.name);
+        }
+      }
+      
+      // حفظ التغييرات
       orders[i].status = 'completed';
       saveOrders();
+      save(); // حفظ تغييرات المخزون
+      stats(); // تحديث الإحصائيات
       displayOrders();
-      msg('✅ نجح', 'تم وضع علامة الإنجاز على الطلب', 'success');
+      
+      // عرض تقرير مفصل
+      var reportMsg = '<div style="text-align:right">';
+      reportMsg += '<h3 style="color:#16a34a;margin-bottom:15px">✅ تم إنجاز الطلب بنجاح!</h3>';
+      
+      if (soldItems.length > 0) {
+        reportMsg += '<div style="background:#d1fae5;padding:10px;border-radius:6px;margin-bottom:10px">';
+        reportMsg += '<strong style="color:#065f46">🎉 تم بيع (' + soldItems.length + ') منتج:</strong><br>';
+        for (var m = 0; m < soldItems.length; m++) {
+          reportMsg += '• ' + soldItems[m].name;
+          if (soldItems[m].boxCode) reportMsg += ' (📦 ' + soldItems[m].boxCode + ')';
+          reportMsg += ' → الكمية المتبقية: ' + soldItems[m].remainingQty + '<br>';
+        }
+        reportMsg += '</div>';
+      }
+      
+      if (unavailableItems.length > 0) {
+        reportMsg += '<div style="background:#fee2e2;padding:10px;border-radius:6px;margin-bottom:10px">';
+        reportMsg += '<strong style="color:#991b1b">⚠️ منتجات نفذت (' + unavailableItems.length + '):</strong><br>';
+        for (var n = 0; n < unavailableItems.length; n++) {
+          reportMsg += '• ' + unavailableItems[n].name;
+          if (unavailableItems[n].boxCode) reportMsg += ' (📦 ' + unavailableItems[n].boxCode + ')';
+          reportMsg += '<br>';
+        }
+        reportMsg += '</div>';
+      }
+      
+      if (notInStockItems.length > 0) {
+        reportMsg += '<div style="background:#fef3c7;padding:10px;border-radius:6px;margin-bottom:10px">';
+        reportMsg += '<strong style="color:#92400e">ℹ️ غير موجود في المخزون (' + notInStockItems.length + '):</strong><br>';
+        for (var p = 0; p < notInStockItems.length; p++) {
+          reportMsg += '• ' + notInStockItems[p] + '<br>';
+        }
+        reportMsg += '</div>';
+      }
+      
+      reportMsg += '</div>';
+      
+      msg('📊 تقرير الإنجاز', reportMsg, 'success', true);
       break;
     }
   }
@@ -1142,21 +1302,37 @@ function printOrders() {
   var printWindow = window.open('', '_blank');
   var h = '<html dir="rtl"><head><meta charset="UTF-8"><title>طلبات الزبائن - كرزما K3D</title>';
   h += '<style>';
-  h += 'body{font-family:Arial,sans-serif;padding:20px;background:#fff}';
-  h += 'h1{text-align:center;color:#4338ca;margin-bottom:30px}';
-  h += '.order{border:2px solid #e5e7eb;border-radius:8px;padding:15px;margin-bottom:20px;page-break-inside:avoid}';
-  h += '.order-header{background:#4338ca;color:white;padding:10px;border-radius:6px;margin-bottom:10px}';
-  h += '.order-info{margin-bottom:10px;padding:8px;background:#f8fafc}';
-  h += '.order-items{background:#fff;padding:10px;border:1px solid #e5e7eb;border-radius:6px}';
-  h += '.item-row{padding:6px 0;border-bottom:1px solid #e5e7eb}';
-  h += '.status-badge{display:inline-block;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600}';
+  h += 'body{font-family:Cairo,Arial,sans-serif;padding:30px;background:#f8fafc;margin:0}';
+  h += '.container{max-width:900px;margin:0 auto;background:#fff;padding:30px;box-shadow:0 4px 6px rgba(0,0,0,0.1)}';
+  h += '.header{text-align:center;border-bottom:3px solid #4338ca;padding-bottom:20px;margin-bottom:30px}';
+  h += 'h1{color:#4338ca;margin:0 0 10px 0;font-size:28px}';
+  h += '.subtitle{color:#64748b;font-size:14px}';
+  h += '.order{border:2px solid #e5e7eb;border-radius:10px;padding:20px;margin-bottom:25px;page-break-inside:avoid;background:#fff}';
+  h += '.order-number{background:linear-gradient(135deg,#4338ca,#6366f1);color:white;padding:12px 20px;border-radius:8px;margin-bottom:15px;font-weight:700;font-size:18px;display:flex;justify-content:space-between;align-items:center}';
+  h += '.order-info{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:15px;background:#f8fafc;padding:15px;border-radius:8px}';
+  h += '.info-item{display:flex;align-items:center;gap:8px}';
+  h += '.info-item strong{color:#4338ca;min-width:70px}';
+  h += '.order-items{background:#fff;padding:15px;border:2px solid #e5e7eb;border-radius:8px}';
+  h += '.items-header{font-weight:700;color:#4338ca;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid #e5e7eb;font-size:16px}';
+  h += '.item-row{padding:10px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;gap:8px}';
+  h += '.item-row:last-child{border-bottom:none}';
+  h += '.item-number{background:#4338ca;color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}';
+  h += '.item-name{flex:1;font-weight:600;color:#1e293b}';
+  h += '.item-color{color:#64748b;font-size:13px}';
+  h += '.item-box{background:#4338ca;color:white;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;white-space:nowrap}';
+  h += '.status-badge{display:inline-block;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600}';
   h += '.pending{background:#fed7aa;color:#ea580c}';
   h += '.completed{background:#dcfce7;color:#16a34a}';
-  h += '@media print{body{padding:10px}.order{page-break-inside:avoid}}';
+  h += '.footer{text-align:center;margin-top:40px;padding-top:20px;border-top:2px solid #e5e7eb;color:#64748b;font-size:13px}';
+  h += '@media print{body{padding:0;background:#fff}.container{box-shadow:none;padding:20px}.order{page-break-inside:avoid}}';
   h += '</style></head><body>';
   
-  h += '<h1>📋 طلبات الزبائن - برنامج كرزما K3D</h1>';
-  h += '<p style="text-align:center;color:#64748b;margin-bottom:30px">التاريخ: ' + new Date().toLocaleDateString('ar-EG') + '</p>';
+  h += '<div class="container">';
+  h += '<div class="header">';
+  h += '<h1>📋 طلبات الزبائن</h1>';
+  h += '<div class="subtitle">برنامج كرزما K3D لإدارة المخزون</div>';
+  h += '<div class="subtitle" style="margin-top:8px">تاريخ الطباعة: ' + new Date().toLocaleDateString('ar-EG') + ' - ' + new Date().toLocaleTimeString('ar-EG', {hour: '2-digit', minute: '2-digit'}) + '</div>';
+  h += '</div>';
   
   // ترتيب الطلبات (قيد الانتظار أولاً)
   var sorted = orders.slice().sort(function(a, b) {
@@ -1166,34 +1342,50 @@ function printOrders() {
     return new Date(b.date) - new Date(a.date);
   });
   
+  var pendingCount = 0;
+  var completedCount = 0;
+  for (var i = 0; i < sorted.length; i++) {
+    if (sorted[i].status === 'pending') pendingCount++;
+    else completedCount++;
+  }
+  
+  h += '<div style="background:#f8fafc;padding:15px;border-radius:8px;margin-bottom:25px;display:flex;justify-content:space-around;text-align:center">';
+  h += '<div><div style="font-size:24px;font-weight:700;color:#4338ca">' + orders.length + '</div><div style="color:#64748b;font-size:13px">إجمالي الطلبات</div></div>';
+  h += '<div><div style="font-size:24px;font-weight:700;color:#ea580c">' + pendingCount + '</div><div style="color:#64748b;font-size:13px">قيد الانتظار</div></div>';
+  h += '<div><div style="font-size:24px;font-weight:700;color:#16a34a">' + completedCount + '</div><div style="color:#64748b;font-size:13px">مكتملة</div></div>';
+  h += '</div>';
+  
   for (var i = 0; i < sorted.length; i++) {
     var order = sorted[i];
     var date = new Date(order.date);
     var dateStr = date.toLocaleDateString('ar-EG');
+    var timeStr = date.toLocaleTimeString('ar-EG', {hour: '2-digit', minute: '2-digit'});
     var statusClass = order.status === 'completed' ? 'completed' : 'pending';
     var statusText = order.status === 'completed' ? '✅ مكتمل' : '⏳ قيد الانتظار';
     
     h += '<div class="order">';
-    h += '<div class="order-header">';
-    h += '<h3 style="margin:0">طلب رقم ' + (i + 1) + ' - ' + order.customerName + '</h3>';
+    h += '<div class="order-number">';
+    h += '<span>طلب رقم ' + (i + 1) + ' - ' + order.customerName + '</span>';
+    h += '<span class="status-badge ' + statusClass + '">' + statusText + '</span>';
     h += '</div>';
     
     h += '<div class="order-info">';
-    h += '<div><strong>📞 الهاتف:</strong> ' + order.customerPhone + '</div>';
+    h += '<div class="info-item"><strong>📞 الهاتف:</strong> <span>' + order.customerPhone + '</span></div>';
+    h += '<div class="info-item"><strong>📅 التاريخ:</strong> <span>' + dateStr + ' - ' + timeStr + '</span></div>';
     if (order.customerAddress) {
-      h += '<div><strong>📍 العنوان:</strong> ' + order.customerAddress + '</div>';
+      h += '<div class="info-item" style="grid-column:1/-1"><strong>📍 العنوان:</strong> <span>' + order.customerAddress + '</span></div>';
     }
-    h += '<div><strong>📅 التاريخ:</strong> ' + dateStr + '</div>';
-    h += '<div><strong>الحالة:</strong> <span class="status-badge ' + statusClass + '">' + statusText + '</span></div>';
     h += '</div>';
     
     h += '<div class="order-items">';
-    h += '<strong>الأسماء المطلوبة (' + order.items.length + '):</strong>';
+    h += '<div class="items-header">الأسماء المطلوبة (' + order.items.length + ' منتج)</div>';
     for (var j = 0; j < order.items.length; j++) {
       var item = order.items[j];
       h += '<div class="item-row">';
-      h += '<strong>' + (j + 1) + '.</strong> ' + item.name;
-      if (item.color) h += ' - <span style="color:#64748b">' + item.color + '</span>';
+      h += '<div class="item-number">' + (j + 1) + '</div>';
+      h += '<div class="item-name">' + item.name + '</div>';
+      if (item.color) h += '<div class="item-color">(' + item.color + ')</div>';
+      if (item.boxCode) h += '<div class="item-box">📦 ' + item.boxCode + '</div>';
       h += '</div>';
     }
     h += '</div>';
@@ -1201,6 +1393,12 @@ function printOrders() {
     h += '</div>';
   }
   
+  h += '<div class="footer">';
+  h += '<div>تم الإنشاء بواسطة برنامج كرزما K3D لإدارة المخزون</div>';
+  h += '<div style="margin-top:5px">© 2024 - جميع الحقوق محفوظة</div>';
+  h += '</div>';
+  
+  h += '</div>';
   h += '</body></html>';
   
   printWindow.document.open();
@@ -1258,6 +1456,71 @@ function exportOrders() {
   URL.revokeObjectURL(url);
   
   msg('✅ نجح', 'تم تنزيل ملف الطلبات بنجاح', 'success');
+}
+
+// التنقل بين التبويبات
+function switchTab(tabName) {
+  // إخفاء كل التبويبات
+  var tabs = document.getElementsByClassName('tab-content');
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].classList.remove('active');
+  }
+  
+  // إزالة active من كل الأزرار
+  var btns = document.getElementsByClassName('tab-btn');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.remove('active');
+  }
+  
+  // إظهار التبويب المطلوب
+  var targetTab = document.getElementById(tabName + '-tab');
+  if (targetTab) {
+    targetTab.classList.add('active');
+  }
+  
+  // تفعيل الزر المطلوب
+  event.target.closest('.tab-btn').classList.add('active');
+}
+
+// دالة للانتقال بين التبويبات برمجياً
+function switchTabDirect(tabName) {
+  // تحويل 'manage' و 'sell' و 'boxes' إلى الأسماء الجديدة
+  if (tabName === 'manage' || tabName === 'sell') {
+    tabName = 'search';
+  } else if (tabName === 'boxes') {
+    tabName = 'settings';
+  }
+  
+  // إخفاء كل التبويبات
+  var tabs = document.getElementsByClassName('tab-content');
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].classList.remove('active');
+  }
+  
+  // إزالة active من كل الأزرار
+  var btns = document.getElementsByClassName('tab-btn');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.remove('active');
+  }
+  
+  // إظهار التبويب المطلوب
+  var targetTab = document.getElementById(tabName + '-tab');
+  if (targetTab) {
+    targetTab.classList.add('active');
+  }
+  
+  // تفعيل الزر المطلوب
+  var allBtns = document.querySelectorAll('.tab-btn');
+  for (var i = 0; i < allBtns.length; i++) {
+    var btn = allBtns[i];
+    var btnText = btn.textContent || btn.innerText;
+    if ((tabName === 'search' && btnText.indexOf('البحث') !== -1) ||
+        (tabName === 'orders' && btnText.indexOf('طلبات') !== -1) ||
+        (tabName === 'settings' && btnText.indexOf('العلب') !== -1)) {
+      btn.classList.add('active');
+      break;
+    }
+  }
 }
 
 function init() {
@@ -1322,10 +1585,13 @@ function save() {
   if (isFirebaseReady && database) {
     database.ref('k3d_names').set(db).then(function() {
       stats();
-      document.getElementById('status').textContent = '✅ تم الحفظ على السحابة';
-      setTimeout(function() {
-        document.getElementById('status').textContent = '💾 حفظ تلقائي مفعل';
-      }, 2000);
+      var statusEl = document.getElementById('status');
+      if (statusEl) {
+        statusEl.textContent = '✅ تم الحفظ على السحابة';
+        setTimeout(function() {
+          statusEl.textContent = '💾 حفظ تلقائي مفعل';
+        }, 2000);
+      }
     }).catch(function(error) {
       console.error('خطأ في Firebase:', error);
       saveLocal();
@@ -1335,10 +1601,13 @@ function save() {
     // حفظ محلي فقط
     saveLocal();
     stats();
-    document.getElementById('status').textContent = '✅ تم الحفظ محلياً';
-    setTimeout(function() {
-      document.getElementById('status').textContent = '💾 حفظ محلي فقط';
-    }, 2000);
+    var statusEl = document.getElementById('status');
+    if (statusEl) {
+      statusEl.textContent = '✅ تم الحفظ محلياً';
+      setTimeout(function() {
+        statusEl.textContent = '💾 حفظ محلي فقط';
+      }, 2000);
+    }
   }
 }
 
@@ -1467,22 +1736,35 @@ function show(items, title, searchQuery) {
 }
 
 function addNewName(name) {
+  // الانتقال إلى تبويب إدارة السجلات
+  switchTabDirect('manage');
+  
   document.getElementById('name').value = name;
   document.getElementById('qty').value = '0';
   document.getElementById('gender').value = '';
   document.getElementById('color').value = '';
   document.getElementById('note').value = '';
   updateBoxCodePreview();
-  document.getElementById('gender').focus();
-  msg('إضافة', 'تم ملء الاسم "' + name + '" - الرجاء إكمال البيانات', 'info');
   
-  // التمرير إلى قسم إدارة السجلات
-  document.getElementById('name').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  // تأخير بسيط للتأكد من ظهور التبويب
+  setTimeout(function() {
+    document.getElementById('gender').focus();
+  }, 100);
+  
+  msg('إضافة', 'تم ملء الاسم "' + name + '" - الرجاء إكمال البيانات', 'info');
 }
 
 function addToSell(name) {
+  // الانتقال إلى تبويب عملية البيع
+  switchTabDirect('sell');
+  
   document.getElementById('sname').value = name;
-  document.getElementById('sqty').focus();
+  
+  // تأخير بسيط للتأكد من ظهور التبويب
+  setTimeout(function() {
+    document.getElementById('sqty').focus();
+  }, 100);
+  
   msg('تم', 'تم إضافة "' + name + '" لعملية البيع', 'success');
 }
 
@@ -1916,6 +2198,18 @@ document.getElementById('file').addEventListener('change', function(e) {
   reader.onload = function(ev) {
     try {
       var text = ev.target.result;
+      
+      // إزالة BOM إذا كان موجوداً
+      if (text.charCodeAt(0) === 0xFEFF) {
+        text = text.substr(1);
+      }
+      
+      // تحديد الفاصل (فاصلة أو فاصلة منقوطة)
+      var delimiter = ',';
+      if (text.indexOf(';') > -1 && text.indexOf(';') < text.indexOf('\n')) {
+        delimiter = ';';
+      }
+      
       var lines = text.split('\n');
       if (lines.length < 2) {
         msg('❌ خطأ', 'الملف فارغ أو لا يحتوي على بيانات', 'error');
@@ -1924,7 +2218,10 @@ document.getElementById('file').addEventListener('change', function(e) {
       
       // قراءة سطر الرأس لمعرفة البنية
       var header = lines[0].trim();
-      var hasBoxColumns = header.indexOf('رقم العلبة') !== -1 || header.indexOf('box_number') !== -1;
+      var hasBoxColumns = header.indexOf('رقم العلبة') !== -1 || 
+                         header.indexOf('box_number') !== -1 ||
+                         header.indexOf('رمز العلبة') !== -1 ||
+                         header.indexOf('box_code') !== -1;
       
       var imported = [];
       
@@ -1938,7 +2235,7 @@ document.getElementById('file').addEventListener('change', function(e) {
           var char = line[j];
           if (char === '"') {
             inQuotes = !inQuotes;
-          } else if (char === ',' && !inQuotes) {
+          } else if (char === delimiter && !inQuotes) {
             parts.push(current);
             current = '';
           } else {
@@ -1957,22 +2254,29 @@ document.getElementById('file').addEventListener('change', function(e) {
           var note = '';
           
           if (hasBoxColumns && parts.length >= 7) {
-            // بنية جديدة: الاسم,الكمية,الجنس,اللون,رقم العلبة,رمز العلبة,ملاحظات
+            // بنية كاملة: الاسم,الكمية,الجنس,اللون,رقم العلبة,رمز العلبة,ملاحظات
             boxNumber = parts[4].trim();
             boxCode = parts[5].trim();
             note = parts[6].replace(/^"|"$/g, '').trim();
           } else if (hasBoxColumns && parts.length >= 6) {
-            // بنية متوسطة
+            // بنية متوسطة: الاسم,الكمية,الجنس,اللون,رقم العلبة,رمز العلبة
             boxNumber = parts[4].trim();
-            boxCode = parts.length >= 6 ? parts[5].trim() : '';
+            boxCode = parts[5].trim();
             note = parts.length >= 7 ? parts[6].replace(/^"|"$/g, '').trim() : '';
-          } else {
+          } else if (hasBoxColumns && parts.length >= 5) {
+            // بنية مع رقم العلبة فقط: الاسم,الكمية,الجنس,اللون,رقم العلبة
+            boxNumber = parts[4].trim();
+            note = parts.length >= 6 ? parts[5].replace(/^"|"$/g, '').trim() : '';
+          } else if (parts.length >= 5) {
             // بنية قديمة: الاسم,الكمية,الجنس,اللون,ملاحظات
-            note = parts.length > 4 ? parts[4].replace(/^"|"$/g, '').trim() : '';
-            // لا يتم التعيين التلقائي - المستخدم سيضيف رقم العلبة يدوياً
+            note = parts[4].replace(/^"|"$/g, '').trim();
           }
           
-          // إذا كان هناك boxCode قديم ولكن لا يوجد boxNumber، استخرج الرقم
+          // إزالة علامات التنصيص من القيم
+          boxNumber = boxNumber.replace(/^"|"$/g, '');
+          boxCode = boxCode.replace(/^"|"$/g, '');
+          
+          // إذا كان هناك boxCode ولكن لا يوجد boxNumber، استخرج الرقم
           if (!boxNumber && boxCode) {
             boxNumber = boxCode.replace(/[ذأ]/g, '');
           }
@@ -1999,18 +2303,51 @@ document.getElementById('file').addEventListener('change', function(e) {
         return;
       }
       
-      var message = '✅ تم العثور على ' + imported.length + ' سجل في الملف';
-      message += '\n\n⚠️ هل تريد استبدال البيانات الحالية؟\n\nملاحظة: سيتم حذف جميع البيانات الحالية';
+      // إحصائيات بيانات العلب
+      var withBoxData = 0;
+      var withoutBoxData = 0;
+      for (var i = 0; i < imported.length; i++) {
+        if (imported[i].box_code || imported[i].box_number) {
+          withBoxData++;
+        } else {
+          withoutBoxData++;
+        }
+      }
+      
+      var message = '✅ تم العثور على ' + imported.length + ' سجل في الملف\n\n';
+      if (withBoxData > 0) {
+        message += '📦 سجلات بها بيانات علب: ' + withBoxData + '\n';
+      }
+      if (withoutBoxData > 0) {
+        message += '⚠️ سجلات بدون بيانات علب: ' + withoutBoxData + '\n';
+      }
+      message += '\n⚠️ هل تريد استبدال البيانات الحالية؟\n\nملاحظة: سيتم حذف جميع البيانات الحالية';
       
       if (confirm(message)) {
         db = imported;
         save();
         search();
-        msg('✅ نجح', 'تم استرداد البيانات بنجاح!<br><br>تم استيراد ' + imported.length + ' سجل', 'success');
+        var successMsg = 'تم استرداد البيانات بنجاح!<br><br>';
+        successMsg += '📊 تم استيراد ' + imported.length + ' سجل<br>';
+        if (withBoxData > 0) {
+          successMsg += '📦 سجلات بها بيانات علب: ' + withBoxData + '<br>';
+        }
+        if (withoutBoxData > 0) {
+          successMsg += '⚠️ سجلات بدون بيانات علب: ' + withoutBoxData;
+        }
+        msg('✅ نجح', successMsg, 'success');
       }
     } catch (err) {
       console.error('خطأ:', err);
-      msg('❌ خطأ', 'فشل في قراءة الملف. تأكد من أن الملف بصيغة CSV صحيحة', 'error');
+      var errorMsg = 'فشل في قراءة الملف.<br><br>';
+      errorMsg += '<strong>تأكد من:</strong><br>';
+      errorMsg += '• أن الملف بصيغة CSV صحيحة<br>';
+      errorMsg += '• أن الملف يحتوي على سطر رأس (Header)<br>';
+      errorMsg += '• البنية الأساسية: <strong>الاسم,الكمية,الجنس,اللون</strong><br>';
+      errorMsg += '• البنية الكاملة (اختياري): <strong>الاسم,الكمية,الجنس,اللون,رقم العلبة,رمز العلبة,ملاحظات</strong><br>';
+      errorMsg += '• أن الملف محفوظ بترميز UTF-8<br><br>';
+      errorMsg += '<small>الخطأ: ' + err.message + '</small>';
+      msg('❌ خطأ', errorMsg, 'error');
     }
   };
   reader.readAsText(f, 'UTF-8');
