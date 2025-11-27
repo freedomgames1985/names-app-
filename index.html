@@ -104,6 +104,7 @@ body{padding:8px;font-size:14px}
 .connection-status,.action-message{font-size:10px !important;padding:3px 8px !important}
 .stats{gap:6px !important;margin-top:8px !important}
 .stat{padding:6px 12px !important;font-size:11px !important}
+.stat-total-qty{display:none !important}
 .grid{grid-template-columns:1fr}
 .row{grid-template-columns:1fr}
 .row3{grid-template-columns:1fr}
@@ -160,7 +161,7 @@ body{padding:8px;font-size:14px}
 <div class="stat">📊 الإجمالي: <span id="total">0</span></div>
 <div class="stat">✅ متوفر: <span id="avail">0</span></div>
 <div class="stat">❌ ناقص: <span id="miss">0</span></div>
-<div class="stat">📦 إجمالي القطع: <span id="totalQty">0</span></div>
+<div class="stat stat-total-qty">📦 إجمالي القطع: <span id="totalQty">0</span></div>
 </div>
 </div>
 </div>
@@ -503,6 +504,23 @@ function initFirebase() {
       }
     });
     
+    // الاستماع لتغييرات قواعد العلب
+    database.ref('k3d_letterbox_map').on('value', function(snapshot) {
+      if (snapshot.exists()) {
+        letterBoxMap = snapshot.val();
+        // حفظ في localStorage أيضاً
+        try {
+          localStorage.setItem(LETTERBOX_KEY, JSON.stringify(letterBoxMap));
+        } catch (e) {
+          console.error('خطأ في حفظ قواعد العلب محلياً:', e);
+        }
+        // تحديث العرض إذا كان في صفحة العلب
+        if (document.getElementById('letterBoxList')) {
+          displayLetterBoxList();
+        }
+      }
+    });
+    
     // مراقبة حالة الاتصال
     database.ref('.info/connected').on('value', function(snapshot) {
       if (snapshot.val() === true) {
@@ -629,20 +647,50 @@ function addLetterBox() {
 
 // حفظ قواعد توزيع الحروف
 function saveLetterBoxMap() {
+  // حفظ في localStorage دائماً
   try {
     localStorage.setItem(LETTERBOX_KEY, JSON.stringify(letterBoxMap));
   } catch (e) {
-    console.error('خطأ في حفظ قواعد العلب:', e);
+    console.error('خطأ في حفظ قواعد العلب محلياً:', e);
+  }
+  
+  // حفظ في Firebase إذا كان متاحاً
+  if (isFirebaseReady && database) {
+    database.ref('k3d_letterbox_map').set(letterBoxMap).then(function() {
+      console.log('تم حفظ قواعد العلب على السحابة');
+    }).catch(function(error) {
+      console.error('خطأ في حفظ قواعد العلب على Firebase:', error);
+    });
   }
 }
 
 // تحميل قواعد توزيع الحروف
 function loadLetterBoxMap() {
+  // إذا كان Firebase متاحاً، سيتم التحميل تلقائياً من listener
+  // هنا نحمل من localStorage كبديل أو حتى يتم التحميل من Firebase
   try {
     var saved = localStorage.getItem(LETTERBOX_KEY);
     letterBoxMap = saved ? JSON.parse(saved) : [];
     if (letterBoxMap.length > 0) {
       displayLetterBoxList();
+    }
+    
+    // إذا كان Firebase جاهزاً، حمل من Firebase مرة واحدة للتأكد
+    if (isFirebaseReady && database) {
+      database.ref('k3d_letterbox_map').once('value').then(function(snapshot) {
+        if (snapshot.exists()) {
+          letterBoxMap = snapshot.val();
+          // حفظ في localStorage
+          try {
+            localStorage.setItem(LETTERBOX_KEY, JSON.stringify(letterBoxMap));
+          } catch (e) {
+            console.error('خطأ في حفظ قواعد العلب محلياً:', e);
+          }
+          displayLetterBoxList();
+        }
+      }).catch(function(error) {
+        console.error('خطأ في تحميل قواعد العلب من Firebase:', error);
+      });
     }
   } catch (e) {
     letterBoxMap = [];
