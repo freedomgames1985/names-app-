@@ -108,8 +108,8 @@ body{padding:8px;font-size:14px}
 .grid{grid-template-columns:1fr}
 .row{grid-template-columns:1fr}
 .row3{grid-template-columns:1fr}
-.btns{grid-template-columns:1fr}
-.btns3{grid-template-columns:1fr}
+.btns{grid-template-columns:1fr 1fr}
+.btns3{grid-template-columns:1fr 1fr}
 .search{flex-direction:column}
 .tab-nav{margin:0 0 15px 0;border-width:2px;justify-content:stretch}
 .tab-btn{padding:8px 6px;font-size:11px;min-width:0;flex:1 1 0;line-height:1.2;white-space:normal;text-align:center}
@@ -266,7 +266,7 @@ body{padding:8px;font-size:14px}
 <div class="row">
 <div class="group">
 <label>📞 رقم الهاتف</label>
-<input type="text" id="customerPhone" placeholder="مثال: 0599123456">
+<input type="tel" id="customerPhone" placeholder="مثال: 0599123456">
 </div>
 <div class="group">
 <label>📍 العنوان</label>
@@ -274,22 +274,27 @@ body{padding:8px;font-size:14px}
 </div>
 </div>
 <div class="group">
-<label>📝 ملاحظات</label>
-<textarea id="customerNotes" placeholder="ملاحظات إضافية (اختياري)" rows="1" style="resize:vertical;font-family:inherit;font-size:15px;padding:12px;border:2px solid #e5e7eb;border-radius:8px;width:100%;box-sizing:border-box"></textarea>
-</div>
-<div class="group">
 <label>📝 الأسماء المطلوبة</label>
 <div id="orderItemsList" style="margin-bottom:10px;display:none"></div>
 <div class="row">
 <div class="group" style="flex:2;position:relative">
-<input type="text" id="orderItemName" placeholder="أدخل الاسم المطلوب" onkeypress="if(event.key==='Enter') addOrderItem()" oninput="showOrderItemSuggestions()">
+<input type="text" id="orderItemName" placeholder="أدخل الاسم (Enter أو اختر من القائمة)" onkeydown="if(event.key==='Tab' && this.value.trim()) { event.preventDefault(); addOrderItem(); }" onkeypress="if(event.key==='Enter') addOrderItem()" oninput="showOrderItemSuggestions()">
 <div id="orderItemSuggestions" style="position:absolute;top:100%;left:0;right:0;background:white;border:1px solid #e5e7eb;border-radius:8px;max-height:300px;overflow-y:auto;z-index:1000;display:none;box-shadow:0 4px 6px rgba(0,0,0,0.1)"></div>
 </div>
-<div class="group" style="flex:1">
-<input type="text" id="orderItemColor" placeholder="اللون" onkeypress="if(event.key==='Enter') addOrderItem()">
+<div class="group" style="flex:1;position:relative">
+<input type="text" id="orderItemColor" placeholder="اللون (Enter أو ✓)" onkeypress="if(event.key==='Enter') addOrderItem()" style="padding-left:45px">
+<button onclick="addOrderItem()" style="position:absolute;left:5px;top:50%;transform:translateY(-50%);background:#10b981;color:white;border:none;border-radius:6px;width:35px;height:35px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:bold;transition:all 0.2s" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10b981'">✓</button>
 </div>
-<button class="btn btn-success" onclick="addOrderItem()" style="width:auto;padding:10px 20px;margin-top:24px">➕</button>
 </div>
+</div>
+<div style="margin-bottom:16px">
+<a href="javascript:void(0)" onclick="toggleNotesField()" id="toggleNotesBtn" style="color:#4338ca;font-size:14px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:6px;cursor:pointer">
+<span id="toggleNotesIcon">➕</span> إضافة ملاحظات (اختياري)
+</a>
+</div>
+<div class="group" id="notesFieldContainer" style="display:none">
+<label>📝 ملاحظات</label>
+<textarea id="customerNotes" placeholder="ملاحظات إضافية (اختياري)" rows="1" style="resize:vertical;font-family:inherit;font-size:15px;padding:12px;border:2px solid #e5e7eb;border-radius:8px;width:100%;box-sizing:border-box"></textarea>
 </div>
 <div class="btns">
 <button class="btn btn-success" onclick="saveOrder()">💾 حفظ الطلب</button>
@@ -922,6 +927,7 @@ function selectOrderItemSuggestion(name) {
     }
   }
   
+  // التركيز على حقل اللون
   document.getElementById('orderItemColor').focus();
 }
 
@@ -1398,6 +1404,13 @@ function editOrder(orderId) {
       document.getElementById('customerAddress').value = order.customerAddress || '';
       document.getElementById('customerNotes').value = order.customerNotes || '';
       
+      // إظهار حقل الملاحظات إذا كان هناك ملاحظات
+      if (order.customerNotes) {
+        document.getElementById('notesFieldContainer').style.display = 'block';
+        document.getElementById('toggleNotesIcon').textContent = '➖';
+        document.getElementById('toggleNotesBtn').innerHTML = '<span id="toggleNotesIcon">➖</span> إخفاء الملاحظات';
+      }
+      
       // ملء الأسماء المطلوبة
       currentOrderItems = [];
       for (var j = 0; j < order.items.length; j++) {
@@ -1430,6 +1443,23 @@ function editOrder(orderId) {
   }
 }
 
+// إظهار/إخفاء حقل الملاحظات
+function toggleNotesField() {
+  var container = document.getElementById('notesFieldContainer');
+  var icon = document.getElementById('toggleNotesIcon');
+  var btn = document.getElementById('toggleNotesBtn');
+  
+  if (container.style.display === 'none') {
+    container.style.display = 'block';
+    icon.textContent = '➖';
+    btn.innerHTML = '<span id="toggleNotesIcon">➖</span> إخفاء الملاحظات';
+  } else {
+    container.style.display = 'none';
+    icon.textContent = '➕';
+    btn.innerHTML = '<span id="toggleNotesIcon">➕</span> إضافة ملاحظات (اختياري)';
+  }
+}
+
 // مسح نموذج الطلب
 function clearOrderForm() {
   document.getElementById('customerName').value = '';
@@ -1440,6 +1470,11 @@ function clearOrderForm() {
   document.getElementById('orderItemColor').value = '';
   currentOrderItems = [];
   displayOrderItems();
+  
+  // إخفاء حقل الملاحظات
+  document.getElementById('notesFieldContainer').style.display = 'none';
+  document.getElementById('toggleNotesIcon').textContent = '➕';
+  document.getElementById('toggleNotesBtn').innerHTML = '<span id="toggleNotesIcon">➕</span> إضافة ملاحظات (اختياري)';
 }
 
 // تحديث إحصائيات الأسماء المطلوبة
