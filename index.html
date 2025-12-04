@@ -439,8 +439,10 @@ body{padding:8px;font-size:14px}
 </div>
 </div>
 
+
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
 <script>
@@ -503,15 +505,86 @@ function initFirebase() {
       return false;
     }
     
+// إعداد المستمعين بعد تسجيل الدخول
+function setupFirebaseListeners() {
+  if (!database) return;
+  
+  updateConnectionStatus('online');
+  
+  // الاستماع للتغييرات الفورية
+  database.ref('k3d_names').on('value', function(snapshot) {
+    if (snapshot.exists()) {
+      db = snapshot.val();
+      stats();
+      if (document.getElementById('q').value.trim()) {
+        liveSearch();
+      }
+    }
+  });
+  
+  // الاستماع لتغييرات قواعد العلب
+  database.ref('k3d_letterbox_map').on('value', function(snapshot) {
+    if (snapshot.exists()) {
+      letterBoxMap = snapshot.val();
+      try {
+        localStorage.setItem(LETTERBOX_KEY, JSON.stringify(letterBoxMap));
+      } catch (e) {
+        console.error('خطأ في حفظ قواعد العلب محلياً:', e);
+      }
+      if (document.getElementById('letterBoxList')) {
+        displayLetterBoxList();
+      }
+    }
+  });
+  
+  // الاستماع لتغييرات طلبات الزبائن
+  database.ref('k3d_orders').on('value', function(snapshot) {
+    if (snapshot.exists()) {
+      orders = snapshot.val();
+      try {
+        localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+      } catch (e) {
+        console.error('خطأ في حفظ الطلبات محلياً:', e);
+      }
+      if (document.getElementById('savedOrdersList')) {
+        displayOrders();
+      }
+    }
+  });
+  
+  // مراقبة حالة الاتصال
+  database.ref('.info/connected').on('value', function(snapshot) {
+    if (snapshot.val() === true) {
+      updateConnectionStatus('online');
+    } else {
+      updateConnectionStatus('offline');
+    }
+  });
+}
+
+
+
     var fbConfig = JSON.parse(config);
     if (!fbConfig.apiKey || !fbConfig.databaseURL || !fbConfig.projectId) {
       updateConnectionStatus('local');
       return false;
     }
     
-    firebaseApp = firebase.initializeApp(fbConfig);
-    database = firebase.database();
-    isFirebaseReady = true;
+firebaseApp = firebase.initializeApp(fbConfig);
+database = firebase.database();
+
+// تسجيل دخول مجهول
+firebase.auth().signInAnonymously().then(function() {
+  console.log('✅ تم تسجيل الدخول بنجاح');
+  isFirebaseReady = true;
+  setupFirebaseListeners();
+}).catch(function(error) {
+  console.error('❌ خطأ في تسجيل الدخول:', error);
+  updateConnectionStatus('local');
+  return false;
+});
+
+return true;
     
     // الاستماع للتغييرات الفورية
     database.ref('k3d_names').on('value', function(snapshot) {
