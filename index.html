@@ -68,15 +68,6 @@ body{font-family:Cairo,sans-serif;background:linear-gradient(135deg,#6366f1,#8b5
 .tab-btn{background:#fff;border:2px solid #e5e7eb;padding:14px 28px;font-size:14px;font-weight:600;color:#64748b;cursor:pointer;transition:all 0.3s;white-space:nowrap;font-family:Cairo,sans-serif;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.08);min-width:140px;flex:1}
 .tab-btn:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,0.12);border-color:#10b981;color:#10b981;background:#f0fdf4}
 .tab-btn.active{background:linear-gradient(135deg,#10b981,#059669);color:#fff;border-color:#10b981;box-shadow:0 4px 20px rgba(16,185,129,0.5);transform:translateY(0)}
-.tab-btn[onclick*="search"]{border-color:#e5e7eb;color:#64748b}
-.tab-btn[onclick*="search"]:hover{border-color:#10b981;color:#10b981;background:#f0fdf4}
-.tab-btn[onclick*="search"].active{background:linear-gradient(135deg,#10b981,#059669);color:#fff;border-color:#10b981;box-shadow:0 4px 20px rgba(16,185,129,0.5)}
-.tab-btn[onclick*="orders"]{border-color:#e5e7eb;color:#64748b}
-.tab-btn[onclick*="orders"]:hover{border-color:#10b981;color:#10b981;background:#f0fdf4}
-.tab-btn[onclick*="orders"].active{background:linear-gradient(135deg,#10b981,#059669);color:#fff;border-color:#10b981;box-shadow:0 4px 20px rgba(16,185,129,0.5)}
-.tab-btn[onclick*="settings"]{border-color:#e5e7eb;color:#64748b}
-.tab-btn[onclick*="settings"]:hover{border-color:#10b981;color:#10b981;background:#f0fdf4}
-.tab-btn[onclick*="settings"].active{background:linear-gradient(135deg,#10b981,#059669);color:#fff;border-color:#10b981;box-shadow:0 4px 20px rgba(16,185,129,0.5)}
 .tab-btn .icon{font-size:16px;margin-left:6px;display:inline-block}
 .tab-content{display:none;animation:fadeIn 0.3s}
 .tab-content.active{display:block}
@@ -105,6 +96,28 @@ body{font-family:Cairo,sans-serif;background:linear-gradient(135deg,#6366f1,#8b5
 .firebase-setup .help{background:#f5f3ff;padding:12px;border-radius:8px;font-size:13px;margin-top:10px;line-height:1.6;border:1px solid #e0e7ff}
 .box-code-display{background:#f5f3ff;padding:8px 12px;border-radius:8px;font-weight:700;color:#7c3aed;text-align:center;font-size:16px;margin-top:8px;border:2px solid #c4b5fd}
 .readonly{background:#f3f4f6;cursor:not-allowed}
+
+/* ===== نافذة البيع السريع ===== */
+.sell-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(6px);z-index:2000;align-items:center;justify-content:center;padding:20px}
+.sell-box{background:#fff;border-radius:20px;padding:0;max-width:420px;width:100%;border:3px solid #f59e0b;box-shadow:0 25px 60px rgba(245,158,11,0.3);overflow:hidden;animation:slideUp 0.3s ease}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.sell-box-header{background:linear-gradient(135deg,#f59e0b,#d97706);padding:20px 24px;display:flex;justify-content:space-between;align-items:center}
+.sell-box-header h3{color:#fff;font-size:18px;font-weight:800;margin:0}
+.sell-box-body{padding:24px}
+.sell-item-info{background:#fef3c7;border:2px solid #fbbf24;border-radius:12px;padding:14px;margin-bottom:20px}
+.sell-item-name{font-size:20px;font-weight:800;color:#92400e;margin-bottom:6px}
+.sell-item-details{display:flex;gap:8px;flex-wrap:wrap}
+.sell-qty-row{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.sell-qty-btn{width:44px;height:44px;border:none;border-radius:10px;font-size:22px;font-weight:700;cursor:pointer;transition:all 0.2s;flex-shrink:0}
+.sell-qty-minus{background:#fee2e2;color:#dc2626}
+.sell-qty-minus:hover{background:#fecaca}
+.sell-qty-plus{background:#d1fae5;color:#059669}
+.sell-qty-plus:hover{background:#a7f3d0}
+.sell-qty-input{flex:1;text-align:center;font-size:24px;font-weight:800;padding:10px;border:2px solid #e5e7eb;border-radius:10px;font-family:Cairo,sans-serif}
+.sell-confirm-btn{width:100%;padding:14px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;font-family:Cairo,sans-serif;transition:all 0.2s;box-shadow:0 4px 12px rgba(245,158,11,0.4)}
+.sell-confirm-btn:hover{box-shadow:0 6px 20px rgba(245,158,11,0.5);transform:translateY(-1px)}
+.sell-confirm-btn:active{transform:scale(0.98)}
+
 @media(max-width:768px){
 body{padding:8px;font-size:14px}
 .header{flex-direction:column;text-align:center;padding:12px !important;gap:8px !important}
@@ -143,6 +156,7 @@ body{padding:8px;font-size:14px}
 .firebase-setup h3{font-size:15px;margin-bottom:12px}
 .firebase-setup input{padding:8px;font-size:12px;margin-bottom:8px}
 .firebase-setup .help{padding:10px;font-size:11px}
+.sell-box{max-width:100%}
 }
 </style>
 </head>
@@ -161,7 +175,6 @@ body{padding:8px;font-size:14px}
 
 <div class="header">
 <img src="https://i.postimg.cc/rmGB25f3/lwjw-bnfsjy-bsyt-ʿn-stwdyw-3.png" class="logo" alt="Logo">
-
 <div class="header-content">
 <h1>📋 برنامج إدارة الأسماء كرزما K3D</h1>
 <div class="header-status">
@@ -179,15 +192,15 @@ body{padding:8px;font-size:14px}
 
 <!-- Tab Navigation -->
 <div class="tab-nav">
-<button class="tab-btn active" onclick="switchTab('search')">
+<button class="tab-btn active" id="tabBtn-search" onclick="switchTab('search', this)">
 <span class="icon">🔍</span>
 <span>البحث والإدارة</span>
 </button>
-<button class="tab-btn" onclick="switchTab('orders')">
+<button class="tab-btn" id="tabBtn-orders" onclick="switchTab('orders', this)">
 <span class="icon">📋</span>
 <span>طلبات الزبائن</span>
 </button>
-<button class="tab-btn" onclick="switchTab('settings')">
+<button class="tab-btn" id="tabBtn-settings" onclick="switchTab('settings', this)">
 <span class="icon">⚙️</span>
 <span>العلب والإعدادات</span>
 </button>
@@ -263,7 +276,6 @@ body{padding:8px;font-size:14px}
 </div>
 </div>
 </div>
-</div>
 
 <!-- Tab Content: Customer Orders -->
 <div id="orders-tab" class="tab-content">
@@ -311,6 +323,7 @@ body{padding:8px;font-size:14px}
 <button class="btn btn-success" onclick="saveOrder()">💾 حفظ الطلب</button>
 <button class="btn btn-outline" onclick="clearOrderForm()">🧹 مسح</button>
 </div>
+<!-- ===== FIX 1: أزرار الطباعة والتنزيل - تم إصلاح onclick ===== -->
 <div class="btns" style="margin-top:10px">
 <button class="btn btn-primary" onclick="printOrders()">🖨️ طباعة الطلبات</button>
 <button class="btn btn-primary" onclick="exportOrders()">📥 تنزيل الطلبات</button>
@@ -326,7 +339,6 @@ body{padding:8px;font-size:14px}
 <div class="empty" style="padding:30px">لا توجد طلبات محفوظة حالياً</div>
 </div>
 </div>
-
 </div>
 </div>
 
@@ -407,8 +419,8 @@ body{padding:8px;font-size:14px}
 </div>
 
 </div>
-<!-- End of Container -->
 
+<!-- Modal رسائل عامة -->
 <div id="modal" class="modal">
 <div class="box">
 <div class="head">
@@ -419,6 +431,31 @@ body{padding:8px;font-size:14px}
 </div>
 </div>
 
+<!-- ===== FIX 2: نافذة البيع السريع ===== -->
+<div id="sellModal" class="sell-modal">
+<div class="sell-box">
+<div class="sell-box-header">
+<h3>💸 بيع سريع</h3>
+<button class="close" onclick="closeSellModal()" style="background:rgba(255,255,255,0.3);color:#fff">×</button>
+</div>
+<div class="sell-box-body">
+<div class="sell-item-info">
+<div class="sell-item-name" id="sellModalName">-</div>
+<div class="sell-item-details" id="sellModalDetails"></div>
+</div>
+<div style="font-weight:700;color:#1f2937;margin-bottom:10px;font-size:14px">الكمية المراد بيعها:</div>
+<div class="sell-qty-row">
+<button class="sell-qty-btn sell-qty-minus" onclick="changeSellQty(-1)">−</button>
+<input type="number" id="sellModalQty" class="sell-qty-input" value="1" min="1" oninput="validateSellQty()">
+<button class="sell-qty-btn sell-qty-plus" onclick="changeSellQty(1)">+</button>
+</div>
+<button class="sell-confirm-btn" onclick="confirmSellModal()">💸 تأكيد البيع</button>
+<button class="btn btn-outline" onclick="closeSellModal()" style="margin-top:10px;width:100%">❌ إلغاء</button>
+</div>
+</div>
+</div>
+
+<!-- Modal الطباعة -->
 <div id="printModal" class="modal">
 <div class="box">
 <div class="head">
@@ -439,7 +476,6 @@ body{padding:8px;font-size:14px}
 </div>
 </div>
 
-
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -447,9 +483,9 @@ body{padding:8px;font-size:14px}
 
 <script>
 var db = [];
-var letterBoxMap = []; // نظام توزيع الحروف على العلب
-var orders = []; // طلبات الزبائن
-var currentOrderItems = []; // الأسماء المطلوبة للطلب الحالي
+var letterBoxMap = [];
+var orders = [];
+var currentOrderItems = [];
 var LOCAL_KEY = 'names_k3d_local';
 var LETTERBOX_KEY = 'letterbox_map_k3d';
 var ORDERS_KEY = 'orders_k3d';
@@ -459,28 +495,23 @@ var firebaseApp = null;
 var database = null;
 var isFirebaseReady = false;
 
-// نظام توزيع العلب - دالة واحدة مسؤولة عن حساب رمز العلبة
+// ===== متغير نافذة البيع السريع =====
+var sellModalItem = null;
+
 function generateBoxCode(boxNumber, gender) {
   if (!boxNumber || !gender) return '';
-  
-  // رمز الجنس
   var genderSymbol = gender === 'ذكر' ? 'ذ' : 'أ';
-  
-  // رمز العلبة الكامل = رقم العلبة + رمز الجنس
   return boxNumber.toString().trim() + genderSymbol;
 }
 
-// تحديث معاينة رمز العلبة
 function updateBoxCodePreview() {
   var name = document.getElementById('name').value.trim();
   var gender = document.getElementById('gender').value;
   var preview = document.getElementById('boxCodePreview');
   var previewCode = document.getElementById('previewCode');
-  
   if (name && gender) {
     var firstLetter = name.charAt(0);
     var boxNumber = getSuggestedBoxNumber(firstLetter, gender);
-    
     if (boxNumber) {
       var code = generateBoxCode(boxNumber, gender);
       previewCode.textContent = code;
@@ -496,152 +527,43 @@ function updateBoxCodePreview() {
   }
 }
 
-// تهيئة Firebase
+// ===== FIX: دالة switchTab المُصلحة - لا تعتمد على event =====
+function switchTab(tabName, btnEl) {
+  var tabs = document.getElementsByClassName('tab-content');
+  for (var i = 0; i < tabs.length; i++) { tabs[i].classList.remove('active'); }
+  var btns = document.getElementsByClassName('tab-btn');
+  for (var i = 0; i < btns.length; i++) { btns[i].classList.remove('active'); }
+  var targetTab = document.getElementById(tabName + '-tab');
+  if (targetTab) targetTab.classList.add('active');
+  if (btnEl) {
+    btnEl.classList.add('active');
+  } else {
+    var btn = document.getElementById('tabBtn-' + tabName);
+    if (btn) btn.classList.add('active');
+  }
+}
+
+function switchTabDirect(tabName) {
+  if (tabName === 'manage' || tabName === 'sell') tabName = 'search';
+  else if (tabName === 'boxes') tabName = 'settings';
+  switchTab(tabName, null);
+}
+
 function initFirebase() {
   try {
     var config = localStorage.getItem(CONFIG_KEY);
-    if (!config) {
-      updateConnectionStatus('local');
-      return false;
-    }
-    
-// إعداد المستمعين بعد تسجيل الدخول
-function setupFirebaseListeners() {
-  if (!database) return;
-  
-  updateConnectionStatus('online');
-  
-  // الاستماع للتغييرات الفورية
-  database.ref('k3d_names').on('value', function(snapshot) {
-    if (snapshot.exists()) {
-      db = snapshot.val();
-      stats();
-      if (document.getElementById('q').value.trim()) {
-        liveSearch();
-      }
-    }
-  });
-  
-  // الاستماع لتغييرات قواعد العلب
-  database.ref('k3d_letterbox_map').on('value', function(snapshot) {
-    if (snapshot.exists()) {
-      letterBoxMap = snapshot.val();
-      try {
-        localStorage.setItem(LETTERBOX_KEY, JSON.stringify(letterBoxMap));
-      } catch (e) {
-        console.error('خطأ في حفظ قواعد العلب محلياً:', e);
-      }
-      if (document.getElementById('letterBoxList')) {
-        displayLetterBoxList();
-      }
-    }
-  });
-  
-  // الاستماع لتغييرات طلبات الزبائن
-  database.ref('k3d_orders').on('value', function(snapshot) {
-    if (snapshot.exists()) {
-      orders = snapshot.val();
-      try {
-        localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
-      } catch (e) {
-        console.error('خطأ في حفظ الطلبات محلياً:', e);
-      }
-      if (document.getElementById('savedOrdersList')) {
-        displayOrders();
-      }
-    }
-  });
-  
-  // مراقبة حالة الاتصال
-  database.ref('.info/connected').on('value', function(snapshot) {
-    if (snapshot.val() === true) {
-      updateConnectionStatus('online');
-    } else {
-      updateConnectionStatus('offline');
-    }
-  });
-}
-
-
-
+    if (!config) { updateConnectionStatus('local'); return false; }
     var fbConfig = JSON.parse(config);
-    if (!fbConfig.apiKey || !fbConfig.databaseURL || !fbConfig.projectId) {
+    if (!fbConfig.apiKey || !fbConfig.databaseURL || !fbConfig.projectId) { updateConnectionStatus('local'); return false; }
+    firebaseApp = firebase.initializeApp(fbConfig);
+    database = firebase.database();
+    firebase.auth().signInAnonymously().then(function() {
+      isFirebaseReady = true;
+      setupFirebaseListeners();
+    }).catch(function(error) {
+      console.error('خطأ في تسجيل الدخول:', error);
       updateConnectionStatus('local');
-      return false;
-    }
-    
-firebaseApp = firebase.initializeApp(fbConfig);
-database = firebase.database();
-
-// تسجيل دخول مجهول
-firebase.auth().signInAnonymously().then(function() {
-  console.log('✅ تم تسجيل الدخول بنجاح');
-  isFirebaseReady = true;
-  setupFirebaseListeners();
-}).catch(function(error) {
-  console.error('❌ خطأ في تسجيل الدخول:', error);
-  updateConnectionStatus('local');
-  return false;
-});
-
-return true;
-    
-    // الاستماع للتغييرات الفورية
-    database.ref('k3d_names').on('value', function(snapshot) {
-      if (snapshot.exists()) {
-        db = snapshot.val();
-        stats();
-        if (document.getElementById('q').value.trim()) {
-          liveSearch();
-        }
-      }
     });
-    
-    // الاستماع لتغييرات قواعد العلب
-    database.ref('k3d_letterbox_map').on('value', function(snapshot) {
-      if (snapshot.exists()) {
-        letterBoxMap = snapshot.val();
-        // حفظ في localStorage أيضاً
-        try {
-          localStorage.setItem(LETTERBOX_KEY, JSON.stringify(letterBoxMap));
-        } catch (e) {
-          console.error('خطأ في حفظ قواعد العلب محلياً:', e);
-        }
-        // تحديث العرض إذا كان في صفحة العلب
-        if (document.getElementById('letterBoxList')) {
-          displayLetterBoxList();
-        }
-      }
-    });
-    
-    // الاستماع لتغييرات طلبات الزبائن
-    database.ref('k3d_orders').on('value', function(snapshot) {
-      if (snapshot.exists()) {
-        orders = snapshot.val();
-        // حفظ في localStorage أيضاً
-        try {
-          localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
-        } catch (e) {
-          console.error('خطأ في حفظ الطلبات محلياً:', e);
-        }
-        // تحديث العرض إذا كان في صفحة الطلبات
-        if (document.getElementById('savedOrdersList')) {
-          displayOrders();
-        }
-      }
-    });
-    
-    // مراقبة حالة الاتصال
-    database.ref('.info/connected').on('value', function(snapshot) {
-      if (snapshot.val() === true) {
-        updateConnectionStatus('online');
-      } else {
-        updateConnectionStatus('offline');
-      }
-    });
-    
-    document.getElementById('firebaseSetup').style.display = 'none';
-    updateConnectionStatus('online');
     return true;
   } catch (e) {
     console.error('خطأ في Firebase:', e);
@@ -650,41 +572,38 @@ return true;
   }
 }
 
+function setupFirebaseListeners() {
+  if (!database) return;
+  updateConnectionStatus('online');
+  database.ref('k3d_names').on('value', function(snapshot) {
+    if (snapshot.exists()) { db = snapshot.val(); stats(); if (document.getElementById('q').value.trim()) liveSearch(); }
+  });
+  database.ref('k3d_letterbox_map').on('value', function(snapshot) {
+    if (snapshot.exists()) { letterBoxMap = snapshot.val(); try { localStorage.setItem(LETTERBOX_KEY, JSON.stringify(letterBoxMap)); } catch(e){} if (document.getElementById('letterBoxList')) displayLetterBoxList(); }
+  });
+  database.ref('k3d_orders').on('value', function(snapshot) {
+    if (snapshot.exists()) { orders = snapshot.val(); try { localStorage.setItem(ORDERS_KEY, JSON.stringify(orders)); } catch(e){} if (document.getElementById('savedOrdersList')) displayOrders(); }
+  });
+  database.ref('.info/connected').on('value', function(snapshot) {
+    updateConnectionStatus(snapshot.val() === true ? 'online' : 'offline');
+  });
+}
+
 function updateConnectionStatus(status) {
   var statusEl = document.getElementById('connectionStatus');
-  if (status === 'online') {
-    statusEl.className = 'connection-status status-online';
-    statusEl.textContent = '🟢 متصل بالسحابة';
-  } else if (status === 'offline') {
-    statusEl.className = 'connection-status status-offline';
-    statusEl.textContent = '🔴 غير متصل';
-  } else {
-    statusEl.className = 'connection-status status-local';
-    statusEl.textContent = '🟡 حفظ محلي فقط';
-  }
+  if (status === 'online') { statusEl.className = 'connection-status status-online'; statusEl.textContent = '🟢 متصل بالسحابة'; }
+  else if (status === 'offline') { statusEl.className = 'connection-status status-offline'; statusEl.textContent = '🔴 غير متصل'; }
+  else { statusEl.className = 'connection-status status-local'; statusEl.textContent = '🟡 حفظ محلي فقط'; }
 }
 
 function saveFirebaseConfig() {
   var apiKey = document.getElementById('fbApiKey').value.trim();
   var databaseURL = document.getElementById('fbDatabaseURL').value.trim();
   var projectId = document.getElementById('fbProjectId').value.trim();
-  
-  if (!apiKey || !databaseURL || !projectId) {
-    return msg('⚠️ تنبيه', 'الرجاء ملء جميع الحقول', 'warning');
-  }
-  
-  var config = {
-    apiKey: apiKey,
-    databaseURL: databaseURL,
-    projectId: projectId
-  };
-  
-  localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+  if (!apiKey || !databaseURL || !projectId) return msg('⚠️ تنبيه', 'الرجاء ملء جميع الحقول', 'warning');
+  localStorage.setItem(CONFIG_KEY, JSON.stringify({apiKey: apiKey, databaseURL: databaseURL, projectId: projectId}));
   msg('✅ نجح', 'تم حفظ الإعدادات! سيتم إعادة تحميل الصفحة...', 'success');
-  
-  setTimeout(function() {
-    location.reload();
-  }, 2000);
+  setTimeout(function() { location.reload(); }, 2000);
 }
 
 function showFirebaseHelp() {
@@ -692,176 +611,88 @@ function showFirebaseHelp() {
   help.style.display = help.style.display === 'none' ? 'block' : 'none';
 }
 
-// تحديث معاينة إضافة حرف للعلبة
 function updateLetterBoxPreview() {
   var letter = document.getElementById('letterBoxLetter').value.trim();
   var gender = document.getElementById('letterBoxGender').value;
   var boxNum = document.getElementById('letterBoxNumber').value.trim();
   var preview = document.getElementById('letterBoxPreview');
-  
   if (letter && gender && boxNum) {
     document.getElementById('letterPreview').textContent = letter.toUpperCase();
     document.getElementById('genderPreview').textContent = gender;
     document.getElementById('boxPreview').textContent = generateBoxCode(boxNum, gender);
     preview.style.display = 'block';
-  } else {
-    preview.style.display = 'none';
-  }
+  } else { preview.style.display = 'none'; }
 }
 
-// إضافة قاعدة توزيع حرف على علبة
 function addLetterBox() {
   var letter = document.getElementById('letterBoxLetter').value.trim().toUpperCase();
   var gender = document.getElementById('letterBoxGender').value;
   var boxNum = document.getElementById('letterBoxNumber').value.trim();
-  
-  // التحقق من الإدخال
   if (!letter) return msg('⚠️ تنبيه', 'الرجاء إدخال الحرف', 'warning');
   if (!gender) return msg('⚠️ تنبيه', 'الرجاء اختيار الجنس', 'warning');
   if (!boxNum) return msg('⚠️ تنبيه', 'الرجاء إدخال رقم العلبة', 'warning');
-  
-  // التحقق من وجود القاعدة مسبقاً
   for (var i = 0; i < letterBoxMap.length; i++) {
-    if (letterBoxMap[i].letter === letter && letterBoxMap[i].gender === gender) {
-      return msg('⚠️ موجود', 'هذا الحرف مع هذا الجنس موجود مسبقاً في العلبة ' + letterBoxMap[i].box_code, 'warning');
-    }
+    if (letterBoxMap[i].letter === letter && letterBoxMap[i].gender === gender) return msg('⚠️ موجود', 'هذا الحرف مع هذا الجنس موجود مسبقاً في العلبة ' + letterBoxMap[i].box_code, 'warning');
   }
-  
-  // توليد رمز العلبة
   var boxCode = generateBoxCode(boxNum, gender);
-  
-  // إضافة القاعدة
-  letterBoxMap.push({
-    letter: letter,
-    gender: gender,
-    box_number: boxNum,
-    box_code: boxCode
-  });
-  
+  letterBoxMap.push({letter: letter, gender: gender, box_number: boxNum, box_code: boxCode});
   saveLetterBoxMap();
-  
-  // تطبيق القاعدة على جميع الأسماء المطابقة
   var updatedCount = applyLetterBoxRule(letter, gender, boxNum, boxCode);
-  
-  if (updatedCount > 0) {
-    save();
-    msg('✅ نجح', 'تم إضافة القاعدة: الحرف "' + letter + '" (' + gender + ') → العلبة ' + boxCode + '<br>تم تحديث ' + updatedCount + ' اسم تلقائياً', 'success');
-  } else {
-    msg('✅ نجح', 'تم إضافة القاعدة: الحرف "' + letter + '" (' + gender + ') → العلبة ' + boxCode, 'success');
-  }
-  
+  if (updatedCount > 0) { save(); msg('✅ نجح', 'تم إضافة القاعدة: الحرف "' + letter + '" (' + gender + ') → العلبة ' + boxCode + '<br>تم تحديث ' + updatedCount + ' اسم تلقائياً', 'success'); }
+  else msg('✅ نجح', 'تم إضافة القاعدة: الحرف "' + letter + '" (' + gender + ') → العلبة ' + boxCode, 'success');
   clearLetterBox();
   displayLetterBoxList();
   search();
 }
 
-// حفظ قواعد توزيع الحروف
 function saveLetterBoxMap() {
-  // حفظ في localStorage دائماً
-  try {
-    localStorage.setItem(LETTERBOX_KEY, JSON.stringify(letterBoxMap));
-  } catch (e) {
-    console.error('خطأ في حفظ قواعد العلب محلياً:', e);
-  }
-  
-  // حفظ في Firebase إذا كان متاحاً
-  if (isFirebaseReady && database) {
-    database.ref('k3d_letterbox_map').set(letterBoxMap).then(function() {
-      console.log('تم حفظ قواعد العلب على السحابة');
-    }).catch(function(error) {
-      console.error('خطأ في حفظ قواعد العلب على Firebase:', error);
-    });
-  }
+  try { localStorage.setItem(LETTERBOX_KEY, JSON.stringify(letterBoxMap)); } catch(e){}
+  if (isFirebaseReady && database) database.ref('k3d_letterbox_map').set(letterBoxMap).catch(function(e){ console.error(e); });
 }
 
-// تحميل قواعد توزيع الحروف
 function loadLetterBoxMap() {
-  // إذا كان Firebase متاحاً، سيتم التحميل تلقائياً من listener
-  // هنا نحمل من localStorage كبديل أو حتى يتم التحميل من Firebase
   try {
     var saved = localStorage.getItem(LETTERBOX_KEY);
     letterBoxMap = saved ? JSON.parse(saved) : [];
-    if (letterBoxMap.length > 0) {
-      displayLetterBoxList();
-    }
-    
-    // إذا كان Firebase جاهزاً، حمل من Firebase مرة واحدة للتأكد
+    if (letterBoxMap.length > 0) displayLetterBoxList();
     if (isFirebaseReady && database) {
       database.ref('k3d_letterbox_map').once('value').then(function(snapshot) {
-        if (snapshot.exists()) {
-          letterBoxMap = snapshot.val();
-          // حفظ في localStorage
-          try {
-            localStorage.setItem(LETTERBOX_KEY, JSON.stringify(letterBoxMap));
-          } catch (e) {
-            console.error('خطأ في حفظ قواعد العلب محلياً:', e);
-          }
-          displayLetterBoxList();
-        }
-      }).catch(function(error) {
-        console.error('خطأ في تحميل قواعد العلب من Firebase:', error);
-      });
+        if (snapshot.exists()) { letterBoxMap = snapshot.val(); try { localStorage.setItem(LETTERBOX_KEY, JSON.stringify(letterBoxMap)); } catch(e){} displayLetterBoxList(); }
+      }).catch(function(e){ console.error(e); });
     }
-  } catch (e) {
-    letterBoxMap = [];
-  }
+  } catch(e) { letterBoxMap = []; }
 }
 
-// عرض قائمة قواعد توزيع الحروف
 function displayLetterBoxList() {
   var listDiv = document.getElementById('letterBoxList');
-  
-  if (letterBoxMap.length === 0) {
-    listDiv.style.display = 'none';
-    return;
-  }
-  
-  // ترتيب حسب رقم العلبة ثم الجنس
+  if (letterBoxMap.length === 0) { listDiv.style.display = 'none'; return; }
   var sorted = letterBoxMap.slice().sort(function(a, b) {
-    if (a.box_number !== b.box_number) {
-      return parseInt(a.box_number) - parseInt(b.box_number);
-    }
+    if (a.box_number !== b.box_number) return parseInt(a.box_number) - parseInt(b.box_number);
     return a.gender === 'ذكر' ? -1 : 1;
   });
-  
-  var h = '<div style="font-weight:800;color:#6366f1;margin-bottom:12px;font-size:16px">';
-  h += '📋 قواعد توزيع الحروف (' + letterBoxMap.length + ')';
-  h += '</div>';
-  
+  var h = '<div style="font-weight:800;color:#6366f1;margin-bottom:12px;font-size:16px">📋 قواعد توزيع الحروف (' + letterBoxMap.length + ')</div>';
   for (var i = 0; i < sorted.length; i++) {
     var rule = sorted[i];
     var genderIcon = rule.gender === 'ذكر' ? '👦' : '👧';
-    
     h += '<div class="item" style="display:flex;align-items:center;justify-content:space-between;gap:10px">';
-    h += '<div style="flex:1">';
-    h += '<span class="name">الحرف "' + rule.letter + '" ' + genderIcon + ' ' + rule.gender + '</span>';
-    h += ' → <span class="tag purple">📦 ' + rule.box_code + '</span>';
-    h += '</div>';
+    h += '<div style="flex:1"><span class="name">الحرف "' + rule.letter + '" ' + genderIcon + ' ' + rule.gender + '</span> → <span class="tag purple">📦 ' + rule.box_code + '</span></div>';
     h += '<button class="btn btn-danger" onclick="deleteLetterBox(\'' + rule.letter + '\', \'' + rule.gender + '\')" style="width:auto;padding:6px 14px;font-size:13px">🗑️</button>';
     h += '</div>';
   }
-  
   listDiv.innerHTML = h;
   listDiv.style.display = 'block';
 }
 
-// حذف قاعدة توزيع
 function deleteLetterBox(letter, gender) {
   if (!confirm('⚠️ هل تريد حذف قاعدة: الحرف "' + letter + '" (' + gender + ')؟')) return;
-  
   for (var i = 0; i < letterBoxMap.length; i++) {
-    if (letterBoxMap[i].letter === letter && letterBoxMap[i].gender === gender) {
-      letterBoxMap.splice(i, 1);
-      break;
-    }
+    if (letterBoxMap[i].letter === letter && letterBoxMap[i].gender === gender) { letterBoxMap.splice(i, 1); break; }
   }
-  
   saveLetterBoxMap();
   displayLetterBoxList();
   msg('✅ نجح', 'تم حذف القاعدة بنجاح', 'success');
 }
 
-// مسح حقول إضافة حرف للعلبة
 function clearLetterBox() {
   document.getElementById('letterBoxLetter').value = '';
   document.getElementById('letterBoxGender').value = '';
@@ -869,70 +700,45 @@ function clearLetterBox() {
   document.getElementById('letterBoxPreview').style.display = 'none';
 }
 
-// الحصول على رقم العلبة المقترح بناءً على الحرف والجنس
 function getSuggestedBoxNumber(letter, gender) {
   if (!letter || !gender) return '';
-  
   letter = letter.toUpperCase();
   for (var i = 0; i < letterBoxMap.length; i++) {
-    if (letterBoxMap[i].letter === letter && letterBoxMap[i].gender === gender) {
-      return letterBoxMap[i].box_number;
-    }
+    if (letterBoxMap[i].letter === letter && letterBoxMap[i].gender === gender) return letterBoxMap[i].box_number;
   }
   return '';
 }
 
-// تصدير قواعد توزيع الحروف
 function exportLetterBoxRules() {
-  if (letterBoxMap.length === 0) {
-    return msg('⚠️ تنبيه', 'لا توجد قواعد للتصدير', 'warning');
-  }
-  
+  if (letterBoxMap.length === 0) return msg('⚠️ تنبيه', 'لا توجد قواعد للتصدير', 'warning');
   var json = JSON.stringify(letterBoxMap, null, 2);
   var blob = new Blob([json], {type: 'application/json'});
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
-  a.href = url;
-  a.download = 'letterbox_rules_' + new Date().toISOString().slice(0, 10) + '.json';
-  a.click();
+  a.href = url; a.download = 'letterbox_rules_' + new Date().toISOString().slice(0, 10) + '.json'; a.click();
   URL.revokeObjectURL(url);
   msg('✅ نجح', 'تم تصدير ' + letterBoxMap.length + ' قاعدة بنجاح', 'success');
 }
 
-// استيراد قواعد توزيع الحروف
-function importLetterBoxRules() {
-  document.getElementById('letterBoxFile').click();
-}
+function importLetterBoxRules() { document.getElementById('letterBoxFile').click(); }
 
-// معالج استيراد قواعد العلب
 document.addEventListener('DOMContentLoaded', function() {
   var letterBoxFileInput = document.getElementById('letterBoxFile');
   if (letterBoxFileInput) {
     letterBoxFileInput.addEventListener('change', function(e) {
       var f = e.target.files[0];
       if (!f) return;
-      if (!f.name.toLowerCase().endsWith('.json')) {
-        msg('❌ خطأ', 'الرجاء اختيار ملف JSON فقط', 'error');
-        e.target.value = '';
-        return;
-      }
+      if (!f.name.toLowerCase().endsWith('.json')) { msg('❌ خطأ', 'الرجاء اختيار ملف JSON فقط', 'error'); e.target.value = ''; return; }
       var reader = new FileReader();
       reader.onload = function(ev) {
         try {
           var imported = JSON.parse(ev.target.result);
-          if (!Array.isArray(imported)) {
-            throw new Error('Invalid format');
-          }
+          if (!Array.isArray(imported)) throw new Error('Invalid format');
           if (confirm('✅ تم العثور على ' + imported.length + ' قاعدة\n\n⚠️ هل تريد استبدال القواعد الحالية؟')) {
-            letterBoxMap = imported;
-            saveLetterBoxMap();
-            displayLetterBoxList();
+            letterBoxMap = imported; saveLetterBoxMap(); displayLetterBoxList();
             msg('✅ نجح', 'تم استيراد ' + imported.length + ' قاعدة بنجاح', 'success');
           }
-        } catch (err) {
-          console.error('خطأ:', err);
-          msg('❌ خطأ', 'فشل في قراءة الملف. تأكد من صحة الملف', 'error');
-        }
+        } catch(err) { msg('❌ خطأ', 'فشل في قراءة الملف. تأكد من صحة الملف', 'error'); }
       };
       reader.readAsText(f, 'UTF-8');
       e.target.value = '';
@@ -940,411 +746,214 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// عرض اقتراحات الأسماء عند كتابة اسم مطلوب
 function showOrderItemSuggestions() {
   var input = document.getElementById('orderItemName').value.trim();
   var suggestionsDiv = document.getElementById('orderItemSuggestions');
-  
-  if (!input) {
-    suggestionsDiv.style.display = 'none';
-    return;
-  }
-  
-  // البحث عن الأسماء المطابقة
+  if (!input) { suggestionsDiv.style.display = 'none'; return; }
   var matches = [];
   var inputLower = input.toLowerCase();
-  
   for (var i = 0; i < db.length; i++) {
-    if (db[i].name.toLowerCase().indexOf(inputLower) !== -1) {
-      matches.push(db[i]);
-    }
+    if (db[i].name.toLowerCase().indexOf(inputLower) !== -1) matches.push(db[i]);
   }
-  
-  if (matches.length === 0) {
-    suggestionsDiv.style.display = 'none';
-    return;
-  }
-  
-  // ترتيب النتائج
+  if (matches.length === 0) { suggestionsDiv.style.display = 'none'; return; }
   matches.sort(function(a, b) {
     var aStarts = a.name.toLowerCase().indexOf(inputLower) === 0;
     var bStarts = b.name.toLowerCase().indexOf(inputLower) === 0;
-    if (aStarts && !bStarts) return -1;
-    if (!aStarts && bStarts) return 1;
+    if (aStarts && !bStarts) return -1; if (!aStarts && bStarts) return 1;
     return a.name.localeCompare(b.name, 'ar');
   });
-  
-  // عرض أول 10 نتائج
   var limit = Math.min(matches.length, 10);
   var h = '';
-  
   for (var i = 0; i < limit; i++) {
     var item = matches[i];
     var qtyColor = item.qty === 0 ? '#dc2626' : item.qty === 1 ? '#ea580c' : '#16a34a';
     var qtyText = item.qty === 0 ? 'نفذ' : item.qty + ' قطعة';
-    
     h += '<div style="padding:10px;border-bottom:1px solid #e5e7eb;cursor:pointer;display:flex;justify-content:space-between;align-items:center" onclick="selectOrderItemSuggestion(\'' + item.name.replace(/'/g, "\\'") + '\')" onmouseover="this.style.background=\'#f9fafb\'" onmouseout="this.style.background=\'white\'">';
-    h += '<div style="flex:1">';
-    h += '<div style="font-weight:600;color:#1e293b">' + item.name + '</div>';
-    if (item.color) {
-      h += '<div style="font-size:13px;color:#64748b">🎨 ' + item.color + '</div>';
-    }
-    h += '</div>';
-    h += '<div style="font-size:13px;color:' + qtyColor + ';font-weight:600">' + qtyText + '</div>';
-    h += '</div>';
+    h += '<div style="flex:1"><div style="font-weight:600;color:#1e293b">' + item.name + '</div>';
+    if (item.color) h += '<div style="font-size:13px;color:#64748b">🎨 ' + item.color + '</div>';
+    h += '</div><div style="font-size:13px;color:' + qtyColor + ';font-weight:600">' + qtyText + '</div></div>';
   }
-  
   suggestionsDiv.innerHTML = h;
   suggestionsDiv.style.display = 'block';
 }
 
-// اختيار اسم من الاقتراحات
 function selectOrderItemSuggestion(name) {
   document.getElementById('orderItemName').value = name;
   document.getElementById('orderItemSuggestions').style.display = 'none';
-  
-  // البحث عن لون الاسم في قاعدة البيانات
   for (var i = 0; i < db.length; i++) {
-    if (db[i].name === name && db[i].color) {
-      document.getElementById('orderItemColor').value = db[i].color;
-      break;
-    }
+    if (db[i].name === name && db[i].color) { document.getElementById('orderItemColor').value = db[i].color; break; }
   }
-  
-  // التركيز على حقل اللون
   document.getElementById('orderItemColor').focus();
 }
 
-// إخفاء الاقتراحات عند النقر خارجها
 document.addEventListener('click', function(e) {
   var input = document.getElementById('orderItemName');
   var suggestions = document.getElementById('orderItemSuggestions');
-  if (input && suggestions && e.target !== input && !suggestions.contains(e.target)) {
-    suggestions.style.display = 'none';
-  }
+  if (input && suggestions && e.target !== input && !suggestions.contains(e.target)) suggestions.style.display = 'none';
 });
 
-// إضافة اسم مطلوب للطلب الحالي
 function addOrderItem() {
   var itemName = document.getElementById('orderItemName').value.trim();
   var itemColor = document.getElementById('orderItemColor').value.trim();
-  
-  if (!itemName) {
-    return msg('⚠️ تنبيه', 'الرجاء إدخال اسم المنتج', 'warning');
-  }
-  
-  // التحقق من وجود الاسم في المخزون وجلب معلومات العلبة
-  var existsInStock = false;
-  var boxCode = '';
-  var boxNumber = '';
-  var qty = 0;
-  
+  if (!itemName) return msg('⚠️ تنبيه', 'الرجاء إدخال اسم المنتج', 'warning');
+  var existsInStock = false, boxCode = '', boxNumber = '', qty = 0;
   for (var i = 0; i < db.length; i++) {
     if (db[i].name.toLowerCase() === itemName.toLowerCase()) {
-      existsInStock = true;
-      boxCode = db[i].box_code || '';
-      boxNumber = db[i].box_number || '';
-      qty = db[i].qty || 0;
-      // استخدام اللون من المخزون إذا لم يتم إدخال لون
-      if (!itemColor && db[i].color) {
-        itemColor = db[i].color;
-      }
+      existsInStock = true; boxCode = db[i].box_code || ''; boxNumber = db[i].box_number || ''; qty = db[i].qty || 0;
+      if (!itemColor && db[i].color) itemColor = db[i].color;
       break;
     }
   }
-  
-  currentOrderItems.push({
-    name: itemName,
-    color: itemColor,
-    existsInStock: existsInStock,
-    boxCode: boxCode,
-    boxNumber: boxNumber,
-    qty: qty
-  });
-  
+  currentOrderItems.push({name: itemName, color: itemColor, existsInStock: existsInStock, boxCode: boxCode, boxNumber: boxNumber, qty: qty});
   document.getElementById('orderItemName').value = '';
   document.getElementById('orderItemColor').value = '';
   document.getElementById('orderItemSuggestions').style.display = 'none';
   document.getElementById('orderItemName').focus();
-  
   displayOrderItems();
-  
-  // إذا كان الاسم غير موجود، عرض خيار الإضافة
   if (!existsInStock) {
-    var confirmMsg = '⚠️ الاسم "<strong>' + itemName + '</strong>" غير موجود في المخزون<br><br>';
-    confirmMsg += 'هل تريد إضافته للمخزون الآن؟<br><br>';
+    var confirmMsg = '⚠️ الاسم "<strong>' + itemName + '</strong>" غير موجود في المخزون<br><br>هل تريد إضافته للمخزون الآن؟<br><br>';
     confirmMsg += '<button class="btn btn-success" onclick="addItemToInventory(\'' + itemName.replace(/'/g, "\\'") + '\', \'' + itemColor.replace(/'/g, "\\'") + '\')" style="margin:5px">✅ نعم، أضف للمخزون</button>';
     confirmMsg += '<button class="btn btn-outline" onclick="closeModal()" style="margin:5px">❌ لا، متابعة</button>';
     msg('📦 إضافة للمخزون', confirmMsg, 'warning', true);
   } else {
     var stockMsg = 'تمت إضافة "' + itemName + '" للطلب';
-    if (qty === 0) {
-      stockMsg += '<br><span style="color:#dc2626">⚠️ تحذير: الكمية = 0 (نفذ)</span>';
-    } else if (qty === 1) {
-      stockMsg += '<br><span style="color:#ea580c">⚠️ تنبيه: الكمية = 1 (قطعة أخيرة)</span>';
-    }
+    if (qty === 0) stockMsg += '<br><span style="color:#dc2626">⚠️ تحذير: الكمية = 0 (نفذ)</span>';
+    else if (qty === 1) stockMsg += '<br><span style="color:#ea580c">⚠️ تنبيه: الكمية = 1 (قطعة أخيرة)</span>';
     msg('✅ تم', stockMsg, 'success');
   }
 }
 
-// إضافة اسم من الطلب إلى المخزون
 function addItemToInventory(itemName, itemColor) {
-  // التحقق من عدم وجوده مسبقاً
   for (var i = 0; i < db.length; i++) {
-    if (db[i].name.toLowerCase() === itemName.toLowerCase()) {
-      msg('⚠️ موجود', 'الاسم موجود مسبقاً في المخزون', 'warning');
-      return;
-    }
+    if (db[i].name.toLowerCase() === itemName.toLowerCase()) { msg('⚠️ موجود', 'الاسم موجود مسبقاً في المخزون', 'warning'); return; }
   }
-  
-  // عرض خيارات الجنس بدلاً من prompt
   var genderMsg = '🔍 تحديد جنس الاسم "<strong>' + itemName + '</strong>"<br><br>';
   genderMsg += '<div style="display:flex;gap:15px;justify-content:center;margin-top:20px">';
   genderMsg += '<button class="btn btn-primary" onclick="confirmAddToInventory(\'' + itemName.replace(/'/g, "\\'") + '\', \'' + itemColor.replace(/'/g, "\\'") + '\', \'ذكر\')" style="padding:15px 30px;font-size:16px">👦 ذكر</button>';
   genderMsg += '<button class="btn btn-danger" onclick="confirmAddToInventory(\'' + itemName.replace(/'/g, "\\'") + '\', \'' + itemColor.replace(/'/g, "\\'") + '\', \'أنثى\')" style="padding:15px 30px;font-size:16px">👧 أنثى</button>';
-  genderMsg += '</div><br>';
-  genderMsg += '<button class="btn btn-outline" onclick="closeModal()" style="margin-top:10px">❌ إلغاء</button>';
+  genderMsg += '</div><br><button class="btn btn-outline" onclick="closeModal()" style="margin-top:10px">❌ إلغاء</button>';
   msg('📦 اختر الجنس', genderMsg, 'info', true);
 }
 
-// تأكيد إضافة الاسم للمخزون بعد اختيار الجنس
 function confirmAddToInventory(itemName, itemColor, gender) {
   closeModal();
-  
-  // البحث عن قاعدة توزيع الحرف
   var firstLetter = itemName.charAt(0);
-  var boxNum = '';
-  var boxCode = '';
-  
-  // البحث عن قاعدة العلبة
-  boxNum = getSuggestedBoxNumber(firstLetter, gender);
-  if (boxNum) {
-    boxCode = generateBoxCode(boxNum, gender);
-  }
-  
-  // إضافة للمخزون بكمية 0
-  db.push({
-    name: itemName,
-    qty: 0,
-    gender: gender,
-    color: itemColor,
-    note: 'تمت إضافته من طلبات الزبائن',
-    box_number: boxNum,
-    box_code: boxCode
-  });
-  
-  save();
-  stats();
-  
-  // تحديث حالة الاسم في قائمة الطلب الحالي
+  var boxNum = getSuggestedBoxNumber(firstLetter, gender);
+  var boxCode = boxNum ? generateBoxCode(boxNum, gender) : '';
+  db.push({name: itemName, qty: 0, gender: gender, color: itemColor, note: 'تمت إضافته من طلبات الزبائن', box_number: boxNum, box_code: boxCode});
+  save(); stats();
   for (var i = 0; i < currentOrderItems.length; i++) {
     if (currentOrderItems[i].name.toLowerCase() === itemName.toLowerCase()) {
-      currentOrderItems[i].existsInStock = true;
-      currentOrderItems[i].boxCode = boxCode;
-      currentOrderItems[i].boxNumber = boxNum;
-      currentOrderItems[i].qty = 0;
-      break;
+      currentOrderItems[i].existsInStock = true; currentOrderItems[i].boxCode = boxCode; currentOrderItems[i].boxNumber = boxNum; currentOrderItems[i].qty = 0; break;
     }
   }
   displayOrderItems();
-  
-  var successMsg = '✅ تمت إضافة "' + itemName + '" للمخزون بنجاح<br><br>';
-  successMsg += '📋 الجنس: ' + gender + '<br>';
-  if (boxCode) {
-    successMsg += '📦 رمز العلبة: ' + boxCode + '<br>';
-  }
-  successMsg += '🎨 اللون: ' + (itemColor || 'بدون') + '<br>';
-  successMsg += '📊 الكمية: 0 (يمكنك تحديثها لاحقاً)';
+  var successMsg = '✅ تمت إضافة "' + itemName + '" للمخزون بنجاح<br><br>📋 الجنس: ' + gender + '<br>';
+  if (boxCode) successMsg += '📦 رمز العلبة: ' + boxCode + '<br>';
+  successMsg += '🎨 اللون: ' + (itemColor || 'بدون') + '<br>📊 الكمية: 0';
   msg('✅ نجح', successMsg, 'success');
 }
 
-// عرض قائمة الأسماء المطلوبة
 function displayOrderItems() {
   var listDiv = document.getElementById('orderItemsList');
-  
-  if (currentOrderItems.length === 0) {
-    listDiv.style.display = 'none';
-    return;
-  }
-  
+  if (currentOrderItems.length === 0) { listDiv.style.display = 'none'; return; }
   var h = '<div style="background:#f3f4f6;padding:10px;border-radius:8px;margin-bottom:10px">';
   h += '<div style="font-weight:600;color:#6366f1;margin-bottom:8px">الأسماء المطلوبة (' + currentOrderItems.length + '):</div>';
-  
   for (var i = 0; i < currentOrderItems.length; i++) {
     var item = currentOrderItems[i];
     var stockIcon = item.existsInStock ? '✅' : '❌';
     var stockColor = item.existsInStock ? '#16a34a' : '#dc2626';
     var stockText = item.existsInStock ? 'موجود' : 'غير موجود';
-    
     h += '<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb">';
     h += '<div style="flex:1"><span style="font-weight:600">' + (i + 1) + '. ' + item.name + '</span>';
     if (item.color) h += ' <span style="color:#6b7280">(' + item.color + ')</span>';
-    
-    // عرض رقم العلبة إذا كان موجوداً
-    if (item.existsInStock && item.boxCode) {
-      h += ' <span style="background:#6366f1;color:white;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;margin:0 4px">📦 ' + item.boxCode + '</span>';
-    }
-    
-    // عرض الكمية إذا كان موجوداً
+    if (item.existsInStock && item.boxCode) h += ' <span style="background:#6366f1;color:white;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;margin:0 4px">📦 ' + item.boxCode + '</span>';
     if (item.existsInStock) {
       var qtyColor = item.qty === 0 ? '#dc2626' : item.qty === 1 ? '#ea580c' : '#16a34a';
       h += ' <span style="color:' + qtyColor + ';font-size:12px;font-weight:600">(الكمية: ' + item.qty + ')</span>';
     }
-    
-    h += ' <span style="color:' + stockColor + ';font-size:12px;font-weight:600">' + stockIcon + ' ' + stockText + '</span>';
-    h += '</div>';
-    h += '<button class="btn btn-danger" onclick="removeOrderItem(' + i + ')" style="width:auto;padding:4px 12px;font-size:12px">🗑️</button>';
-    h += '</div>';
+    h += ' <span style="color:' + stockColor + ';font-size:12px;font-weight:600">' + stockIcon + ' ' + stockText + '</span></div>';
+    h += '<button class="btn btn-danger" onclick="removeOrderItem(' + i + ')" style="width:auto;padding:4px 12px;font-size:12px">🗑️</button></div>';
   }
-  
   h += '</div>';
   listDiv.innerHTML = h;
   listDiv.style.display = 'block';
 }
 
-// حذف اسم من الطلب الحالي
 function removeOrderItem(index) {
   currentOrderItems.splice(index, 1);
   displayOrderItems();
   msg('✅ تم', 'تم حذف المنتج', 'success');
 }
 
-// حفظ الطلب
+// ===== FIX 3: حفظ الطلب مع زر طباعة فوري =====
 function saveOrder() {
   var customerName = document.getElementById('customerName').value.trim();
   var customerPhone = document.getElementById('customerPhone').value.trim();
   var customerAddress = document.getElementById('customerAddress').value.trim();
   var customerNotes = document.getElementById('customerNotes').value.trim();
-  
-  if (!customerName) {
-    return msg('⚠️ تنبيه', 'الرجاء إدخال اسم الزبون', 'warning');
-  }
-  
-  if (!customerPhone) {
-    return msg('⚠️ تنبيه', 'الرجاء إدخال رقم الهاتف', 'warning');
-  }
-  
-  if (currentOrderItems.length === 0) {
-    return msg('⚠️ تنبيه', 'الرجاء إضافة اسم واحد على الأقل للطلب', 'warning');
-  }
-  
+  if (!customerName) return msg('⚠️ تنبيه', 'الرجاء إدخال اسم الزبون', 'warning');
+  if (!customerPhone) return msg('⚠️ تنبيه', 'الرجاء إدخال رقم الهاتف', 'warning');
+  if (currentOrderItems.length === 0) return msg('⚠️ تنبيه', 'الرجاء إضافة اسم واحد على الأقل للطلب', 'warning');
   var order = {
-    id: Date.now(),
-    customerName: customerName,
-    customerPhone: customerPhone,
-    customerAddress: customerAddress,
-    customerNotes: customerNotes,
-    items: currentOrderItems.slice(),
-    date: new Date().toISOString(),
-    status: 'pending' // حالة الطلب: pending, completed
+    id: Date.now(), customerName: customerName, customerPhone: customerPhone,
+    customerAddress: customerAddress, customerNotes: customerNotes,
+    items: currentOrderItems.slice(), date: new Date().toISOString(), status: 'pending'
   };
-  
   orders.push(order);
   saveOrders();
   displayOrders();
   
-  msg('✅ نجح', 'تم حفظ طلب ' + customerName + ' بنجاح<br>عدد الأسماء: ' + currentOrderItems.length, 'success');
+  // رسالة نجاح مع زر طباعة الطلب
+  var successMsg = '<div class="alert success" style="margin-bottom:15px">✅ تم حفظ طلب <strong>' + customerName + '</strong> بنجاح!<br>عدد الأسماء: ' + currentOrderItems.length + '</div>';
+  successMsg += '<button class="btn btn-primary" onclick="printSingleOrder(' + order.id + ');closeModal();" style="width:100%;margin-bottom:8px">🖨️ طباعة هذا الطلب الآن</button>';
+  successMsg += '<button class="btn btn-outline" onclick="closeModal()" style="width:100%">✖️ إغلاق</button>';
+  document.getElementById('mtitle').textContent = '✅ تم الحفظ';
+  document.getElementById('mbody').innerHTML = successMsg;
+  document.getElementById('modal').style.display = 'flex';
+  
   clearOrderForm();
 }
 
-// حفظ الطلبات في localStorage
 function saveOrders() {
-  // حفظ في localStorage دائماً
-  try {
-    localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
-  } catch (e) {
-    console.error('خطأ في حفظ الطلبات محلياً:', e);
-  }
-  
-  // حفظ في Firebase إذا كان متاحاً
-  if (isFirebaseReady && database) {
-    database.ref('k3d_orders').set(orders).then(function() {
-      console.log('تم حفظ الطلبات على السحابة');
-    }).catch(function(error) {
-      console.error('خطأ في حفظ الطلبات على Firebase:', error);
-    });
-  }
+  try { localStorage.setItem(ORDERS_KEY, JSON.stringify(orders)); } catch(e){}
+  if (isFirebaseReady && database) database.ref('k3d_orders').set(orders).catch(function(e){ console.error(e); });
 }
 
-// تحميل الطلبات من localStorage
 function loadOrders() {
-  // إذا كان Firebase متاحاً، سيتم التحميل تلقائياً من listener
-  // هنا نحمل من localStorage كبديل أو حتى يتم التحميل من Firebase
   try {
     var saved = localStorage.getItem(ORDERS_KEY);
     orders = saved ? JSON.parse(saved) : [];
-    displayOrders(); // عرض الطلبات سواء كانت فارغة أو لا
-    
-    // إذا كان Firebase جاهزاً، حمل من Firebase مرة واحدة للتأكد
+    displayOrders();
     if (isFirebaseReady && database) {
       database.ref('k3d_orders').once('value').then(function(snapshot) {
-        if (snapshot.exists()) {
-          orders = snapshot.val();
-          // حفظ في localStorage
-          try {
-            localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
-          } catch (e) {
-            console.error('خطأ في حفظ الطلبات محلياً:', e);
-          }
-          displayOrders();
-        }
-      }).catch(function(error) {
-        console.error('خطأ في تحميل الطلبات من Firebase:', error);
-      });
+        if (snapshot.exists()) { orders = snapshot.val(); try { localStorage.setItem(ORDERS_KEY, JSON.stringify(orders)); } catch(e){} displayOrders(); }
+      }).catch(function(e){ console.error(e); });
     }
-  } catch (e) {
-    orders = [];
-    displayOrders(); // عرض رسالة فارغة
-  }
+  } catch(e) { orders = []; displayOrders(); }
 }
 
-// عرض قائمة الطلبات
 function displayOrders() {
   var listDiv = document.getElementById('savedOrdersList');
   var titleDiv = document.getElementById('ordersTitle');
-  
-  // تحديث العنوان بعدد الطلبات
-  if (titleDiv) {
-    titleDiv.textContent = '📦 الطلبات المحفوظة (' + orders.length + ')';
-  }
-  
-  if (orders.length === 0) {
-    listDiv.innerHTML = '<div class="empty" style="padding:30px">لا توجد طلبات محفوظة حالياً</div>';
-    return;
-  }
-  
-  // ترتيب حسب التاريخ (الأحدث أولاً)
-  var sorted = orders.slice().sort(function(a, b) {
-    return new Date(b.date) - new Date(a.date);
-  });
-  
+  if (titleDiv) titleDiv.textContent = '📦 الطلبات المحفوظة (' + orders.length + ')';
+  if (orders.length === 0) { listDiv.innerHTML = '<div class="empty" style="padding:30px">لا توجد طلبات محفوظة حالياً</div>'; return; }
+  var sorted = orders.slice().sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
   var h = '';
-  
   for (var i = 0; i < sorted.length; i++) {
     var order = sorted[i];
     var date = new Date(order.date);
     var dateStr = date.toLocaleDateString('ar-EG');
     var statusColor = order.status === 'completed' ? '#16a34a' : '#ea580c';
     var statusText = order.status === 'completed' ? '✅ مكتمل' : '⏳ قيد الانتظار';
-    
     h += '<div class="item" style="border-right:4px solid ' + statusColor + ';margin-bottom:12px">';
     h += '<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px">';
-    h += '<div style="flex:1">';
-    h += '<div style="font-weight:700;font-size:16px;color:#1e293b">👤 ' + order.customerName + '</div>';
+    h += '<div style="flex:1"><div style="font-weight:700;font-size:16px;color:#1e293b">👤 ' + order.customerName + '</div>';
     h += '<div style="color:#64748b;font-size:14px;margin-top:4px">📞 ' + order.customerPhone + '</div>';
-    if (order.customerAddress) {
-      h += '<div style="color:#64748b;font-size:14px">📍 ' + order.customerAddress + '</div>';
-    }
-    if (order.customerNotes) {
-      h += '<div style="color:#64748b;font-size:13px;margin-top:4px;font-style:italic">📝 ' + order.customerNotes + '</div>';
-    }
-    h += '<div style="color:#64748b;font-size:13px;margin-top:4px">📅 ' + dateStr + '</div>';
-    h += '</div>';
-    h += '<div style="display:flex;gap:6px;flex-direction:column">';
-    h += '<span style="background:' + statusColor + ';color:white;padding:4px 10px;border-radius:6px;font-size:12px;white-space:nowrap">' + statusText + '</span>';
-    h += '</div>';
-    h += '</div>';
-    
+    if (order.customerAddress) h += '<div style="color:#64748b;font-size:14px">📍 ' + order.customerAddress + '</div>';
+    if (order.customerNotes) h += '<div style="color:#64748b;font-size:13px;margin-top:4px;font-style:italic">📝 ' + order.customerNotes + '</div>';
+    h += '<div style="color:#64748b;font-size:13px;margin-top:4px">📅 ' + dateStr + '</div></div>';
+    h += '<span style="background:' + statusColor + ';color:white;padding:4px 10px;border-radius:6px;font-size:12px;white-space:nowrap">' + statusText + '</span></div>';
     h += '<div style="background:#f8fafc;padding:10px;border-radius:6px;margin-top:8px">';
     h += '<div style="font-weight:600;color:#475569;margin-bottom:6px">الأسماء المطلوبة (' + order.items.length + '):</div>';
     for (var j = 0; j < order.items.length; j++) {
@@ -1355,196 +964,150 @@ function displayOrders() {
       h += '</div>';
     }
     h += '</div>';
-    
     h += '<div style="display:flex;gap:8px;margin-top:10px">';
-    if (order.status === 'pending') {
-      h += '<button class="btn btn-success" onclick="completeOrder(' + order.id + ')" style="flex:1;padding:8px;font-size:13px">✅ تم الإنجاز</button>';
-    }
+    if (order.status === 'pending') h += '<button class="btn btn-success" onclick="completeOrder(' + order.id + ')" style="flex:1;padding:8px;font-size:13px">✅ تم الإنجاز</button>';
+    h += '<button class="btn btn-primary" onclick="printSingleOrder(' + order.id + ')" style="flex:1;padding:8px;font-size:13px">🖨️ طباعة</button>';
     h += '<button class="btn btn-primary" onclick="editOrder(' + order.id + ')" style="flex:1;padding:8px;font-size:13px">✏️ تعديل</button>';
     h += '<button class="btn btn-danger" onclick="deleteOrder(' + order.id + ')" style="flex:1;padding:8px;font-size:13px">🗑️ حذف</button>';
-    h += '</div>';
-    
-    h += '</div>';
+    h += '</div></div>';
   }
-  
   listDiv.innerHTML = h;
 }
 
-// إكمال طلب
+// ===== طباعة طلب واحد =====
+function printSingleOrder(orderId) {
+  var order = null;
+  for (var i = 0; i < orders.length; i++) {
+    if (orders[i].id === orderId) { order = orders[i]; break; }
+  }
+  if (!order) return msg('❌ خطأ', 'الطلب غير موجود', 'error');
+  var printWindow = window.open('', '_blank');
+  var date = new Date(order.date);
+  var dateStr = date.toLocaleDateString('ar-EG');
+  var statusText = order.status === 'completed' ? '✅ مكتمل' : '⏳ قيد الانتظار';
+  var h = '<html dir="rtl"><head><meta charset="UTF-8"><title>طلب ' + order.customerName + ' - كرزما K3D</title>';
+  h += '<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">';
+  h += '<style>body{font-family:Cairo,Arial,sans-serif;padding:20px;background:#fff;margin:0}';
+  h += '.header{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;padding:20px;border-radius:12px;text-align:center;margin-bottom:20px}';
+  h += 'h1{margin:0 0 5px 0;font-size:22px;font-weight:700}';
+  h += '.card{background:#fff;border:2px solid #e5e7eb;border-radius:12px;overflow:hidden;max-width:600px;margin:0 auto}';
+  h += '.card-header{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;padding:15px 20px}';
+  h += '.card-body{padding:20px}.info-row{display:flex;gap:8px;margin-bottom:8px;font-size:14px}';
+  h += '.info-icon{color:#6366f1;font-weight:700;min-width:75px}.info-value{flex:1}';
+  h += 'table{width:100%;border-collapse:collapse;margin-top:15px}';
+  h += 'th{background:#f5f3ff;color:#6366f1;padding:10px;text-align:right;font-weight:700;border-bottom:2px solid #e0e7ff}';
+  h += 'td{padding:10px;border-bottom:1px solid #e5e7eb;font-size:14px}';
+  h += '.box-tag{background:#6366f1;color:white;padding:2px 8px;border-radius:4px;font-size:12px}</style></head><body>';
+  h += '<div class="header"><h1>📋 طلب كرزما K3D</h1><div style="font-size:13px;opacity:0.9">تاريخ: ' + dateStr + ' • ' + statusText + '</div></div>';
+  h += '<div class="card"><div class="card-header"><div style="font-size:18px;font-weight:700">👤 ' + order.customerName + '</div></div>';
+  h += '<div class="card-body">';
+  h += '<div class="info-row"><span class="info-icon">📞 الهاتف:</span><span class="info-value">' + order.customerPhone + '</span></div>';
+  if (order.customerAddress) h += '<div class="info-row"><span class="info-icon">📍 العنوان:</span><span class="info-value">' + order.customerAddress + '</span></div>';
+  if (order.customerNotes) h += '<div class="info-row"><span class="info-icon">📝 ملاحظات:</span><span class="info-value">' + order.customerNotes + '</span></div>';
+  h += '<table><thead><tr><th>#</th><th>الاسم</th><th>اللون</th><th>العلبة</th></tr></thead><tbody>';
+  for (var j = 0; j < order.items.length; j++) {
+    var item = order.items[j];
+    h += '<tr><td>' + (j + 1) + '</td><td style="font-weight:600">' + item.name + '</td>';
+    h += '<td>' + (item.color || '-') + '</td>';
+    h += '<td>' + (item.boxCode ? '<span class="box-tag">📦 ' + item.boxCode + '</span>' : '-') + '</td></tr>';
+  }
+  h += '</tbody></table></div></div>';
+  h += '<script>window.onload=function(){setTimeout(function(){window.print()},500)}<\/script></body></html>';
+  printWindow.document.open(); printWindow.document.write(h); printWindow.document.close();
+}
+
 function completeOrder(orderId) {
   for (var i = 0; i < orders.length; i++) {
     if (orders[i].id === orderId) {
       var order = orders[i];
-      
-      // تنقيص الكميات من المخزون
-      var soldItems = [];
-      var unavailableItems = [];
-      var notInStockItems = [];
-      
+      var soldItems = [], unavailableItems = [], notInStockItems = [];
       for (var j = 0; j < order.items.length; j++) {
-        var item = order.items[j];
-        var found = false;
-        
-        // البحث عن الاسم في المخزون
+        var item = order.items[j]; var found = false;
         for (var k = 0; k < db.length; k++) {
           if (db[k].name.toLowerCase() === item.name.toLowerCase()) {
             found = true;
-            if (db[k].qty > 0) {
-              db[k].qty--;
-              soldItems.push({
-                name: item.name,
-                boxCode: db[k].box_code,
-                remainingQty: db[k].qty
-              });
-            } else {
-              unavailableItems.push({
-                name: item.name,
-                boxCode: db[k].box_code
-              });
-            }
+            if (db[k].qty > 0) { db[k].qty--; soldItems.push({name: item.name, boxCode: db[k].box_code, remainingQty: db[k].qty}); }
+            else unavailableItems.push({name: item.name, boxCode: db[k].box_code});
             break;
           }
         }
-        
-        if (!found) {
-          notInStockItems.push(item.name);
-        }
+        if (!found) notInStockItems.push(item.name);
       }
-      
-      // حفظ التغييرات
       orders[i].status = 'completed';
-      saveOrders();
-      save(); // حفظ تغييرات المخزون
-      stats(); // تحديث الإحصائيات
-      displayOrders();
-      
-      // عرض تقرير مفصل
-      var reportMsg = '<div style="text-align:right">';
-      reportMsg += '<h3 style="color:#16a34a;margin-bottom:15px">✅ تم إنجاز الطلب بنجاح!</h3>';
-      
+      saveOrders(); save(); stats(); displayOrders();
+      var reportMsg = '<h3 style="color:#16a34a;margin-bottom:15px">✅ تم إنجاز الطلب بنجاح!</h3>';
       if (soldItems.length > 0) {
-        reportMsg += '<div style="background:#d1fae5;padding:10px;border-radius:6px;margin-bottom:10px">';
-        reportMsg += '<strong style="color:#065f46">🎉 تم بيع (' + soldItems.length + ') منتج:</strong><br>';
-        for (var m = 0; m < soldItems.length; m++) {
-          reportMsg += '• ' + soldItems[m].name;
-          if (soldItems[m].boxCode) reportMsg += ' (📦 ' + soldItems[m].boxCode + ')';
-          reportMsg += ' → الكمية المتبقية: ' + soldItems[m].remainingQty + '<br>';
-        }
+        reportMsg += '<div style="background:#d1fae5;padding:10px;border-radius:6px;margin-bottom:10px"><strong style="color:#065f46">🎉 تم بيع (' + soldItems.length + ') منتج:</strong><br>';
+        for (var m = 0; m < soldItems.length; m++) reportMsg += '• ' + soldItems[m].name + (soldItems[m].boxCode ? ' (📦 ' + soldItems[m].boxCode + ')' : '') + ' → الكمية المتبقية: ' + soldItems[m].remainingQty + '<br>';
         reportMsg += '</div>';
       }
-      
       if (unavailableItems.length > 0) {
-        reportMsg += '<div style="background:#fee2e2;padding:10px;border-radius:6px;margin-bottom:10px">';
-        reportMsg += '<strong style="color:#991b1b">⚠️ منتجات نفذت (' + unavailableItems.length + '):</strong><br>';
-        for (var n = 0; n < unavailableItems.length; n++) {
-          reportMsg += '• ' + unavailableItems[n].name;
-          if (unavailableItems[n].boxCode) reportMsg += ' (📦 ' + unavailableItems[n].boxCode + ')';
-          reportMsg += '<br>';
-        }
+        reportMsg += '<div style="background:#fee2e2;padding:10px;border-radius:6px;margin-bottom:10px"><strong style="color:#991b1b">⚠️ منتجات نفذت (' + unavailableItems.length + '):</strong><br>';
+        for (var n = 0; n < unavailableItems.length; n++) reportMsg += '• ' + unavailableItems[n].name + (unavailableItems[n].boxCode ? ' (📦 ' + unavailableItems[n].boxCode + ')' : '') + '<br>';
         reportMsg += '</div>';
       }
-      
       if (notInStockItems.length > 0) {
-        reportMsg += '<div style="background:#fef3c7;padding:10px;border-radius:6px;margin-bottom:10px">';
-        reportMsg += '<strong style="color:#92400e">ℹ️ غير موجود في المخزون (' + notInStockItems.length + '):</strong><br>';
-        for (var p = 0; p < notInStockItems.length; p++) {
-          reportMsg += '• ' + notInStockItems[p] + '<br>';
-        }
+        reportMsg += '<div style="background:#fef3c7;padding:10px;border-radius:6px;margin-bottom:10px"><strong style="color:#92400e">ℹ️ غير موجود في المخزون (' + notInStockItems.length + '):</strong><br>';
+        for (var p = 0; p < notInStockItems.length; p++) reportMsg += '• ' + notInStockItems[p] + '<br>';
         reportMsg += '</div>';
       }
-      
-      reportMsg += '</div>';
-      
       msg('📊 تقرير الإنجاز', reportMsg, 'success', true);
       break;
     }
   }
 }
 
-// حذف طلب
 function deleteOrder(orderId) {
   for (var i = 0; i < orders.length; i++) {
     if (orders[i].id === orderId) {
       var orderName = orders[i].customerName;
       if (!confirm('⚠️ هل تريد حذف طلب ' + orderName + '؟')) return;
-      orders.splice(i, 1);
-      saveOrders();
-      displayOrders();
+      orders.splice(i, 1); saveOrders(); displayOrders();
       msg('✅ نجح', 'تم حذف الطلب بنجاح', 'success');
       break;
     }
   }
 }
 
-// تعديل طلب موجود
 function editOrder(orderId) {
   for (var i = 0; i < orders.length; i++) {
     if (orders[i].id === orderId) {
       var order = orders[i];
-      
-      // ملء بيانات الزبون
       document.getElementById('customerName').value = order.customerName;
       document.getElementById('customerPhone').value = order.customerPhone;
       document.getElementById('customerAddress').value = order.customerAddress || '';
       document.getElementById('customerNotes').value = order.customerNotes || '';
-      
-      // إظهار حقل الملاحظات إذا كان هناك ملاحظات
       if (order.customerNotes) {
         document.getElementById('notesFieldContainer').style.display = 'block';
         document.getElementById('toggleNotesIcon').textContent = '➖';
         document.getElementById('toggleNotesBtn').innerHTML = '<span id="toggleNotesIcon">➖</span> إخفاء الملاحظات';
       }
-      
-      // ملء الأسماء المطلوبة
       currentOrderItems = [];
       for (var j = 0; j < order.items.length; j++) {
         var item = order.items[j];
-        currentOrderItems.push({
-          name: item.name,
-          color: item.color || '',
-          boxCode: item.boxCode || '',
-          boxNumber: item.boxNumber || 0,
-          qty: item.qty || 0
-        });
+        currentOrderItems.push({name: item.name, color: item.color || '', boxCode: item.boxCode || '', boxNumber: item.boxNumber || 0, qty: item.qty || 0});
       }
-      
-      // حذف الطلب القديم (سيتم إضافة النسخة المعدلة)
-      orders.splice(i, 1);
-      saveOrders();
-      displayOrders();
-      
-      // عرض الأسماء
+      orders.splice(i, 1); saveOrders(); displayOrders();
       displayOrderItems();
-      
-      // التبديل لتبويب الطلبات
-      switchTab('orders');
-      
-      // رسالة للمستخدم
+      switchTabDirect('orders');
       msg('✏️ تعديل', 'تم تحميل بيانات الطلب للتعديل. عدّل ثم اضغط "حفظ الطلب"', 'info');
-      
       break;
     }
   }
 }
 
-// إظهار/إخفاء حقل الملاحظات
 function toggleNotesField() {
   var container = document.getElementById('notesFieldContainer');
-  var icon = document.getElementById('toggleNotesIcon');
   var btn = document.getElementById('toggleNotesBtn');
-  
   if (container.style.display === 'none') {
     container.style.display = 'block';
-    icon.textContent = '➖';
     btn.innerHTML = '<span id="toggleNotesIcon">➖</span> إخفاء الملاحظات';
   } else {
     container.style.display = 'none';
-    icon.textContent = '➕';
     btn.innerHTML = '<span id="toggleNotesIcon">➕</span> إضافة ملاحظات (اختياري)';
   }
 }
 
-// مسح نموذج الطلب
 function clearOrderForm() {
   document.getElementById('customerName').value = '';
   document.getElementById('customerPhone').value = '';
@@ -1554,320 +1117,96 @@ function clearOrderForm() {
   document.getElementById('orderItemColor').value = '';
   currentOrderItems = [];
   displayOrderItems();
-  
-  // إخفاء حقل الملاحظات
   document.getElementById('notesFieldContainer').style.display = 'none';
-  document.getElementById('toggleNotesIcon').textContent = '➕';
   document.getElementById('toggleNotesBtn').innerHTML = '<span id="toggleNotesIcon">➕</span> إضافة ملاحظات (اختياري)';
 }
 
-// تحديث إحصائيات الأسماء المطلوبة
-// طباعة الطلبات
 function printOrders() {
-  if (orders.length === 0) {
-    return msg('⚠️ تنبيه', 'لا توجد طلبات للطباعة', 'warning');
-  }
-  
+  if (orders.length === 0) return msg('⚠️ تنبيه', 'لا توجد طلبات للطباعة', 'warning');
   var printWindow = window.open('', '_blank');
   var h = '<html dir="rtl"><head><meta charset="UTF-8"><title>طلبات الزبائن - كرزما K3D</title>';
   h += '<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">';
-  h += '<style>';
-  h += 'body{font-family:Cairo,Arial,sans-serif;padding:20px;background:#f5f5f5;margin:0}';
+  h += '<style>body{font-family:Cairo,Arial,sans-serif;padding:20px;background:#f5f5f5;margin:0}';
   h += '.container{max-width:1200px;margin:0 auto}';
-  h += '.header{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;padding:15px;border-radius:10px;text-align:center;margin-bottom:20px;box-shadow:0 4px 10px rgba(99,102,241,0.2)}';
-  h += 'h1{margin:0 0 5px 0;font-size:24px;font-weight:700}';
-  h += '.subtitle{font-size:12px;opacity:0.92;margin:2px 0}';
-  
-  // Grid layout for cards
+  h += '.header{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;padding:15px;border-radius:10px;text-align:center;margin-bottom:20px}';
+  h += 'h1{margin:0 0 5px 0;font-size:24px;font-weight:700}.subtitle{font-size:12px;opacity:0.92;margin:2px 0}';
   h += '.orders-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:30px}';
   h += '.order-card{background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1);overflow:hidden;page-break-inside:avoid;border:2px solid #e5e7eb}';
   h += '.card-header{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;padding:15px 20px;display:flex;justify-content:space-between;align-items:center}';
-  h += '.order-title{font-weight:700;font-size:18px}';
-  h += '.order-number{background:rgba(255,255,255,0.25);padding:4px 12px;border-radius:20px;font-size:13px;font-weight:600}';
-  h += '.card-body{padding:20px}';
-  h += '.customer-info{background:#f5f3ff;padding:15px;border-radius:8px;margin-bottom:15px;border:1px solid #e0e7ff}';
-  h += '.info-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:14px}';
-  h += '.info-row:last-child{margin-bottom:0}';
-  h += '.info-icon{color:#6366f1;font-weight:600;min-width:65px}';
-  h += '.info-value{color:#1e293b;flex:1}';
-  h += '.items-section{margin-top:15px}';
-  h += '.items-title{font-weight:700;color:#6366f1;margin-bottom:10px;font-size:15px;display:flex;align-items:center;gap:8px}';
-  h += '.items-count{background:#e0e7ff;color:#6366f1;padding:2px 10px;border-radius:12px;font-size:13px}';
+  h += '.order-title{font-weight:700;font-size:18px}.order-number{background:rgba(255,255,255,0.25);padding:4px 12px;border-radius:20px;font-size:13px;font-weight:600}';
+  h += '.card-body{padding:20px}.customer-info{background:#f5f3ff;padding:15px;border-radius:8px;margin-bottom:15px;border:1px solid #e0e7ff}';
+  h += '.info-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:14px}.info-row:last-child{margin-bottom:0}';
+  h += '.info-icon{color:#6366f1;font-weight:600;min-width:65px}.info-value{color:#1e293b;flex:1}';
   h += '.items-table{width:100%;border-collapse:collapse}';
-  h += '.items-table thead{background:#f5f3ff}';
-  h += '.items-table th{padding:10px;text-align:right;font-weight:700;color:#6366f1;font-size:13px;border-bottom:2px solid #c4b5fd}';
+  h += '.items-table thead{background:#f5f3ff}.items-table th{padding:10px;text-align:right;font-weight:700;color:#6366f1;font-size:13px;border-bottom:2px solid #c4b5fd}';
   h += '.items-table td{padding:10px;text-align:right;border-bottom:1px solid #e2e8f0;font-size:14px}';
-  h += '.items-table tbody tr:last-child td{border-bottom:none}';
-  h += '.items-table tbody tr:hover{background:#faf5ff}';
-  h += '.item-number{background:#6366f1;color:white;width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}';
-  h += '.item-name{font-weight:600;color:#1e293b}';
-  h += '.item-color{color:#64748b;font-size:13px}';
   h += '.item-box{background:#6366f1;color:white;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;display:inline-block}';
-  h += '.status-badge{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;display:inline-block}';
-  h += '.status-pending{background:#fed7aa;color:#ea580c}';
-  h += '.status-completed{background:#dcfce7;color:#16a34a}';
   h += '.footer{text-align:center;padding:20px;color:#64748b;font-size:12px;margin-top:20px;border-top:2px solid #e5e7eb}';
-  
-  // Print styles
-  h += '@media print{';
-  h += 'body{padding:15px;background:white}';
-  h += '.container{max-width:100%}';
-  h += '.header{page-break-after:avoid}';
-  h += '.stats{page-break-after:avoid}';
-  h += '.order-card{page-break-inside:avoid;margin-bottom:15px}';
-  h += '.orders-grid{gap:15px}';
-  h += '}';
-  
-  // For single column on small pages
-  h += '@page{size:A4;margin:15mm}';
-  
-  h += '</style></head><body>';
-  
-  h += '<div class="container">';
-  
-  // Header
-  h += '<div class="header">';
-  h += '<h1>📋 طلبات الزبائن</h1>';
+  h += '@media print{body{padding:15px;background:white}.order-card{page-break-inside:avoid}}';
+  h += '@page{size:A4;margin:15mm}</style></head><body>';
+  h += '<div class="container"><div class="header"><h1>📋 طلبات الزبائن</h1>';
   h += '<div class="subtitle">برنامج كرزما K3D لإدارة المخزون</div>';
-  h += '<div class="subtitle">تاريخ الطباعة: ' + new Date().toLocaleDateString('ar-EG') + ' • ' + new Date().toLocaleTimeString('ar-EG', {hour: '2-digit', minute: '2-digit'}) + '</div>';
-  h += '</div>';
-  
-  // Sort orders
+  h += '<div class="subtitle">تاريخ الطباعة: ' + new Date().toLocaleDateString('ar-EG') + '</div></div>';
   var sorted = orders.slice().sort(function(a, b) {
-    if (a.status !== b.status) {
-      return a.status === 'pending' ? -1 : 1;
-    }
+    if (a.status !== b.status) return a.status === 'pending' ? -1 : 1;
     return new Date(b.date) - new Date(a.date);
   });
-  
-  // Orders Grid
   h += '<div class="orders-grid">';
-  
   for (var i = 0; i < sorted.length; i++) {
     var order = sorted[i];
     var date = new Date(order.date);
-    var dateStr = date.toLocaleDateString('ar-EG');
-    var timeStr = date.toLocaleTimeString('ar-EG', {hour: '2-digit', minute: '2-digit'});
-    var statusClass = order.status === 'completed' ? 'status-completed' : 'status-pending';
-    var statusText = order.status === 'completed' ? '✅ مكتمل' : '⏳ قيد الانتظار';
-    
-    h += '<div class="order-card">';
-    
-    // Card Header
-    h += '<div class="card-header">';
-    h += '<div class="order-title">👤 ' + order.customerName + '</div>';
-    h += '<div class="order-number">#' + (i + 1) + '</div>';
-    h += '</div>';
-    
-    // Card Body
-    h += '<div class="card-body">';
-    
-    // Customer Info
-    h += '<div class="customer-info">';
-    h += '<div class="info-row">';
-    h += '<span class="info-icon">📞 الهاتف:</span>';
-    h += '<span class="info-value">' + order.customerPhone + '</span>';
-    h += '</div>';
-    if (order.customerAddress) {
-      h += '<div class="info-row">';
-      h += '<span class="info-icon">📍 العنوان:</span>';
-      h += '<span class="info-value">' + order.customerAddress + '</span>';
-      h += '</div>';
-    }
-    if (order.customerNotes) {
-      h += '<div class="info-row">';
-      h += '<span class="info-icon">📝 ملاحظات:</span>';
-      h += '<span class="info-value" style="font-style:italic">' + order.customerNotes + '</span>';
-      h += '</div>';
-    }
-    h += '</div>';
-    
-    // Items Section
-    h += '<div class="items-section">';
-    h += '<div class="items-title">';
-    h += '<span>الأسماء المطلوبة</span>';
-    h += '<span class="items-count">' + order.items.length + ' منتج</span>';
-    h += '</div>';
-    
-    // Items Table
-    h += '<table class="items-table">';
-    h += '<thead><tr>';
-    h += '<th style="width:40px">#</th>';
-    h += '<th>الاسم</th>';
-    h += '<th style="width:80px">اللون</th>';
-    h += '<th style="width:80px">العلبة</th>';
-    h += '</tr></thead>';
-    h += '<tbody>';
-    
+    h += '<div class="order-card"><div class="card-header"><div class="order-title">👤 ' + order.customerName + '</div><div class="order-number">#' + (i + 1) + '</div></div>';
+    h += '<div class="card-body"><div class="customer-info">';
+    h += '<div class="info-row"><span class="info-icon">📞 الهاتف:</span><span class="info-value">' + order.customerPhone + '</span></div>';
+    if (order.customerAddress) h += '<div class="info-row"><span class="info-icon">📍 العنوان:</span><span class="info-value">' + order.customerAddress + '</span></div>';
+    if (order.customerNotes) h += '<div class="info-row"><span class="info-icon">📝 ملاحظات:</span><span class="info-value">' + order.customerNotes + '</span></div>';
+    h += '</div><table class="items-table"><thead><tr><th>#</th><th>الاسم</th><th>اللون</th><th>العلبة</th></tr></thead><tbody>';
     for (var j = 0; j < order.items.length; j++) {
       var item = order.items[j];
-      h += '<tr>';
-      h += '<td><span class="item-number">' + (j + 1) + '</span></td>';
-      h += '<td><span class="item-name">' + item.name + '</span></td>';
-      h += '<td>' + (item.color ? '<span class="item-color">' + item.color + '</span>' : '-') + '</td>';
-      h += '<td>' + (item.boxCode ? '<span class="item-box">📦 ' + item.boxCode + '</span>' : '-') + '</td>';
-      h += '</tr>';
+      h += '<tr><td>' + (j+1) + '</td><td style="font-weight:600">' + item.name + '</td>';
+      h += '<td>' + (item.color || '-') + '</td>';
+      h += '<td>' + (item.boxCode ? '<span class="item-box">📦 ' + item.boxCode + '</span>' : '-') + '</td></tr>';
     }
-    
-    h += '</tbody></table>';
-    h += '</div>';
-    
-    h += '</div>'; // card-body
-    h += '</div>'; // order-card
+    h += '</tbody></table></div></div>';
   }
-  
-  h += '</div>'; // orders-grid
-  
-  // Footer
-  h += '<div class="footer">';
-  h += '<div style="font-weight:600;margin-bottom:5px">برنامج كرزما K3D لإدارة المخزون</div>';
-  h += '<div>© 2024 - جميع الحقوق محفوظة</div>';
-  h += '</div>';
-  
-  h += '</div>'; // container
-  h += '</body></html>';
-  
-  printWindow.document.open();
-  printWindow.document.write(h);
-  printWindow.document.close();
-  
-  setTimeout(function() {
-    printWindow.print();
-  }, 250);
-  
+  h += '</div><div class="footer"><div style="font-weight:600;margin-bottom:5px">برنامج كرزما K3D لإدارة المخزون</div></div></div>';
+  h += '<script>window.onload=function(){setTimeout(function(){window.print()},250)}<\/script></body></html>';
+  printWindow.document.open(); printWindow.document.write(h); printWindow.document.close();
   msg('✅ نجح', 'تم فتح نافذة الطباعة', 'success');
 }
 
-// تصدير الطلبات كـ CSV
 function exportOrders() {
-  if (orders.length === 0) {
-    return msg('⚠️ تنبيه', 'لا توجد طلبات للتصدير', 'warning');
-  }
-  
+  if (orders.length === 0) return msg('⚠️ تنبيه', 'لا توجد طلبات للتصدير', 'warning');
   var csv = 'رقم الطلب,اسم الزبون,رقم الهاتف,العنوان,التاريخ,الحالة,الأسماء المطلوبة\n';
-  
   for (var i = 0; i < orders.length; i++) {
     var order = orders[i];
-    var date = new Date(order.date);
-    var dateStr = date.toLocaleDateString('ar-EG');
+    var dateStr = new Date(order.date).toLocaleDateString('ar-EG');
     var statusText = order.status === 'completed' ? 'مكتمل' : 'قيد الانتظار';
-    
     var itemsStr = '';
     for (var j = 0; j < order.items.length; j++) {
       itemsStr += order.items[j].name;
-      if (order.items[j].color) {
-        itemsStr += ' (' + order.items[j].color + ')';
-      }
-      if (j < order.items.length - 1) {
-        itemsStr += ' | ';
-      }
+      if (order.items[j].color) itemsStr += ' (' + order.items[j].color + ')';
+      if (j < order.items.length - 1) itemsStr += ' | ';
     }
-    
-    csv += (i + 1) + ',';
-    csv += order.customerName + ',';
-    csv += order.customerPhone + ',';
-    csv += (order.customerAddress || '') + ',';
-    csv += dateStr + ',';
-    csv += statusText + ',';
-    csv += '"' + itemsStr + '"';
-    csv += '\n';
+    csv += (i+1) + ',' + order.customerName + ',' + order.customerPhone + ',' + (order.customerAddress || '') + ',' + dateStr + ',' + statusText + ',"' + itemsStr + '"\n';
   }
-  
   var blob = new Blob(['\ufeff' + csv], {type: 'text/csv;charset=utf-8;'});
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
-  a.href = url;
-  a.download = 'orders_' + new Date().toISOString().slice(0, 10) + '.csv';
-  a.click();
+  a.href = url; a.download = 'orders_' + new Date().toISOString().slice(0, 10) + '.csv'; a.click();
   URL.revokeObjectURL(url);
-  
   msg('✅ نجح', 'تم تنزيل ملف الطلبات بنجاح', 'success');
 }
 
-// التنقل بين التبويبات
-function switchTab(tabName) {
-  // إخفاء كل التبويبات
-  var tabs = document.getElementsByClassName('tab-content');
-  for (var i = 0; i < tabs.length; i++) {
-    tabs[i].classList.remove('active');
-  }
-  
-  // إزالة active من كل الأزرار
-  var btns = document.getElementsByClassName('tab-btn');
-  for (var i = 0; i < btns.length; i++) {
-    btns[i].classList.remove('active');
-  }
-  
-  // إظهار التبويب المطلوب
-  var targetTab = document.getElementById(tabName + '-tab');
-  if (targetTab) {
-    targetTab.classList.add('active');
-  }
-  
-  // تفعيل الزر المطلوب
-  event.target.closest('.tab-btn').classList.add('active');
-}
-
-// دالة للانتقال بين التبويبات برمجياً
-function switchTabDirect(tabName) {
-  // تحويل 'manage' و 'sell' و 'boxes' إلى الأسماء الجديدة
-  if (tabName === 'manage' || tabName === 'sell') {
-    tabName = 'search';
-  } else if (tabName === 'boxes') {
-    tabName = 'settings';
-  }
-  
-  // إخفاء كل التبويبات
-  var tabs = document.getElementsByClassName('tab-content');
-  for (var i = 0; i < tabs.length; i++) {
-    tabs[i].classList.remove('active');
-  }
-  
-  // إزالة active من كل الأزرار
-  var btns = document.getElementsByClassName('tab-btn');
-  for (var i = 0; i < btns.length; i++) {
-    btns[i].classList.remove('active');
-  }
-  
-  // إظهار التبويب المطلوب
-  var targetTab = document.getElementById(tabName + '-tab');
-  if (targetTab) {
-    targetTab.classList.add('active');
-  }
-  
-  // تفعيل الزر المطلوب
-  var allBtns = document.querySelectorAll('.tab-btn');
-  for (var i = 0; i < allBtns.length; i++) {
-    var btn = allBtns[i];
-    var btnText = btn.textContent || btn.innerText;
-    if ((tabName === 'search' && btnText.indexOf('البحث') !== -1) ||
-        (tabName === 'orders' && btnText.indexOf('طلبات') !== -1) ||
-        (tabName === 'settings' && btnText.indexOf('العلب') !== -1)) {
-      btn.classList.add('active');
-      break;
-    }
-  }
-}
-
 function init() {
-  // تحميل قواعد توزيع الحروف
   loadLetterBoxMap();
-  
-  // تحميل طلبات الزبائن
   loadOrders();
-  
-  // محاولة تهيئة Firebase أولاً
   var fbReady = initFirebase();
-  
   if (!fbReady) {
-    // إذا لم يكن Firebase جاهزاً، استخدم localStorage
     try {
       var s = localStorage.getItem(LOCAL_KEY);
       db = s ? JSON.parse(s) : [];
-    } catch (e) {
-      db = [];
-    }
-    
+    } catch(e) { db = []; }
     if (db.length === 0) {
       db = [
         {name: 'خالد', gender: 'ذكر', qty: 25, color: 'أزرق', note: 'مقاس صغير', box_number: '7', box_code: generateBoxCode('7', 'ذكر')},
@@ -1877,73 +1216,31 @@ function init() {
       ];
       saveLocal();
     } else {
-      // تحديث رموز العلب للسجلات القديمة
       var updated = false;
       for (var i = 0; i < db.length; i++) {
-        if (!db[i].box_code && db[i].box_number && db[i].gender) {
-          db[i].box_code = generateBoxCode(db[i].box_number, db[i].gender);
-          updated = true;
-        }
-        // إذا كان هناك box_code قديم، حاول استخراج رقم العلبة منه
-        if (!db[i].box_number && db[i].box_code) {
-          // استخراج الرقم من رمز العلبة (مثلاً: "1ذ" -> "1")
-          db[i].box_number = db[i].box_code.replace(/[ذأ]/g, '');
-          updated = true;
-        }
+        if (!db[i].box_code && db[i].box_number && db[i].gender) { db[i].box_code = generateBoxCode(db[i].box_number, db[i].gender); updated = true; }
+        if (!db[i].box_number && db[i].box_code) { db[i].box_number = db[i].box_code.replace(/[ذأ]/g, ''); updated = true; }
       }
       if (updated) saveLocal();
     }
   }
-  
   stats();
 }
 
 function saveLocal() {
-  try {
-    localStorage.setItem(LOCAL_KEY, JSON.stringify(db));
-  } catch (e) {
-    console.error('خطأ في الحفظ المحلي:', e);
-  }
+  try { localStorage.setItem(LOCAL_KEY, JSON.stringify(db)); } catch(e){}
 }
 
 function save() {
-  // حفظ في Firebase إذا كان متاحاً
   if (isFirebaseReady && database) {
-    database.ref('k3d_names').set(db).then(function() {
-      stats();
-      var statusEl = document.getElementById('status');
-      if (statusEl) {
-        statusEl.textContent = '✅ تم الحفظ على السحابة';
-        setTimeout(function() {
-          statusEl.textContent = '💾 حفظ تلقائي مفعل';
-        }, 2000);
-      }
-    }).catch(function(error) {
-      console.error('خطأ في Firebase:', error);
-      saveLocal();
-      stats();
-    });
-  } else {
-    // حفظ محلي فقط
-    saveLocal();
-    stats();
-    var statusEl = document.getElementById('status');
-    if (statusEl) {
-      statusEl.textContent = '✅ تم الحفظ محلياً';
-      setTimeout(function() {
-        statusEl.textContent = '💾 حفظ محلي فقط';
-      }, 2000);
-    }
-  }
+    database.ref('k3d_names').set(db).then(function() { stats(); }).catch(function(error) { saveLocal(); stats(); });
+  } else { saveLocal(); stats(); }
 }
 
 function stats() {
   document.getElementById('total').textContent = db.length;
   var a = 0, m = 0, totalQty = 0;
-  for (var i = 0; i < db.length; i++) {
-    if (db[i].qty > 0) a++; else m++;
-    totalQty += db[i].qty;
-  }
+  for (var i = 0; i < db.length; i++) { if (db[i].qty > 0) a++; else m++; totalQty += db[i].qty; }
   document.getElementById('avail').textContent = a;
   document.getElementById('miss').textContent = m;
   document.getElementById('totalQty').textContent = totalQty;
@@ -1960,17 +1257,10 @@ function copyCode() {
   var c = document.getElementById('code').textContent;
   if (c === 'انقر لإنشاء الكود') return makeCode();
   var t = document.createElement('textarea');
-  t.value = c;
-  t.style.position = 'fixed';
-  t.style.opacity = '0';
-  document.body.appendChild(t);
-  t.select();
-  try {
-    document.execCommand('copy');
-    msg('✅ تم', 'تم نسخ الكود بنجاح', 'success');
-  } catch (e) {
-    prompt('انسخ الكود:', c);
-  }
+  t.value = c; t.style.position = 'fixed'; t.style.opacity = '0';
+  document.body.appendChild(t); t.select();
+  try { document.execCommand('copy'); msg('✅ تم', 'تم نسخ الكود بنجاح', 'success'); }
+  catch(e) { prompt('انسخ الكود:', c); }
   document.body.removeChild(t);
 }
 
@@ -1980,54 +1270,105 @@ function loadCode() {
   try {
     var imp = JSON.parse(decodeURIComponent(escape(atob(c))));
     if (!Array.isArray(imp)) throw new Error('Invalid');
-    if (confirm('هل تريد استيراد ' + imp.length + ' سجل؟')) {
-      db = imp;
+    if (confirm('هل تريد استيراد ' + imp.length + ' سجل؟')) { db = imp; save(); show(db, '✅ تم الاستيراد بنجاح'); msg('✅ نجح', 'تم استيراد البيانات بنجاح', 'success'); }
+  } catch(e) { msg('❌ خطأ', 'الكود غير صالح أو تالف', 'error'); }
+}
+
+// ===== نافذة البيع السريع =====
+function openSellModal(itemName) {
+  var item = null;
+  for (var i = 0; i < db.length; i++) {
+    if (db[i].name === itemName) { item = db[i]; break; }
+  }
+  if (!item) return msg('❌ خطأ', 'المنتج غير موجود', 'error');
+  sellModalItem = item;
+  document.getElementById('sellModalName').textContent = item.name;
+  var details = '';
+  var genderIcon = item.gender === 'ذكر' ? '👦' : '👧';
+  details += '<span class="tag blue">' + genderIcon + ' ' + (item.gender || '') + '</span> ';
+  if (item.box_code) details += '<span class="tag purple">📦 ' + item.box_code + '</span> ';
+  if (item.color) details += '<span class="tag orange">🎨 ' + item.color + '</span> ';
+  var qtyClass = item.qty === 0 ? 'red' : item.qty === 1 ? 'orange' : 'green';
+  var qtyText = item.qty === 0 ? '❌ نفذ' : '📊 ' + item.qty + ' قطعة';
+  details += '<span class="tag ' + qtyClass + '">' + qtyText + '</span>';
+  document.getElementById('sellModalDetails').innerHTML = details;
+  document.getElementById('sellModalQty').value = item.qty > 0 ? 1 : 0;
+  document.getElementById('sellModalQty').max = item.qty;
+  document.getElementById('sellModal').style.display = 'flex';
+  setTimeout(function() { document.getElementById('sellModalQty').focus(); document.getElementById('sellModalQty').select(); }, 100);
+}
+
+function closeSellModal() {
+  document.getElementById('sellModal').style.display = 'none';
+  sellModalItem = null;
+}
+
+function changeSellQty(delta) {
+  var input = document.getElementById('sellModalQty');
+  var val = parseInt(input.value) || 0;
+  var max = sellModalItem ? sellModalItem.qty : 999;
+  val = Math.max(1, Math.min(max, val + delta));
+  input.value = val;
+}
+
+function validateSellQty() {
+  var input = document.getElementById('sellModalQty');
+  var val = parseInt(input.value) || 1;
+  var max = sellModalItem ? sellModalItem.qty : 999;
+  if (val < 1) input.value = 1;
+  if (val > max) input.value = max;
+}
+
+function confirmSellModal() {
+  if (!sellModalItem) return;
+  var q = parseInt(document.getElementById('sellModalQty').value) || 0;
+  if (q <= 0) return msg('⚠️ تنبيه', 'الرجاء إدخال كمية صحيحة', 'warning');
+  var itemName = sellModalItem.name;
+  if (sellModalItem.qty < q) return msg('❌ خطأ', 'الكمية المتوفرة غير كافية<br>المتوفر: ' + sellModalItem.qty + ' قطعة', 'error');
+  // تنفيذ البيع
+  for (var i = 0; i < db.length; i++) {
+    if (db[i].name === itemName) {
+      db[i].qty -= q;
       save();
-      show(db, '✅ تم الاستيراد بنجاح');
-      msg('✅ نجح', 'تم استيراد البيانات بنجاح', 'success');
+      var remaining = db[i].qty;
+      closeSellModal();
+      // تحديث نتائج البحث
+      var searchQuery = document.getElementById('q').value.trim();
+      if (searchQuery) liveSearch(); else search();
+      var m = '✅ تمت عملية البيع بنجاح<br><br>📦 الكمية المباعة: ' + q + ' قطعة<br>📊 الكمية المتبقية: ' + remaining + ' قطعة';
+      if (remaining === 0) m += '<br><br>❌ تحذير: المخزون نفذ تماماً!';
+      else if (remaining === 1) m += '<br><br>⚠️ تنبيه: متبقي قطعة واحدة فقط!';
+      msg('💰 عملية البيع', m, 'success', true);
+      break;
     }
-  } catch (e) {
-    msg('❌ خطأ', 'الكود غير صالح أو تالف', 'error');
   }
 }
 
+// إغلاق نافذة البيع بالضغط خارجها
+document.getElementById('sellModal').addEventListener('click', function(e) {
+  if (e.target === this) closeSellModal();
+});
+
 function show(items, title, searchQuery) {
   var r = document.getElementById('results');
-  
-  // إذا كانت هناك عبارة بحث ولم نجد نتائج مطابقة تماماً
   if (searchQuery && items.length === 0) {
     var exactMatch = false;
-    for (var i = 0; i < db.length; i++) {
-      if (db[i].name.toLowerCase() === searchQuery.toLowerCase()) {
-        exactMatch = true;
-        break;
-      }
-    }
-    
+    for (var i = 0; i < db.length; i++) { if (db[i].name.toLowerCase() === searchQuery.toLowerCase()) { exactMatch = true; break; } }
     if (!exactMatch) {
-      r.innerHTML = '<div class="empty" style="padding:20px">';
-      r.innerHTML += '<div style="margin-bottom:15px;font-size:16px">❌ لا توجد نتائج لـ "<strong>' + searchQuery + '</strong>"</div>';
-      r.innerHTML += '<button class="btn btn-success" onclick="addNewName(\'' + searchQuery.replace(/'/g, "\\'") + '\')" style="width:auto;padding:12px 24px">➕ إضافة اسم جديد: ' + searchQuery + '</button>';
-      r.innerHTML += '</div>';
+      r.innerHTML = '<div class="empty" style="padding:20px"><div style="margin-bottom:15px;font-size:16px">❌ لا توجد نتائج لـ "<strong>' + searchQuery + '</strong>"</div>';
+      r.innerHTML += '<button class="btn btn-success" onclick="addNewName(\'' + searchQuery.replace(/'/g, "\\'") + '\')" style="width:auto;padding:12px 24px">➕ إضافة اسم جديد: ' + searchQuery + '</button></div>';
       return;
     }
   }
-  
-  if (items.length === 0) {
-    r.innerHTML = '<div class="empty">❌ لا توجد نتائج</div>';
-    return;
-  }
-  
+  if (items.length === 0) { r.innerHTML = '<div class="empty">❌ لا توجد نتائج</div>'; return; }
   var h = '';
   if (title) h += '<div style="font-weight:800;color:#6366f1;margin-bottom:12px;font-size:16px">' + title + '</div>';
-  
-  // عرض النتائج الموجودة أولاً
   for (var i = 0; i < items.length; i++) {
     var it = items[i];
     var genderText = it.gender === 'ذكر' ? '👦 ذكر' : '👧 أنثى';
     var qtyTag = it.qty === 0 ? '<span class="tag red">' + it.qty + '</span>' : it.qty === 1 ? '<span class="tag orange">' + it.qty + '</span>' : '<span class="tag green">' + it.qty + '</span>';
     var boxCodeTag = it.box_code ? '<span class="tag purple">📦 ' + it.box_code + '</span>' : '';
-    
+    // ===== زر البيع السريع بدلاً من "للبيع" =====
     h += '<div class="item" style="display:flex;align-items:center;justify-content:space-between;gap:10px">';
     h += '<div style="flex:1;display:flex;align-items:center;gap:8px;cursor:pointer;flex-wrap:wrap" onclick="fill(\'' + it.name.replace(/'/g, "\\'") + '\')">';
     h += '<span class="name">' + (i + 1) + '. ' + it.name + '</span>';
@@ -2035,63 +1376,35 @@ function show(items, title, searchQuery) {
     h += '<span class="tag blue">' + genderText + '</span>';
     if (boxCodeTag) h += boxCodeTag;
     h += '</div>';
-    h += '<button class="btn btn-success" onclick="addToSell(\'' + it.name.replace(/'/g, "\\'") + '\')" style="width:auto;padding:6px 14px;font-size:13px;flex-shrink:0">➕ للبيع</button>';
+    h += '<button class="btn btn-warning" onclick="openSellModal(\'' + it.name.replace(/'/g, "\\'") + '\')" style="width:auto;padding:6px 14px;font-size:13px;flex-shrink:0">💸 بيع</button>';
     h += '</div>';
   }
-  
-  // إذا كانت هناك عبارة بحث، تحقق من وجود مطابقة تامة
   if (searchQuery) {
     var exactMatch = false;
-    for (var i = 0; i < items.length; i++) {
-      if (items[i].name.toLowerCase() === searchQuery.toLowerCase()) {
-        exactMatch = true;
-        break;
-      }
-    }
-    
-    // إذا لم يكن هناك مطابقة تامة، اعرض زر إضافة اسم جديد في الأسفل
+    for (var i = 0; i < items.length; i++) { if (items[i].name.toLowerCase() === searchQuery.toLowerCase()) { exactMatch = true; break; } }
     if (!exactMatch) {
       h += '<div style="background:#f0f9ff;border:2px dashed #3b82f6;padding:15px;border-radius:10px;margin-top:15px;text-align:center">';
       h += '<div style="margin-bottom:10px;font-size:14px;color:#1e40af">💡 لم يتم العثور على "<strong>' + searchQuery + '</strong>" بالضبط</div>';
-      h += '<button class="btn btn-success" onclick="addNewName(\'' + searchQuery.replace(/'/g, "\\'") + '\')" style="width:auto;padding:10px 20px">➕ إضافة اسم جديد: ' + searchQuery + '</button>';
-      h += '</div>';
+      h += '<button class="btn btn-success" onclick="addNewName(\'' + searchQuery.replace(/'/g, "\\'") + '\')" style="width:auto;padding:10px 20px">➕ إضافة اسم جديد: ' + searchQuery + '</button></div>';
     }
   }
-  
   r.innerHTML = h;
 }
 
 function addNewName(name) {
-  // الانتقال إلى تبويب إدارة السجلات
   switchTabDirect('manage');
-  
   document.getElementById('name').value = name;
   document.getElementById('qty').value = '0';
   document.getElementById('gender').value = '';
   document.getElementById('color').value = '';
   document.getElementById('note').value = '';
   updateBoxCodePreview();
-  
-  // تأخير بسيط للتأكد من ظهور التبويب
-  setTimeout(function() {
-    document.getElementById('gender').focus();
-  }, 100);
-  
+  setTimeout(function() { document.getElementById('gender').focus(); }, 100);
   msg('إضافة', 'تم ملء الاسم "' + name + '" - الرجاء إكمال البيانات', 'info');
 }
 
 function addToSell(name) {
-  // الانتقال إلى تبويب عملية البيع
-  switchTabDirect('sell');
-  
-  document.getElementById('sname').value = name;
-  
-  // تأخير بسيط للتأكد من ظهور التبويب
-  setTimeout(function() {
-    document.getElementById('sqty').focus();
-  }, 100);
-  
-  msg('تم', 'تم إضافة "' + name + '" لعملية البيع', 'success');
+  openSellModal(name);
 }
 
 function fill(n) {
@@ -2110,7 +1423,6 @@ function fill(n) {
 }
 
 function msg(t, m, type, forceModal) {
-  // إذا كانت forceModal = true، اعرض رسالة منبثقة
   if (forceModal) {
     document.getElementById('mtitle').textContent = t;
     var cls = type === 'success' ? 'success' : type === 'error' ? 'error' : type === 'warning' ? 'warning' : 'info';
@@ -2118,65 +1430,32 @@ function msg(t, m, type, forceModal) {
     document.getElementById('modal').style.display = 'flex';
     return;
   }
-  
-  // وإلا اعرض في الهيدر
   showActionMessage(m, type);
-  setTimeout(function() {
-    hideActionMessage();
-  }, 9000);
+  setTimeout(function() { hideActionMessage(); }, 9000);
 }
 
 function showActionMessage(message, type) {
   var msgEl = document.getElementById('actionMessage');
-  msgEl.textContent = message.replace(/<[^>]*>/g, ' '); // إزالة HTML tags
-  
-  // تغيير اللون حسب النوع
-  if (type === 'success') {
-    msgEl.style.background = '#d1fae5';
-    msgEl.style.color = '#065f46';
-  } else if (type === 'error') {
-    msgEl.style.background = '#fee2e2';
-    msgEl.style.color = '#991b1b';
-  } else if (type === 'warning') {
-    msgEl.style.background = '#fef3c7';
-    msgEl.style.color = '#92400e';
-  } else {
-    msgEl.style.background = '#dbeafe';
-    msgEl.style.color = '#1e40af';
-  }
-  
+  msgEl.textContent = message.replace(/<[^>]*>/g, ' ');
+  if (type === 'success') { msgEl.style.background = '#d1fae5'; msgEl.style.color = '#065f46'; }
+  else if (type === 'error') { msgEl.style.background = '#fee2e2'; msgEl.style.color = '#991b1b'; }
+  else if (type === 'warning') { msgEl.style.background = '#fef3c7'; msgEl.style.color = '#92400e'; }
+  else { msgEl.style.background = '#dbeafe'; msgEl.style.color = '#1e40af'; }
   msgEl.classList.add('show');
 }
 
-function hideActionMessage() {
-  var msgEl = document.getElementById('actionMessage');
-  msgEl.classList.remove('show');
-}
-
-function closeModal() {
-  document.getElementById('modal').style.display = 'none';
-}
-
-function toggleSync() {
-  var c = document.getElementById('syncCard');
-  c.style.display = c.style.display === 'none' || c.style.display === '' ? 'block' : 'none';
-}
+function hideActionMessage() { document.getElementById('actionMessage').classList.remove('show'); }
+function closeModal() { document.getElementById('modal').style.display = 'none'; }
+function toggleSync() { var c = document.getElementById('syncCard'); c.style.display = c.style.display === 'none' || c.style.display === '' ? 'block' : 'none'; }
 
 function liveSearch() {
   clearTimeout(searchTimeout);
   searchTimeout = setTimeout(function() {
     var q = document.getElementById('q').value.trim().toLowerCase();
-    if (!q) {
-      document.getElementById('results').innerHTML = '<div class="empty">ابدأ بالكتابة للبحث 👆</div>';
-      return;
-    }
+    if (!q) { document.getElementById('results').innerHTML = '<div class="empty">ابدأ بالكتابة للبحث 👆</div>'; return; }
     var res = [];
     for (var i = 0; i < db.length; i++) {
-      // البحث في الاسم أو رمز العلبة
-      if (db[i].name.toLowerCase().indexOf(q) !== -1 || 
-          (db[i].box_code && db[i].box_code.toLowerCase().indexOf(q) !== -1)) {
-        res.push(db[i]);
-      }
+      if (db[i].name.toLowerCase().indexOf(q) !== -1 || (db[i].box_code && db[i].box_code.toLowerCase().indexOf(q) !== -1)) res.push(db[i]);
     }
     show(res, '🔍 نتائج البحث (' + res.length + ')', q);
   }, 300);
@@ -2184,134 +1463,55 @@ function liveSearch() {
 
 function search() {
   var q = document.getElementById('q').value.trim().toLowerCase();
-  if (!q) {
-    show(db, '📑 جميع السجلات (' + db.length + ')');
-    return;
-  }
+  if (!q) { show(db, '📑 جميع السجلات (' + db.length + ')'); return; }
   var res = [];
   for (var i = 0; i < db.length; i++) {
-    // البحث في الاسم أو رمز العلبة
-    if (db[i].name.toLowerCase().indexOf(q) !== -1 || 
-        (db[i].box_code && db[i].box_code.toLowerCase().indexOf(q) !== -1)) {
-      res.push(db[i]);
-    }
+    if (db[i].name.toLowerCase().indexOf(q) !== -1 || (db[i].box_code && db[i].box_code.toLowerCase().indexOf(q) !== -1)) res.push(db[i]);
   }
   show(res, '🔍 نتائج البحث (' + res.length + ')', q);
 }
 
-// تطبيق قاعدة توزيع الحروف على جميع الأسماء المطابقة
 function applyLetterBoxRule(letter, gender, boxNumber, boxCode) {
   var updatedCount = 0;
   letter = letter.toUpperCase();
-  
   for (var i = 0; i < db.length; i++) {
-    var item = db[i];
-    var firstLetter = item.name.charAt(0).toUpperCase();
-    
-    // إذا كان الاسم يبدأ بنفس الحرف ونفس الجنس ولا يوجد له رقم علبة
-    if (firstLetter === letter && item.gender === gender && !item.box_number) {
-      db[i].box_number = boxNumber;
-      db[i].box_code = boxCode;
-      updatedCount++;
+    var firstLetter = db[i].name.charAt(0).toUpperCase();
+    if (firstLetter === letter && db[i].gender === gender && !db[i].box_number) {
+      db[i].box_number = boxNumber; db[i].box_code = boxCode; updatedCount++;
     }
   }
-  
   return updatedCount;
 }
 
 function add() {
   var n = document.getElementById('name').value.trim();
   var g = document.getElementById('gender').value;
-  
   if (!n) return msg('⚠️ تنبيه', 'الرجاء إدخال الاسم', 'warning');
   if (!g) return msg('⚠️ تنبيه', 'الرجاء اختيار الجنس', 'warning');
-  
-  // الحصول على رقم العلبة من القواعد المحفوظة (اختياري)
   var firstLetter = n.charAt(0);
   var boxNum = getSuggestedBoxNumber(firstLetter, g);
-  var boxCode = '';
-  
-  // إذا كانت هناك قاعدة، استخدمها
-  if (boxNum) {
-    boxCode = generateBoxCode(boxNum, g);
-  } else {
-    // لا توجد قاعدة - سيتم الحفظ بدون رقم علبة
-    boxNum = '';
-    boxCode = '';
-  }
-  
-  for (var i = 0; i < db.length; i++) {
-    if (db[i].name.toLowerCase() === n.toLowerCase()) return msg('⚠️ موجود', 'الاسم موجود مسبقاً', 'warning');
-  }
-  
-  db.push({
-    name: n,
-    qty: parseInt(document.getElementById('qty').value) || 0,
-    gender: g,
-    color: document.getElementById('color').value.trim(),
-    note: document.getElementById('note').value.trim(),
-    box_number: boxNum,
-    box_code: boxCode
-  });
+  var boxCode = boxNum ? generateBoxCode(boxNum, g) : '';
+  for (var i = 0; i < db.length; i++) { if (db[i].name.toLowerCase() === n.toLowerCase()) return msg('⚠️ موجود', 'الاسم موجود مسبقاً', 'warning'); }
+  db.push({name: n, qty: parseInt(document.getElementById('qty').value) || 0, gender: g, color: document.getElementById('color').value.trim(), note: document.getElementById('note').value.trim(), box_number: boxNum, box_code: boxCode});
   save();
-  
-  if (boxCode) {
-    msg('✅ نجح', 'تمت إضافة السجل بنجاح - رمز العلبة: ' + boxCode, 'success');
-  } else {
-    msg('✅ نجح', 'تمت إضافة السجل بنجاح (بدون رقم علبة)', 'success');
-  }
-  
-  clearForm();
-  search();
+  msg('✅ نجح', boxCode ? 'تمت إضافة السجل بنجاح - رمز العلبة: ' + boxCode : 'تمت إضافة السجل بنجاح (بدون رقم علبة)', 'success');
+  clearForm(); search();
 }
 
 function update() {
   var n = document.getElementById('name').value.trim();
-  if (!n) return msg('⚠️ تنبيه', 'الرجاء إدخال الاسم', 'warning');
-  var idx = -1;
-  for (var i = 0; i < db.length; i++) {
-    if (db[i].name.toLowerCase() === n.toLowerCase()) {
-      idx = i;
-      break;
-    }
-  }
-  if (idx === -1) return msg('❌ خطأ', 'السجل غير موجود', 'error');
-  
   var g = document.getElementById('gender').value;
-  
+  if (!n) return msg('⚠️ تنبيه', 'الرجاء إدخال الاسم', 'warning');
   if (!g) return msg('⚠️ تنبيه', 'الرجاء اختيار الجنس', 'warning');
-  
-  // الحصول على رقم العلبة من القواعد المحفوظة (اختياري)
+  var idx = -1;
+  for (var i = 0; i < db.length; i++) { if (db[i].name.toLowerCase() === n.toLowerCase()) { idx = i; break; } }
+  if (idx === -1) return msg('❌ خطأ', 'السجل غير موجود', 'error');
   var firstLetter = n.charAt(0);
   var boxNum = getSuggestedBoxNumber(firstLetter, g);
-  var boxCode = '';
-  
-  // إذا كانت هناك قاعدة، استخدمها
-  if (boxNum) {
-    boxCode = generateBoxCode(boxNum, g);
-  } else {
-    // لا توجد قاعدة - سيتم الحفظ بدون رقم علبة
-    boxNum = '';
-    boxCode = '';
-  }
-  
-  db[idx] = {
-    name: n,
-    qty: parseInt(document.getElementById('qty').value) || 0,
-    gender: g,
-    color: document.getElementById('color').value.trim(),
-    note: document.getElementById('note').value.trim(),
-    box_number: boxNum,
-    box_code: boxCode
-  };
+  var boxCode = boxNum ? generateBoxCode(boxNum, g) : '';
+  db[idx] = {name: n, qty: parseInt(document.getElementById('qty').value) || 0, gender: g, color: document.getElementById('color').value.trim(), note: document.getElementById('note').value.trim(), box_number: boxNum, box_code: boxCode};
   save();
-  
-  if (boxCode) {
-    msg('✅ نجح', 'تم تحديث السجل بنجاح - رمز العلبة: ' + boxCode, 'success');
-  } else {
-    msg('✅ نجح', 'تم تحديث السجل بنجاح (بدون رقم علبة)', 'success');
-  }
-  
+  msg('✅ نجح', boxCode ? 'تم تحديث السجل بنجاح - رمز العلبة: ' + boxCode : 'تم تحديث السجل بنجاح (بدون رقم علبة)', 'success');
   search();
 }
 
@@ -2319,19 +1519,12 @@ function del() {
   var n = document.getElementById('name').value.trim();
   if (!n) return msg('⚠️ تنبيه', 'الرجاء إدخال الاسم', 'warning');
   var idx = -1;
-  for (var i = 0; i < db.length; i++) {
-    if (db[i].name.toLowerCase() === n.toLowerCase()) {
-      idx = i;
-      break;
-    }
-  }
+  for (var i = 0; i < db.length; i++) { if (db[i].name.toLowerCase() === n.toLowerCase()) { idx = i; break; } }
   if (idx === -1) return msg('❌ خطأ', 'السجل غير موجود', 'error');
   if (!confirm('⚠️ هل أنت متأكد من حذف هذا السجل؟')) return;
-  db.splice(idx, 1);
-  save();
+  db.splice(idx, 1); save();
   msg('✅ نجح', 'تم حذف السجل بنجاح', 'success');
-  clearForm();
-  search();
+  clearForm(); search();
 }
 
 function clearForm() {
@@ -2347,12 +1540,7 @@ function check() {
   var n = document.getElementById('sname').value.trim();
   if (!n) return msg('تنبيه', 'الرجاء إدخال اسم المنتج', 'warning');
   var it = null;
-  for (var i = 0; i < db.length; i++) {
-    if (db[i].name.toLowerCase() === n.toLowerCase()) {
-      it = db[i];
-      break;
-    }
-  }
+  for (var i = 0; i < db.length; i++) { if (db[i].name.toLowerCase() === n.toLowerCase()) { it = db[i]; break; } }
   if (!it) return msg('خطأ', 'المنتج غير موجود', 'error');
   var gIcon = it.gender === 'ذكر' ? '👦' : '👧';
   var st = it.qty === 0 ? '❌ غير متوفر' : it.qty === 1 ? '⚠️ نافذ قريبا: قطعة واحدة' : '✅ متوفر: ' + it.qty + ' قطعة';
@@ -2366,24 +1554,13 @@ function sell() {
   if (!n) return msg('تنبيه', 'الرجاء إدخال اسم المنتج', 'warning');
   if (q <= 0) return msg('تنبيه', 'الرجاء إدخال كمية صحيحة', 'warning');
   var idx = -1;
-  for (var i = 0; i < db.length; i++) {
-    if (db[i].name.toLowerCase() === n.toLowerCase()) {
-      idx = i;
-      break;
-    }
-  }
+  for (var i = 0; i < db.length; i++) { if (db[i].name.toLowerCase() === n.toLowerCase()) { idx = i; break; } }
   if (idx === -1) return msg('خطأ', 'المنتج غير موجود', 'error');
   if (db[idx].qty < q) return msg('خطأ', 'الكمية المتوفرة غير كافية<br>المتوفر: ' + db[idx].qty + ' قطعة', 'error', true);
   if (!confirm('💸 هل تريد بيع ' + q + ' قطعة من ' + db[idx].name + '؟')) return;
-  db[idx].qty -= q;
-  save();
-  
-  // تحديث نتائج البحث تلقائياً إذا كان هناك بحث نشط
+  db[idx].qty -= q; save();
   var searchQuery = document.getElementById('q').value.trim();
-  if (searchQuery) {
-    search();
-  }
-  
+  if (searchQuery) search();
   var m = '✅ تمت عملية البيع بنجاح<br><br>📦 الكمية المباعة: ' + q + ' قطعة<br>📊 الكمية المتبقية: ' + db[idx].qty + ' قطعة';
   if (db[idx].qty === 0) m += '<br><br>❌ تحذير: المخزون نفذ تماماً!';
   else if (db[idx].qty === 1) m += '<br><br>⚠️ تنبيه: متبقي قطعة واحدة فقط!';
@@ -2402,18 +1579,14 @@ function backup() {
   var blob = new Blob(['\ufeff' + csv], {type: 'text/csv;charset=utf-8;'});
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
-  a.href = url;
-  a.download = 'backup_K3D_' + new Date().toISOString().slice(0, 10) + '.csv';
-  a.click();
+  a.href = url; a.download = 'backup_K3D_' + new Date().toISOString().slice(0, 10) + '.csv'; a.click();
   URL.revokeObjectURL(url);
   msg('✅ نجح', 'تم تحميل النسخة الاحتياطية بنجاح', 'success');
 }
 
 function exportMiss() {
   var m = [];
-  for (var i = 0; i < db.length; i++) {
-    if (db[i].qty === 0) m.push(db[i]);
-  }
+  for (var i = 0; i < db.length; i++) { if (db[i].qty === 0) m.push(db[i]); }
   if (m.length === 0) return msg('🎉 رائع', 'لا توجد سجلات ناقصة!', 'success');
   var csv = 'الاسم,الكمية,الجنس,اللون,رقم العلبة,رمز العلبة,ملاحظات\n';
   for (var i = 0; i < m.length; i++) {
@@ -2423,20 +1596,13 @@ function exportMiss() {
   var blob = new Blob(['\ufeff' + csv], {type: 'text/csv;charset=utf-8;'});
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
-  a.href = url;
-  a.download = 'missing_K3D_' + new Date().toISOString().slice(0, 10) + '.csv';
-  a.click();
+  a.href = url; a.download = 'missing_K3D_' + new Date().toISOString().slice(0, 10) + '.csv'; a.click();
   URL.revokeObjectURL(url);
   msg('✅ نجح', 'تم تصدير السجلات الناقصة بنجاح', 'success');
 }
 
-function openPrint() {
-  document.getElementById('printModal').style.display = 'flex';
-}
-
-function closePrint() {
-  document.getElementById('printModal').style.display = 'none';
-}
+function openPrint() { document.getElementById('printModal').style.display = 'flex'; }
+function closePrint() { document.getElementById('printModal').style.display = 'none'; }
 
 function printRecords() {
   var g = document.querySelector('input[name="pg"]:checked').value;
@@ -2456,223 +1622,91 @@ function printRecords() {
   var w = window.open('', '_blank');
   if (!w) return msg('خطأ', 'الرجاء السماح بفتح النوافذ المنبثقة', 'error');
   var h = '<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>' + title + ' - كرزما K3D</title>';
-  h += '<style>';
-  h += 'body{font-family:Arial,sans-serif;padding:15px 10px;background:#f5f5f5}';
+  h += '<style>body{font-family:Arial,sans-serif;padding:15px 10px;background:#f5f5f5}';
   h += '.print-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px;border-bottom:3px solid #6366f1;padding-bottom:10px}';
   h += '.logo-print{width:100px;height:auto;border-radius:10px}';
   h += '.header-info{flex:1;text-align:right;padding-right:15px}';
-  h += 'h1{color:#6366f1;margin:0 0 5px 0;font-size:20px;font-weight:700}';
-  h += '.info{color:#666;font-size:11px;margin-bottom:3px}';
+  h += 'h1{color:#6366f1;margin:0 0 5px 0;font-size:20px;font-weight:700}.info{color:#666;font-size:11px;margin-bottom:3px}';
   h += 'table{width:100%;margin:10px auto;border-collapse:collapse;background:#fff;box-shadow:0 4px 12px rgba(99,102,241,0.15);table-layout:fixed;border-radius:8px;overflow:hidden}';
   h += 'th,td{border:1px solid #e0e7ff;padding:4px 2px;text-align:center;font-size:12px}';
   h += 'th{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-weight:bold;font-size:13px}';
-  h += 'td{background:#fff}';
-  h += '.name-col{font-weight:bold;font-size:18px;color:#1e293b}';
-  h += '.qty-col{font-weight:bold;font-size:20px}';
-  h += '.box-col{font-weight:bold;font-size:14px;color:#7c3aed}';
-  h += '.z{background:#fee2e2;color:#dc2626;font-weight:bold}';
-  h += '.o{background:#fef3c7;color:#d97706;font-weight:bold}';
-  h += '.g{background:#d1fae5;color:#059669;font-weight:bold}';
+  h += 'td{background:#fff}.name-col{font-weight:bold;font-size:18px;color:#1e293b}.qty-col{font-weight:bold;font-size:20px}.box-col{font-weight:bold;font-size:14px;color:#7c3aed}';
+  h += '.z{background:#fee2e2;color:#dc2626;font-weight:bold}.o{background:#fef3c7;color:#d97706;font-weight:bold}.g{background:#d1fae5;color:#059669;font-weight:bold}';
   h += '.notes-col{text-align:right;word-wrap:break-word;font-size:12px;overflow-wrap:break-word}';
-  h += '@media print{body{background:#fff;padding:10px 5px}.no-print{display:none}table{page-break-inside:auto}tr{page-break-inside:avoid;page-break-after:auto}}';
-  h += '</style></head><body>';
-  h += '<div class="print-header">';
-  h += '<img src="https://i.postimg.cc/pTQwMKs3/lwjw-bnfsjy-bsyt-ʿn-stwdyw-1.png" class="logo-print" alt="Logo">';
-  h += '<div class="header-info">';
-  h += '<h1>' + title + '</h1>';
-  h += '<div class="info">📋 برنامج إدارة الأسماء كرزما K3D</div>';
+  h += '@media print{body{background:#fff;padding:10px 5px}.no-print{display:none}table{page-break-inside:auto}tr{page-break-inside:avoid;page-break-after:auto}}</style></head><body>';
+  h += '<div class="print-header"><img src="https://i.postimg.cc/pTQwMKs3/lwjw-bnfsjy-bsyt-ʿn-stwdyw-1.png" class="logo-print" alt="Logo">';
+  h += '<div class="header-info"><h1>' + title + '</h1><div class="info">📋 برنامج إدارة الأسماء كرزما K3D</div>';
   h += '<div class="info">📅 ' + new Date().toLocaleDateString('ar-EG', {year: 'numeric', month: 'long', day: 'numeric'}) + '</div>';
-  h += '<div class="info">📊 عدد السجلات: ' + items.length + '</div>';
-  h += '</div>';
-  h += '</div>';
-  h += '<table><thead><tr>';
-  h += '<th style="width:5%">#</th><th style="width:20%">الاسم</th><th style="width:8%">الكمية</th><th style="width:10%">العلبة</th><th>ملاحظات</th>';
-  h += '</tr></thead><tbody>';
+  h += '<div class="info">📊 عدد السجلات: ' + items.length + '</div></div></div>';
+  h += '<table><thead><tr><th style="width:5%">#</th><th style="width:20%">الاسم</th><th style="width:8%">الكمية</th><th style="width:10%">العلبة</th><th>ملاحظات</th></tr></thead><tbody>';
   for (var i = 0; i < items.length; i++) {
     var it = items[i];
     var c = it.qty === 0 ? 'z' : it.qty === 1 ? 'o' : 'g';
-    h += '<tr>';
-    h += '<td>' + (i + 1) + '</td>';
-    h += '<td class="name-col">' + it.name + '</td>';
-    h += '<td class="' + c + ' qty-col">' + it.qty + '</td>';
-    h += '<td class="box-col">' + (it.box_code || '-') + '</td>';
-    h += '<td class="notes-col">' + (it.note || '-') + '</td>';
-    h += '</tr>';
+    h += '<tr><td>' + (i+1) + '</td><td class="name-col">' + it.name + '</td><td class="' + c + ' qty-col">' + it.qty + '</td><td class="box-col">' + (it.box_code || '-') + '</td><td class="notes-col">' + (it.note || '-') + '</td></tr>';
   }
-  h += '</tbody></table>';
-  h += '<script>window.onload=function(){setTimeout(function(){window.print()},800)}<\/script>';
-  h += '</body></html>';
-  w.document.open();
-  w.document.write(h);
-  w.document.close();
+  h += '</tbody></table><script>window.onload=function(){setTimeout(function(){window.print()},800)}<\/script></body></html>';
+  w.document.open(); w.document.write(h); w.document.close();
   closePrint();
 }
 
-function restore() {
-  document.getElementById('file').click();
-}
+function restore() { document.getElementById('file').click(); }
 
 document.getElementById('file').addEventListener('change', function(e) {
   var f = e.target.files[0];
   if (!f) return;
-  if (!f.name.toLowerCase().endsWith('.csv')) {
-    msg('❌ خطأ', 'الرجاء اختيار ملف CSV فقط', 'error');
-    e.target.value = '';
-    return;
-  }
+  if (!f.name.toLowerCase().endsWith('.csv')) { msg('❌ خطأ', 'الرجاء اختيار ملف CSV فقط', 'error'); e.target.value = ''; return; }
   var reader = new FileReader();
   reader.onload = function(ev) {
     try {
       var text = ev.target.result;
-      
-      // إزالة BOM إذا كان موجوداً
-      if (text.charCodeAt(0) === 0xFEFF) {
-        text = text.substr(1);
-      }
-      
-      // تحديد الفاصل (فاصلة أو فاصلة منقوطة)
+      if (text.charCodeAt(0) === 0xFEFF) text = text.substr(1);
       var delimiter = ',';
-      if (text.indexOf(';') > -1 && text.indexOf(';') < text.indexOf('\n')) {
-        delimiter = ';';
-      }
-      
+      if (text.indexOf(';') > -1 && text.indexOf(';') < text.indexOf('\n')) delimiter = ';';
       var lines = text.split('\n');
-      if (lines.length < 2) {
-        msg('❌ خطأ', 'الملف فارغ أو لا يحتوي على بيانات', 'error');
-        return;
-      }
-      
-      // قراءة سطر الرأس لمعرفة البنية
+      if (lines.length < 2) { msg('❌ خطأ', 'الملف فارغ أو لا يحتوي على بيانات', 'error'); return; }
       var header = lines[0].trim();
-      var hasBoxColumns = header.indexOf('رقم العلبة') !== -1 || 
-                         header.indexOf('box_number') !== -1 ||
-                         header.indexOf('رمز العلبة') !== -1 ||
-                         header.indexOf('box_code') !== -1;
-      
+      var hasBoxColumns = header.indexOf('رقم العلبة') !== -1 || header.indexOf('box_number') !== -1 || header.indexOf('رمز العلبة') !== -1 || header.indexOf('box_code') !== -1;
       var imported = [];
-      
       for (var i = 1; i < lines.length; i++) {
         var line = lines[i].trim();
         if (!line) continue;
-        var parts = [];
-        var inQuotes = false;
-        var current = '';
+        var parts = [], inQuotes = false, current = '';
         for (var j = 0; j < line.length; j++) {
           var char = line[j];
-          if (char === '"') {
-            inQuotes = !inQuotes;
-          } else if (char === delimiter && !inQuotes) {
-            parts.push(current);
-            current = '';
-          } else {
-            current += char;
-          }
+          if (char === '"') inQuotes = !inQuotes;
+          else if (char === delimiter && !inQuotes) { parts.push(current); current = ''; }
+          else current += char;
         }
         parts.push(current);
-        
         if (parts.length >= 3) {
-          var name = parts[0].trim();
-          var qty = parseInt(parts[1]) || 0;
-          var gender = parts[2].trim();
-          var color = parts.length > 3 ? parts[3].trim() : '';
-          var boxNumber = '';
-          var boxCode = '';
-          var note = '';
-          
-          if (hasBoxColumns && parts.length >= 7) {
-            // بنية كاملة: الاسم,الكمية,الجنس,اللون,رقم العلبة,رمز العلبة,ملاحظات
-            boxNumber = parts[4].trim();
-            boxCode = parts[5].trim();
-            note = parts[6].replace(/^"|"$/g, '').trim();
-          } else if (hasBoxColumns && parts.length >= 6) {
-            // بنية متوسطة: الاسم,الكمية,الجنس,اللون,رقم العلبة,رمز العلبة
-            boxNumber = parts[4].trim();
-            boxCode = parts[5].trim();
-            note = parts.length >= 7 ? parts[6].replace(/^"|"$/g, '').trim() : '';
-          } else if (hasBoxColumns && parts.length >= 5) {
-            // بنية مع رقم العلبة فقط: الاسم,الكمية,الجنس,اللون,رقم العلبة
-            boxNumber = parts[4].trim();
-            note = parts.length >= 6 ? parts[5].replace(/^"|"$/g, '').trim() : '';
-          } else if (parts.length >= 5) {
-            // بنية قديمة: الاسم,الكمية,الجنس,اللون,ملاحظات
-            note = parts[4].replace(/^"|"$/g, '').trim();
-          }
-          
-          // إزالة علامات التنصيص من القيم
-          boxNumber = boxNumber.replace(/^"|"$/g, '');
-          boxCode = boxCode.replace(/^"|"$/g, '');
-          
-          // إذا كان هناك boxCode ولكن لا يوجد boxNumber، استخرج الرقم
-          if (!boxNumber && boxCode) {
-            boxNumber = boxCode.replace(/[ذأ]/g, '');
-          }
-          
-          // إذا كان هناك boxNumber ولكن لا يوجد boxCode، قم بتوليده
-          if (boxNumber && !boxCode && gender) {
-            boxCode = generateBoxCode(boxNumber, gender);
-          }
-          
-          imported.push({
-            name: name,
-            qty: qty,
-            gender: gender,
-            color: color,
-            box_number: boxNumber,
-            box_code: boxCode,
-            note: note
-          });
+          var name = parts[0].trim(), qty = parseInt(parts[1]) || 0, gender = parts[2].trim(), color = parts.length > 3 ? parts[3].trim() : '';
+          var boxNumber = '', boxCode = '', note = '';
+          if (hasBoxColumns && parts.length >= 7) { boxNumber = parts[4].trim(); boxCode = parts[5].trim(); note = parts[6].replace(/^"|"$/g, '').trim(); }
+          else if (hasBoxColumns && parts.length >= 6) { boxNumber = parts[4].trim(); boxCode = parts[5].trim(); }
+          else if (hasBoxColumns && parts.length >= 5) { boxNumber = parts[4].trim(); }
+          else if (parts.length >= 5) { note = parts[4].replace(/^"|"$/g, '').trim(); }
+          boxNumber = boxNumber.replace(/^"|"$/g, ''); boxCode = boxCode.replace(/^"|"$/g, '');
+          if (!boxNumber && boxCode) boxNumber = boxCode.replace(/[ذأ]/g, '');
+          if (boxNumber && !boxCode && gender) boxCode = generateBoxCode(boxNumber, gender);
+          imported.push({name: name, qty: qty, gender: gender, color: color, box_number: boxNumber, box_code: boxCode, note: note});
         }
       }
-      
-      if (imported.length === 0) {
-        msg('❌ خطأ', 'لم يتم العثور على بيانات صالحة في الملف', 'error');
-        return;
-      }
-      
-      // إحصائيات بيانات العلب
-      var withBoxData = 0;
-      var withoutBoxData = 0;
-      for (var i = 0; i < imported.length; i++) {
-        if (imported[i].box_code || imported[i].box_number) {
-          withBoxData++;
-        } else {
-          withoutBoxData++;
-        }
-      }
-      
+      if (imported.length === 0) { msg('❌ خطأ', 'لم يتم العثور على بيانات صالحة في الملف', 'error'); return; }
+      var withBoxData = 0, withoutBoxData = 0;
+      for (var i = 0; i < imported.length; i++) { if (imported[i].box_code || imported[i].box_number) withBoxData++; else withoutBoxData++; }
       var message = '✅ تم العثور على ' + imported.length + ' سجل في الملف\n\n';
-      if (withBoxData > 0) {
-        message += '📦 سجلات بها بيانات علب: ' + withBoxData + '\n';
-      }
-      if (withoutBoxData > 0) {
-        message += '⚠️ سجلات بدون بيانات علب: ' + withoutBoxData + '\n';
-      }
-      message += '\n⚠️ هل تريد استبدال البيانات الحالية؟\n\nملاحظة: سيتم حذف جميع البيانات الحالية';
-      
+      if (withBoxData > 0) message += '📦 سجلات بها بيانات علب: ' + withBoxData + '\n';
+      if (withoutBoxData > 0) message += '⚠️ سجلات بدون بيانات علب: ' + withoutBoxData + '\n';
+      message += '\n⚠️ هل تريد استبدال البيانات الحالية؟';
       if (confirm(message)) {
-        db = imported;
-        save();
-        search();
-        var successMsg = 'تم استرداد البيانات بنجاح!<br><br>';
-        successMsg += '📊 تم استيراد ' + imported.length + ' سجل<br>';
-        if (withBoxData > 0) {
-          successMsg += '📦 سجلات بها بيانات علب: ' + withBoxData + '<br>';
-        }
-        if (withoutBoxData > 0) {
-          successMsg += '⚠️ سجلات بدون بيانات علب: ' + withoutBoxData;
-        }
+        db = imported; save(); search();
+        var successMsg = 'تم استرداد البيانات بنجاح!<br><br>📊 تم استيراد ' + imported.length + ' سجل';
+        if (withBoxData > 0) successMsg += '<br>📦 سجلات بها بيانات علب: ' + withBoxData;
+        if (withoutBoxData > 0) successMsg += '<br>⚠️ سجلات بدون بيانات علب: ' + withoutBoxData;
         msg('✅ نجح', successMsg, 'success');
       }
-    } catch (err) {
-      console.error('خطأ:', err);
-      var errorMsg = 'فشل في قراءة الملف.<br><br>';
-      errorMsg += '<strong>تأكد من:</strong><br>';
-      errorMsg += '• أن الملف بصيغة CSV صحيحة<br>';
-      errorMsg += '• أن الملف يحتوي على سطر رأس (Header)<br>';
-      errorMsg += '• البنية الأساسية: <strong>الاسم,الكمية,الجنس,اللون</strong><br>';
-      errorMsg += '• البنية الكاملة (اختياري): <strong>الاسم,الكمية,الجنس,اللون,رقم العلبة,رمز العلبة,ملاحظات</strong><br>';
-      errorMsg += '• أن الملف محفوظ بترميز UTF-8<br><br>';
-      errorMsg += '<small>الخطأ: ' + err.message + '</small>';
+    } catch(err) {
+      var errorMsg = 'فشل في قراءة الملف.<br><br><strong>تأكد من:</strong><br>• أن الملف بصيغة CSV صحيحة<br>• البنية: الاسم,الكمية,الجنس,اللون<br>• أن الملف محفوظ بترميز UTF-8<br><br><small>الخطأ: ' + err.message + '</small>';
       msg('❌ خطأ', errorMsg, 'error');
     }
   };
