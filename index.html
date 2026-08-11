@@ -13,8 +13,8 @@ Error generating stack: `+e.message+`
           <td class="gen">${e.gender===`ذكر`?`👦`:`👧`}</td>
           <td class="qty">${w(e.qty)}</td>
           <td class="color">${e.color||`—`}</td>
-        </tr>`});let p=a===e.length-1;i+=`
-      <div class="box-page${p?``:` page-break`}">
+        </tr>`});let p=Array.from(new Set(o.map(e=>e.name.charAt(0)))).sort((e,t)=>e.localeCompare(t,`ar`)),m=p.map(e=>`<span class="letter-badge">${e}</span>`).join(``),h=a===e.length-1;i+=`
+      <div class="box-page${h?``:` page-break`}">
         <div class="box-hdr">
           <div class="box-hdr-left">
             <img src="${T}" alt="Logo">
@@ -30,6 +30,11 @@ Error generating stack: `+e.message+`
             <div class="box-date">📅 ${r}</div>
           </div>
         </div>
+        <div class="letters-bar">
+          <span class="letters-label">🔤 الحروف:</span>
+          <div class="letters-list">${m}</div>
+          <span class="letters-count">${w(p.length)} حرف</span>
+        </div>
         <div class="box-stats">
           <div class="stat"><div class="sv">${w(o.length)}</div><div class="sl">الإجمالي</div></div>
           <div class="stat male"><div class="sv">${w(s.length)}</div><div class="sl">👦 ذكور</div></div>
@@ -38,7 +43,7 @@ Error generating stack: `+e.message+`
           ${u>0?`<div class="stat zero"><div class="sv">${w(u)}</div><div class="sl">❌ ناقص</div></div>`:``}
         </div>
         <table>
-          <thead><tr><th class="n">#</th><th>الاسم</th><th class="gen">الجنس</th><th class="qty">الكمية</th><th class="color">اللون</th></tr></thead>
+          <thead><tr><th class="n">#</th><th class="name">الاسم</th><th class="gen">الجنس</th><th class="qty">الكمية</th><th class="color">اللون</th></tr></thead>
           <tbody>${f}</tbody>
         </table>
         <div class="box-footer">
@@ -50,53 +55,61 @@ Error generating stack: `+e.message+`
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Cairo,sans-serif}
-body{background:#f8fafc;color:#1e293b;font-size:12px}
-.box-page{width:100%;margin-bottom:0;background:#fff}
-.page-break{page-break-after:always}
-.box-hdr{background:linear-gradient(135deg,#1e293b,#334155);color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
-.box-hdr-left{display:flex;align-items:center;gap:12px}
-.box-hdr-left img{height:52px;width:auto;filter:brightness(0) invert(1)}
-.brand{font-size:18px;font-weight:900}
-.brand-sub{font-size:10px;opacity:.7;margin-top:2px}
+html,body{width:210mm;margin:0 auto;background:#fff;color:#1e293b;font-size:11px}
+.box-page{width:210mm;background:#fff;overflow:hidden}
+.page-break{page-break-after:always;break-after:page}
+.box-hdr{background:linear-gradient(135deg,#1e293b,#334155);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+.box-hdr-left{display:flex;align-items:center;gap:10px}
+.box-hdr-left img{height:44px;width:auto;filter:brightness(0) invert(1)}
+.brand{font-size:15px;font-weight:900}
+.brand-sub{font-size:9px;opacity:.7;margin-top:2px}
 .box-hdr-right{text-align:left}
-.box-num-label{font-size:9px;opacity:.7;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
-.box-num{font-size:36px;font-weight:900;line-height:1;color:#5eead4}
-.box-code{font-size:13px;font-weight:700;color:#a7f3d0;margin-top:2px}
-.box-date{font-size:10px;opacity:.6;margin-top:4px}
+.box-num-label{font-size:8px;opacity:.7;letter-spacing:1px;margin-bottom:1px}
+.box-num{font-size:30px;font-weight:900;line-height:1;color:#5eead4}
+.box-code{font-size:11px;font-weight:700;color:#a7f3d0;margin-top:1px}
+.box-date{font-size:9px;opacity:.6;margin-top:3px}
 .box-stats{display:flex;gap:0;background:#f1f5f9;border-bottom:2px solid #e2e8f0}
-.stat{flex:1;padding:10px 12px;text-align:center;border-right:1px solid #e2e8f0}
+.stat{flex:1;padding:7px 8px;text-align:center;border-right:1px solid #e2e8f0}
 .stat:last-child{border-right:none}
-.sv{font-size:22px;font-weight:900;color:#1e293b}
-.sl{font-size:9px;color:#64748b;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
+.sv{font-size:18px;font-weight:900;color:#1e293b}
+.sl{font-size:8px;color:#64748b;font-weight:700;margin-top:2px}
 .stat.male .sv{color:#3b82f6}
 .stat.female .sv{color:#ec4899}
 .stat.qty .sv{color:#059669}
 .stat.zero .sv{color:#dc2626}
-table{width:100%;border-collapse:collapse;background:#fff}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
 thead tr{background:#1e293b;color:#fff}
-th{padding:8px 12px;text-align:right;font-size:11px;font-weight:700}
-th.n{text-align:center;width:5%}
-th.gen{text-align:center;width:8%}
-th.qty{text-align:center;width:10%}
-th.color{width:18%}
-td{padding:7px 12px;font-size:13px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
-td.n{text-align:center;color:#94a3b8;font-size:11px}
-td.name{font-weight:800;font-size:15px}
-td.gen{text-align:center;font-size:12px}
-td.qty{text-align:center;font-weight:900;font-size:17px}
-td.color{color:#64748b;font-size:11px}
+th{padding:6px 8px;text-align:right;font-size:10px;font-weight:700;overflow:hidden}
+th.n{text-align:center;width:6%}
+th.name{width:42%}
+th.gen{text-align:center;width:10%}
+th.qty{text-align:center;width:12%}
+th.color{width:30%}
+td{padding:5px 8px;font-size:11px;border-bottom:1px solid #f1f5f9;vertical-align:middle;overflow:hidden;word-break:break-word}
+td.n{text-align:center;color:#94a3b8;font-size:10px;width:6%}
+td.name{font-weight:800;font-size:12px;width:42%}
+td.gen{text-align:center;font-size:11px;width:10%}
+td.qty{text-align:center;font-weight:900;font-size:14px;width:12%}
+td.color{color:#64748b;font-size:10px;width:30%}
 tr:nth-child(even) td{background:#f8fafc}
 tr.zero td.name{color:#dc2626}
-tr.zero td.qty{color:#dc2626;background:#fef2f2 !important;font-size:20px}
-tr.one td.qty{color:#d97706;background:#fffbeb !important;font-size:20px}
+tr.zero td.qty{color:#dc2626;background:#fef2f2 !important}
+tr.one td.qty{color:#d97706;background:#fffbeb !important}
 tr.good td.qty{color:#059669;background:#f0fdf4 !important}
-.box-footer{background:#1e293b;color:#94a3b8;padding:8px 20px;display:flex;justify-content:space-between;align-items:center;font-size:10px;font-weight:700}
+.box-footer{background:#1e293b;color:#94a3b8;padding:6px 16px;display:flex;justify-content:space-between;align-items:center;font-size:9px;font-weight:700}
 .box-footer-box{color:#5eead4}
+.letters-bar{display:flex;align-items:center;gap:8px;padding:8px 16px;background:#fafafa;border-bottom:1.5px solid #e2e8f0;flex-wrap:wrap}
+.letters-label{font-size:9px;font-weight:700;color:#64748b;white-space:nowrap;flex-shrink:0}
+.letters-list{display:flex;flex-wrap:wrap;gap:4px;flex:1}
+.letter-badge{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:5px;font-size:11px;font-weight:900;background:#1e293b;color:#5eead4;border:1px solid #334155}
+.letters-count{font-size:9px;font-weight:700;color:#94a3b8;white-space:nowrap;flex-shrink:0}
 @media print{
-  body{background:#fff}
-  .box-page{background:#fff}
-  @page{size:A4 portrait;margin:6mm}
-  .page-break{page-break-after:always}
+  html,body{width:210mm;margin:0}
+  .box-page{width:210mm}
+  @page{size:A4 portrait;margin:8mm}
+  .page-break{page-break-after:always;break-after:page}
+  thead{display:table-header-group}
+  tr{page-break-inside:avoid}
 }
 </style></head><body>
 ${i}
